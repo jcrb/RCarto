@@ -1,0 +1,28 @@
+---
+title: "RCarto"
+author: "JcB"
+date: "05/07/2014"
+output: html_document
+---
+
+source [GitHub](https://github.com/jcrb/RCarto)
+
+Application au [London EMS](http://www.londonr.org/Presentations/High%20Quality%20Maps%20With%20R%20-%20Simon%20Hailstone.pptx)
+
+Utilisation de a librairie __ggmap__ pour localiser les hôpitaux. A croiser avec les données du fichier FINESS.
+
+Utilise l'API Google: note that the google maps api limits to 2500 queries a day.
+
+```{r test, comment="", message=FALSE}
+#install.packages("ggmap")
+library("ggmap", lib.loc="~/R/x86_64-pc-linux-gnu-library/3.1")
+geocode("Nouvel Hôpital Civil")
+geocode("Hôpital de Hautepierre")
+adresse <- c("Nouvel Hôpital Civil", "Hôpital de Hautepierre")
+loc <- geocode(adresse)
+cbind(adresse,loc)
+adresse <- c("Nouvel Hôpital Civil", "Hôpital de Hautepierre", "Centre hospitalier, Wissembourg", "Clinique sainte Anne, Strasbourg", "Clinique sainte Odile, Strasbourg", "Clinique Diaconat, Strasbourg")
+loc <- geocode(adresse)
+cbind(adresse,loc)
+```
+
