@@ -26,3 +26,93 @@ loc <- geocode(adresse)
 cbind(adresse,loc)
 ```
 
+R et Shapefiles
+===============
+
+sources: http://gis.stackexchange.com/questions/19064/how-to-open-a-shapefile-in-r
+
+This will give you an object which is a SpatialPointsDataFrame - the fields of the attribute table are then accessible to you in the same way as an ordinary dataframe, i.e. shape$ID for the ID column.
+
+If you want to use the ASCII file you imported, then you should simply convert the text (character) x and y fields to numbers, e.g.:
+
+shape$x <- as.numeric(shape$x)
+shape$y <- as.numeric(shape$y)
+coordinates(shape) <- ~x + y
+
+source: http://thebiobucket.blogspot.fr/2011/10/simple-map-example-with-r.html
+
+```{r}
+require(maptools)
+
+path <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/"
+guinee.shp <- paste0(path, "GV/gv.shp")
+liberia.shp <- paste0(path, "LI/li.shp")
+sierra.shp <- paste0(path, "SL/sl.shp")
+nigeria.shp <- paste0(path, "NI/ni.shp")
+civoire <- paste0(path, "IV/iv.shp")
+ghana <- paste0(path, "GH/gh.shp")
+
+shape <- readShapePoly(guinee.shp) # readShapePoints pour un shapefile de points
+
+#structure
+str(shape, max.level = 1)
+str(shape, max.level = 2)
+
+
+# dessin
+plot(shape)
+mtext("Guinee-Conacry", 3, line = 0, adj = 0, cex = 2, font = 3)
+
+# nombrez de slots:
+slotNames(shape)
+
+# nom des colonnes de l'objet data:
+names(shape)
+levels(shape$ADMIN_NAME)
+
+# dataframe associé:
+# -  FIPS code (Federal Information Processing Standards) FIPS 6-4 pour les pays http://fr.wikipedia.org/wiki/Federal_Information_Processing_Standard
+
+d <- shape@data
+names(d)
+levels(shape$ADMIN_NAME)
+
+# lecture du slot labptr[[1]]
+a <- shape@polygons
+c <- a[[1]]@Polygons
+c[[1]]@labpt
+c[[1]]@labpt[1]
+# ce qui est équivalent:
+x <- shape@polygons[[1]]@Polygons[[1]]@labpt
+
+# nom des provinces
+plot(shape)
+points( x[1], x[2], pch = 16, col = 2, cex = .5)
+text(x[1], x[2], d$ADMIN_NAME[1], cex=0.5)
+
+# on renumérote les polygones pour pouvoir fusionner avec un autre shapefile
+shape <- spChFIDs(shape, as.character(d$GMI_ADMIN)) # row.names sont maintenant renumérotées selon GMI_ADMIN
+liberia.shp <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/LI/li.shp"
+
+shape2 <- readShapePoly(liberia.shp)
+d.lib <- shape2@data
+shape2 <- spChFIDs(shape2, as.character(d.lib$GMI_ADMIN))
+
+q <- spRbind(shape, shape2) #spRbind n'accèpte que 2 shapes à la fois
+plot(q)
+length(slot(q, "polygons"))
+
+# on ajoute la sierra-lone
+shape3 <- readShapePoly(sierra.shp)
+d.sierra <- shape3@data
+shape3 <- spChFIDs(shape3, as.character(d.sierra$GMI_ADMIN))
+q <- spRbind(q, shape3)
+plot(q)
+
+# enfin le nigéria
+shape4 <- readShapePoly(nigeria.shp)
+d.nigeria <- shape4@data
+shape4 <- spChFIDs(shape4, as.character(d.nigeria$GMI_ADMIN))
+
+```
+
