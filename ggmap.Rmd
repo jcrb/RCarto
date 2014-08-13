@@ -6,6 +6,7 @@ output:
   html_document:
     fig_caption: yes
     keep_md: yes
+    toc: yes
 ---
 
 Utilisation de gmap
@@ -30,9 +31,51 @@ cbind(adresse,loc)
 adresse <- c("Nouvel Hôpital Civil", "Hôpital de Hautepierre", "Centre hospitalier, Wissembourg", "Clinique sainte Anne, Strasbourg", "Clinique sainte Odile, Strasbourg", "Clinique Diaconat, Strasbourg")
 loc <- geocode(adresse)
 cbind(adresse,loc)
+
 ```
 
-R et Shapefiles
+```{}
+SierraLeone <- c("Kailahun","Kenema","Bombali","Port Loko","Tonkolili","Koinadugu","Freetown","Bonthe","Moyamba","Bo","Pujehun","Kono","Kambia")
+d <- geocode(SierraLeone)
+v <- cbind(SierraLeone, d)
+write.table(v, file="SierraLeone_villes.csv")
+
+
+
+  SierraLeone        lon       lat
+1     Kailahun  -10.57389  8.277222
+2       Kenema  -11.19572  7.863215
+3      Bombali  -12.16327  9.247584
+4    Port Loko  -12.78750  8.766667
+5    Tonkolili  -11.79476  8.980427
+6    Koinadugu  -11.36363  9.516877
+7     Freetown  -13.23444  8.484444
+8       Bonthe  -12.50500  7.526389
+9      Moyamba  -12.43333  8.160556
+10          Bo   11.25238 44.369331
+11     Pujehun  -11.71806  7.350556
+12        Kono -117.01361 44.020557
+13      Kambia  -12.91765  9.126166
+
+Kailahun        378
+Kenema	250
+Kono	1
+Kambia	1
+Bombali	7
+Tonkolili	2
+Port Loko	22
+Pujehun	3
+Bo	22
+Moyamba	4
+Bonthe	1
+Freetown	11
+Western area Rural	1
+Koinadugu	0
+
+```
+
+
+R et Shapefiles (maptools)
 ===============
 
 sources: http://gis.stackexchange.com/questions/19064/how-to-open-a-shapefile-in-r
@@ -47,6 +90,7 @@ coordinates(shape) <- ~x + y
 
 source: http://thebiobucket.blogspot.fr/2011/10/simple-map-example-with-r.html
 
+Les fonds de carte (shapefile) sont dans le dossier /home/jcb/Documents/NRBCE/EBOLA/cartes.
 ```{r}
 require(maptools)
 
@@ -55,8 +99,16 @@ guinee.shp <- paste0(path, "GV/gv.shp")
 liberia.shp <- paste0(path, "LI/li.shp")
 sierra.shp <- paste0(path, "SL/sl.shp")
 nigeria.shp <- paste0(path, "NI/ni.shp")
-civoire <- paste0(path, "IV/iv.shp")
-ghana <- paste0(path, "GH/gh.shp")
+civoire.shp <- paste0(path, "IV/iv.shp")
+ghana.shp <- paste0(path, "GH/gh.shp")
+togo.shp <- paste0(path, "TO/to.shp")
+cameroun.shp <- paste0(path, "cm/cm.shp")
+benin.shp <- paste0(path, "bn/bn.shp")
+
+# Bénin
+shape.benin <- readShapePoly(benin.shp)
+plot(shape.benin)
+
 
 shape <- readShapePoly(guinee.shp) # readShapePoints pour un shapefile de points
 
@@ -133,6 +185,24 @@ pays <- cntry@polygons[[1]]@ID
 text(x, y, pays)
 for(i in 1:3){x <- cntry@polygons[[i]]@labpt[1]; y <- cntry@polygons[[i]]@labpt[2]; pays <- cntry@polygons[[i]]@ID;  text(x, y, pays)}
 
+```
+
+Carte de la Sierre Leone
+------------------------
+
+```{r sierra}
+file <- "SierraLeone_villes.csv"
+villes.sl <- read.table(file)
+cas <- c(378,250,7,22,2,NA,12,1,4,22,3,1,1) # nb de cas au 12/8/2014
+villes.sl <- cbind(villes.sl, cas)
+
+shape.sierra <- readShapePoly(sierra.shp)
+plot(shape.sierra)
+symbols(villes.sl[,2], villes.sl[,3], circles=villes.sl[,4], bg="yellow", add=TRUE)
+points(villes.sl[,2], villes.sl[,3], pch=16, col=2, cex=0.8)
+text(villes.sl[,2], villes.sl[,3], villes.sl[,1], pos=1)
+text(villes.sl[,2], villes.sl[,3], villes.sl[,4], pos=3, col="blue")
+mtext("Sierra Leone le 12/08/2014", 3, line = 0, adj = 0, cex = 2, font = 3)
 
 ```
 

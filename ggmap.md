@@ -2,6 +2,9 @@
 JcB  
 05/07/2014  
 
+Utilisation de gmap
+===================
+
 source [GitHub](https://github.com/jcrb/RCarto)
 
 Application au [London EMS](http://www.londonr.org/Presentations/High%20Quality%20Maps%20With%20R%20-%20Simon%20Hailstone.pptx)
@@ -13,7 +16,7 @@ Utilise l'API Google: note that the google maps api limits to 2500 queries a day
 
 ```r
 #install.packages("ggmap")
-library("ggmap", lib.loc="~/R/x86_64-pc-linux-gnu-library/3.1")
+library("ggmap")
 geocode("Nouvel Hôpital Civil")
 ```
 
@@ -59,7 +62,48 @@ cbind(adresse,loc)
 6     Clinique Diaconat, Strasbourg 7.743 48.58
 ```
 
-R et Shapefiles
+```{}
+SierraLeone <- c("Kailahun","Kenema","Bombali","Port Loko","Tonkolili","Koinadugu","Freetown","Bonthe","Moyamba","Bo","Pujehun","Kono","Kambia")
+d <- geocode(SierraLeone)
+v <- cbind(SierraLeone, d)
+write.table(v, file="SierraLeone_villes.csv")
+
+
+
+  SierraLeone        lon       lat
+1     Kailahun  -10.57389  8.277222
+2       Kenema  -11.19572  7.863215
+3      Bombali  -12.16327  9.247584
+4    Port Loko  -12.78750  8.766667
+5    Tonkolili  -11.79476  8.980427
+6    Koinadugu  -11.36363  9.516877
+7     Freetown  -13.23444  8.484444
+8       Bonthe  -12.50500  7.526389
+9      Moyamba  -12.43333  8.160556
+10          Bo   11.25238 44.369331
+11     Pujehun  -11.71806  7.350556
+12        Kono -117.01361 44.020557
+13      Kambia  -12.91765  9.126166
+
+Kailahun        378
+Kenema	250
+Kono	1
+Kambia	1
+Bombali	7
+Tonkolili	2
+Port Loko	22
+Pujehun	3
+Bo	22
+Moyamba	4
+Bonthe	1
+Freetown	11
+Western area Rural	1
+Koinadugu	0
+
+```
+
+
+R et Shapefiles (maptools)
 ===============
 
 sources: http://gis.stackexchange.com/questions/19064/how-to-open-a-shapefile-in-r
@@ -74,6 +118,7 @@ coordinates(shape) <- ~x + y
 
 source: http://thebiobucket.blogspot.fr/2011/10/simple-map-example-with-r.html
 
+Les fonds de carte (shapefile) sont dans le dossier /home/jcb/Documents/NRBCE/EBOLA/cartes.
 
 ```r
 require(maptools)
@@ -94,9 +139,20 @@ guinee.shp <- paste0(path, "GV/gv.shp")
 liberia.shp <- paste0(path, "LI/li.shp")
 sierra.shp <- paste0(path, "SL/sl.shp")
 nigeria.shp <- paste0(path, "NI/ni.shp")
-civoire <- paste0(path, "IV/iv.shp")
-ghana <- paste0(path, "GH/gh.shp")
+civoire.shp <- paste0(path, "IV/iv.shp")
+ghana.shp <- paste0(path, "GH/gh.shp")
+togo.shp <- paste0(path, "TO/to.shp")
+cameroun.shp <- paste0(path, "cm/cm.shp")
+benin.shp <- paste0(path, "bn/bn.shp")
 
+# Bénin
+shape.benin <- readShapePoly(benin.shp)
+plot(shape.benin)
+```
+
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-11.png) 
+
+```r
 shape <- readShapePoly(guinee.shp) # readShapePoints pour un shapefile de points
 
 #structure
@@ -128,7 +184,7 @@ plot(shape)
 mtext("Guinee-Conacry", 3, line = 0, adj = 0, cex = 2, font = 3)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-11.png) 
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-12.png) 
 
 ```r
 # nombrez de slots:
@@ -221,7 +277,7 @@ points( x[1], x[2], pch = 16, col = 2, cex = .5)
 text(x[1], x[2], d$ADMIN_NAME[1], cex=0.5)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-12.png) 
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-13.png) 
 
 ```r
 # on renumérote les polygones pour pouvoir fusionner avec un autre shapefile
@@ -236,7 +292,7 @@ q <- spRbind(shape, shape2) #spRbind n'accèpte que 2 shapes à la fois
 plot(q)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-13.png) 
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-14.png) 
 
 ```r
 length(slot(q, "polygons"))
@@ -255,7 +311,7 @@ q <- spRbind(q, shape3)
 plot(q)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-14.png) 
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-15.png) 
 
 ```r
 # enfin le nigéria
@@ -280,7 +336,7 @@ cntry <- unionSpatialPolygons(q, IDs = d$CNTRY_NAME)
 plot(cntry)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-15.png) 
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-16.png) 
 
 ```r
 plot(q, border="gray70", axes=T)
@@ -292,5 +348,26 @@ text(x, y, pays)
 for(i in 1:3){x <- cntry@polygons[[i]]@labpt[1]; y <- cntry@polygons[[i]]@labpt[2]; pays <- cntry@polygons[[i]]@ID;  text(x, y, pays)}
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-17.png) 
+
+Carte de la Sierre Leone
+------------------------
+
+
+```r
+file <- "SierraLeone_villes.csv"
+villes.sl <- read.table(file)
+cas <- c(378,250,7,22,2,NA,12,1,4,22,3,1,1) # nb de cas au 12/8/2014
+villes.sl <- cbind(villes.sl, cas)
+
+shape.sierra <- readShapePoly(sierra.shp)
+plot(shape.sierra)
+symbols(villes.sl[,2], villes.sl[,3], circles=villes.sl[,4], bg="yellow", add=TRUE)
+points(villes.sl[,2], villes.sl[,3], pch=16, col=2, cex=0.8)
+text(villes.sl[,2], villes.sl[,3], villes.sl[,1], pos=1)
+text(villes.sl[,2], villes.sl[,3], villes.sl[,4], pos=3, col="blue")
+mtext("Sierra Leone le 12/08/2014", 3, line = 0, adj = 0, cex = 2, font = 3)
+```
+
+![plot of chunk sierra](./ggmap_files/figure-html/sierra.png) 
 
