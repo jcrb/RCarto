@@ -2,6 +2,8 @@
 JcB  
 05/07/2014  
 
+Les données spatiales sont traitées par de nombreux packages qui sont regroupés [ici](http://cran.r-project.org/web/views/Spatial.html). Ce site est maintenu par Roger Bivand.
+
 Utilisation de gmap
 ===================
 
@@ -118,7 +120,7 @@ coordinates(shape) <- ~x + y
 
 source: http://thebiobucket.blogspot.fr/2011/10/simple-map-example-with-r.html
 
-Les fonds de carte (shapefile) sont dans le dossier /home/jcb/Documents/NRBCE/EBOLA/cartes.
+Les fonds de carte (shapefile) sont dans le dossier /home/jcb/Documents/NRBCE/EBOLA/cartes. Ils proviennent du programme __EpiInfo__ sont librement accessibles sur le site du [CDC](http://wwwn.cdc.gov/epiinfo/html/shapefiles.htm)
 
 ```r
 require(maptools)
@@ -153,6 +155,152 @@ plot(shape.benin)
 ![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-11.png) 
 
 ```r
+# Libéria
+shape.liberia <- readShapePoly(liberia.shp)
+plot(shape.liberia)
+```
+
+![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-12.png) 
+
+```r
+d.lib <- shape.liberia@data
+```
+Un pays correspond a un dossier shapefile. Ce dossier contient plusieurs fichiers dont un seul est obligatoire _.shp_. C'est ce fichier qui est lu par les méthodes shapefile de R. Il ya 3 sortes d'objet shapefile: les points, les lignes et les polygones. Les pays sont des polygones pour lesquels on utilise la méthode __readShapePoly(liberia.shp)__ qui stoche les données du dossier dans un objet _"SpatialPolygonsDataFrame"_. Schématiquement l'objet se compose de deux parties:
+- un dataframe contenant des informations complémentaires sur l'objet et auquel on peut rajouter des informations
+- des éléments cartographiques permettant de dessiner l'objet.
+
+Techniquement l'objet est composé de _slot_. Le _slot data_ contient le dataframe. On y accède par:
+```{}
+dataframe <- objet@data
+```
+
+
+Libéria avec [DIVA-GIS](http://www.diva-gis.org/datadown). Ce site propose des SF de la plupart des pays avec des niveaux de précision variables. Par exemple, il y a 4 version pour les limites administratives du Libéria:
+- niveau 0: contour du pays, 1 ligne dans le DF
+- niveau 1: régions, 15 lignes
+- niveau 2: districts, 66 lignes
+- niveau 3: communes, 305 lignes
+
+Les données sont plus à jour que les fonds de carte fournis par épiinfo.
+
+
+```r
+lib0.shp <- paste0(path, "LBR_adm/LBR_adm0.shp")
+shape.lib0 <- readShapePoly(lib0.shp)
+plot(shape.lib0)
+```
+
+![plot of chunk liberia](./ggmap_files/figure-html/liberia1.png) 
+
+```r
+d0 <- shape.lib0@data
+
+lib1.shp <- paste0(path, "LBR_adm/LBR_adm1.shp")
+shape.lib1 <- readShapePoly(lib1.shp)
+plot(shape.lib1)
+```
+
+![plot of chunk liberia](./ggmap_files/figure-html/liberia2.png) 
+
+```r
+d1 <- shape.lib1@data
+head(d1)
+```
+
+```
+##   ID_0 ISO  NAME_0 ID_1      NAME_1 VARNAME_1 NL_NAME_1 HASC_1 CC_1 TYPE_1
+## 0  128 LBR Liberia 1630        Lofa      <NA>      <NA>  LR.LF   21 County
+## 1  128 LBR Liberia 1631     Margibi      <NA>      <NA>  LR.MG   24 County
+## 2  128 LBR Liberia 1632    Maryland      <NA>      <NA>  LR.MY   27 County
+## 3  128 LBR Liberia 1633 Montserrado      <NA>      <NA>  LR.MO   30 County
+## 4  128 LBR Liberia 1634       Nimba      <NA>      <NA>  LR.NI   33 County
+## 5  128 LBR Liberia 1635  River Cess Rivercess      <NA>  LR.RI   36 County
+##   ENGTYPE_1 VALIDFR_1 VALIDTO_1 REMARKS_1 Shape_Leng Shape_Area
+## 0    County      1963   Present      <NA>      5.599     0.8410
+## 1    County      1985   Present      <NA>      3.240     0.2297
+## 2    County      1857   Present      <NA>      2.793     0.1787
+## 3    County   Unknown   Present      <NA>      2.808     0.1479
+## 4    County      1963   Present      <NA>      5.468     0.9733
+## 5    County  19550219   Present      <NA>      3.356     0.4316
+```
+
+```r
+lib2.shp <- paste0(path, "LBR_adm/LBR_adm2.shp")
+shape.lib2 <- readShapePoly(lib2.shp)
+plot(shape.lib2)
+```
+
+![plot of chunk liberia](./ggmap_files/figure-html/liberia3.png) 
+
+```r
+d2 <- shape.lib2@data
+head(d2)
+```
+
+```
+##   ID_0 ISO  NAME_0 ID_1 NAME_1  ID_2     NAME_2 VARNAME_2 NL_NAME_2 HASC_2
+## 0  128 LBR Liberia 1623   Bomi 19594       Klay      <NA>      <NA>   <NA>
+## 1  128 LBR Liberia 1623   Bomi 19595      Mecca      <NA>      <NA>   <NA>
+## 2  128 LBR Liberia 1624   Bong 19596     Fuamah      <NA>      <NA>   <NA>
+## 3  128 LBR Liberia 1624   Bong 19597 Jorquelleh      <NA>      <NA>   <NA>
+## 4  128 LBR Liberia 1624   Bong 19598    Kokoyah      <NA>      <NA>   <NA>
+## 5  128 LBR Liberia 1624   Bong 19599  Panta-Kpa      <NA>      <NA>   <NA>
+##   CC_2   TYPE_2 ENGTYPE_2 VALIDFR_2 VALIDTO_2 REMARKS_2 Shape_Leng
+## 0   02 District  District   Unknown   Unknown      <NA>     1.9974
+## 1   04 District  District   Unknown   Unknown      <NA>     0.7886
+## 2   02 District  District   Unknown   Unknown      <NA>     1.2600
+## 3   04 District  District   Unknown   Unknown      <NA>     1.6613
+## 4   06 District  District   Unknown   Unknown      <NA>     1.6006
+## 5   08 District  District   Unknown   Unknown      <NA>     1.6867
+##   Shape_Area
+## 0    0.15091
+## 1    0.02150
+## 2    0.08642
+## 3    0.10626
+## 4    0.07548
+## 5    0.08069
+```
+
+```r
+lib3.shp <- paste0(path, "LBR_adm/LBR_adm3.shp")
+shape.lib3 <- readShapePoly(lib3.shp)
+plot(shape.lib3)
+```
+
+![plot of chunk liberia](./ggmap_files/figure-html/liberia4.png) 
+
+```r
+d3 <- shape.lib3@data
+head(d3)
+```
+
+```
+##   ID_0 ISO  NAME_0 ID_1 NAME_1  ID_2 NAME_2  ID_3  NAME_3 VARNAME_3
+## 0  128 LBR Liberia 1623   Bomi 19594   Klay 38020 Blugban      <NA>
+## 1  128 LBR Liberia 1623   Bomi 19594   Klay 38021 Dey-Gbo      <NA>
+## 2  128 LBR Liberia 1623   Bomi 19594   Klay 38022 Gbarvon      <NA>
+## 3  128 LBR Liberia 1623   Bomi 19594   Klay 38023  Gbojey      <NA>
+## 4  128 LBR Liberia 1623   Bomi 19594   Klay 38024    Gbor      <NA>
+## 5  128 LBR Liberia 1623   Bomi 19594   Klay 38025 Gorblah      <NA>
+##   NL_NAME_3 HASC_3 TYPE_3 ENGTYPE_3 VALIDFR_3 VALIDTO_3 REMARKS_3
+## 0      <NA>   <NA>   Clan      Clan   Unknown   Present      <NA>
+## 1      <NA>   <NA>   Clan      Clan   Unknown   Present      <NA>
+## 2      <NA>   <NA>   Clan      Clan   Unknown   Present      <NA>
+## 3      <NA>   <NA>   Clan      Clan   Unknown   Present      <NA>
+## 4      <NA>   <NA>   Clan      Clan   Unknown   Present      <NA>
+## 5      <NA>   <NA>   Clan      Clan   Unknown   Present      <NA>
+##   Shape_Leng Shape_Area
+## 0     0.7525   0.021624
+## 1     0.4745   0.005761
+## 2     0.3463   0.005924
+## 3     0.3532   0.005865
+## 4     0.6636   0.012898
+## 5     0.3978   0.009238
+```
+
+
+
+```r
 shape <- readShapePoly(guinee.shp) # readShapePoints pour un shapefile de points
 
 #structure
@@ -184,7 +332,7 @@ plot(shape)
 mtext("Guinee-Conacry", 3, line = 0, adj = 0, cex = 2, font = 3)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-12.png) 
+![plot of chunk unnamed-chunk-2](./ggmap_files/figure-html/unnamed-chunk-21.png) 
 
 ```r
 # nombrez de slots:
@@ -277,7 +425,7 @@ points( x[1], x[2], pch = 16, col = 2, cex = .5)
 text(x[1], x[2], d$ADMIN_NAME[1], cex=0.5)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-13.png) 
+![plot of chunk unnamed-chunk-2](./ggmap_files/figure-html/unnamed-chunk-22.png) 
 
 ```r
 # on renumérote les polygones pour pouvoir fusionner avec un autre shapefile
@@ -292,7 +440,7 @@ q <- spRbind(shape, shape2) #spRbind n'accèpte que 2 shapes à la fois
 plot(q)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-14.png) 
+![plot of chunk unnamed-chunk-2](./ggmap_files/figure-html/unnamed-chunk-23.png) 
 
 ```r
 length(slot(q, "polygons"))
@@ -311,7 +459,7 @@ q <- spRbind(q, shape3)
 plot(q)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-15.png) 
+![plot of chunk unnamed-chunk-2](./ggmap_files/figure-html/unnamed-chunk-24.png) 
 
 ```r
 # enfin le nigéria
@@ -336,7 +484,7 @@ cntry <- unionSpatialPolygons(q, IDs = d$CNTRY_NAME)
 plot(cntry)
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-16.png) 
+![plot of chunk unnamed-chunk-2](./ggmap_files/figure-html/unnamed-chunk-25.png) 
 
 ```r
 plot(q, border="gray70", axes=T)
@@ -348,7 +496,7 @@ text(x, y, pays)
 for(i in 1:3){x <- cntry@polygons[[i]]@labpt[1]; y <- cntry@polygons[[i]]@labpt[2]; pays <- cntry@polygons[[i]]@ID;  text(x, y, pays)}
 ```
 
-![plot of chunk unnamed-chunk-1](./ggmap_files/figure-html/unnamed-chunk-17.png) 
+![plot of chunk unnamed-chunk-2](./ggmap_files/figure-html/unnamed-chunk-26.png) 
 
 Carte de la Sierre Leone
 ------------------------
@@ -370,4 +518,44 @@ mtext("Sierra Leone le 12/08/2014", 3, line = 0, adj = 0, cex = 2, font = 3)
 ```
 
 ![plot of chunk sierra](./ggmap_files/figure-html/sierra.png) 
+
+Le site [GADM](http://www.gadm.org/)
+====================================
+
+Propose des shapefile de tous les pays du monde directement pour __R__.
+
+Application pour la France. Le fichier une fois dézippé contient 5 shapefiles et 5 fichiers .csv correspondants au dataframe associés:
+- FRA_adm0.shp contour de la France
+- FRA_adm1.shp limites régionales
+- FRA_adm2.shp départemets
+- FRA_adm3.shp  (y compris Paris)
+- FRA_adm4.shp cantons
+- FRA_adm0.shp communes
+
+
+```r
+require(maptools)
+path <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/"
+france.dep <- paste0(path, "FRA_adm/FRA_adm2.shp")
+shape.fr.dep <- readShapePoly(france.dep)
+plot
+```
+
+```
+## standardGeneric for "plot" defined from package "graphics"
+## 
+## function (x, y, ...) 
+## standardGeneric("plot")
+## <environment: 0x2974b80>
+## Methods may be defined for arguments: x, y
+## Use  showMethods("plot")  for currently available ones.
+```
+
+```r
+dep <- shape.fr.dep@data
+
+plot(shape.fr.dep, col=dep$ID_2)
+```
+
+![plot of chunk france](./ggmap_files/figure-html/france.png) 
 

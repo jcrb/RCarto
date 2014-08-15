@@ -9,6 +9,8 @@ output:
     toc: yes
 ---
 
+Les données spatiales sont traitées par de nombreux packages qui sont regroupés [ici](http://cran.r-project.org/web/views/Spatial.html). Ce site est maintenu par Roger Bivand.
+
 Utilisation de gmap
 ===================
 
@@ -90,7 +92,7 @@ coordinates(shape) <- ~x + y
 
 source: http://thebiobucket.blogspot.fr/2011/10/simple-map-example-with-r.html
 
-Les fonds de carte (shapefile) sont dans le dossier /home/jcb/Documents/NRBCE/EBOLA/cartes.
+Les fonds de carte (shapefile) sont dans le dossier /home/jcb/Documents/NRBCE/EBOLA/cartes. Ils proviennent du programme __EpiInfo__ sont librement accessibles sur le site du [CDC](http://wwwn.cdc.gov/epiinfo/html/shapefiles.htm)
 ```{r}
 require(maptools)
 
@@ -109,7 +111,57 @@ benin.shp <- paste0(path, "bn/bn.shp")
 shape.benin <- readShapePoly(benin.shp)
 plot(shape.benin)
 
+# Libéria
+shape.liberia <- readShapePoly(liberia.shp)
+plot(shape.liberia)
+d.lib <- shape.liberia@data
+```
+Un pays correspond a un dossier shapefile. Ce dossier contient plusieurs fichiers dont un seul est obligatoire _.shp_. C'est ce fichier qui est lu par les méthodes shapefile de R. Il ya 3 sortes d'objet shapefile: les points, les lignes et les polygones. Les pays sont des polygones pour lesquels on utilise la méthode __readShapePoly(liberia.shp)__ qui stoche les données du dossier dans un objet _"SpatialPolygonsDataFrame"_. Schématiquement l'objet se compose de deux parties:
+- un dataframe contenant des informations complémentaires sur l'objet et auquel on peut rajouter des informations
+- des éléments cartographiques permettant de dessiner l'objet.
 
+Techniquement l'objet est composé de _slot_. Le _slot data_ contient le dataframe. On y accède par:
+```{}
+dataframe <- objet@data
+```
+
+
+Libéria avec [DIVA-GIS](http://www.diva-gis.org/datadown). Ce site propose des SF de la plupart des pays avec des niveaux de précision variables. Par exemple, il y a 4 version pour les limites administratives du Libéria:
+- niveau 0: contour du pays, 1 ligne dans le DF
+- niveau 1: régions, 15 lignes
+- niveau 2: districts, 66 lignes
+- niveau 3: communes, 305 lignes
+
+Les données sont plus à jour que les fonds de carte fournis par épiinfo.
+
+```{r liberia}
+
+lib0.shp <- paste0(path, "LBR_adm/LBR_adm0.shp")
+shape.lib0 <- readShapePoly(lib0.shp)
+plot(shape.lib0)
+d0 <- shape.lib0@data
+
+lib1.shp <- paste0(path, "LBR_adm/LBR_adm1.shp")
+shape.lib1 <- readShapePoly(lib1.shp)
+plot(shape.lib1)
+d1 <- shape.lib1@data
+head(d1)
+
+lib2.shp <- paste0(path, "LBR_adm/LBR_adm2.shp")
+shape.lib2 <- readShapePoly(lib2.shp)
+plot(shape.lib2)
+d2 <- shape.lib2@data
+head(d2)
+
+lib3.shp <- paste0(path, "LBR_adm/LBR_adm3.shp")
+shape.lib3 <- readShapePoly(lib3.shp)
+plot(shape.lib3)
+d3 <- shape.lib3@data
+head(d3)
+```
+
+
+```{r}
 shape <- readShapePoly(guinee.shp) # readShapePoints pour un shapefile de points
 
 #structure
@@ -203,6 +255,31 @@ points(villes.sl[,2], villes.sl[,3], pch=16, col=2, cex=0.8)
 text(villes.sl[,2], villes.sl[,3], villes.sl[,1], pos=1)
 text(villes.sl[,2], villes.sl[,3], villes.sl[,4], pos=3, col="blue")
 mtext("Sierra Leone le 12/08/2014", 3, line = 0, adj = 0, cex = 2, font = 3)
+
+```
+
+Le site [GADM](http://www.gadm.org/)
+====================================
+
+Propose des shapefile de tous les pays du monde directement pour __R__.
+
+Application pour la France. Le fichier une fois dézippé contient 5 shapefiles et 5 fichiers .csv correspondants au dataframe associés:
+- FRA_adm0.shp contour de la France
+- FRA_adm1.shp limites régionales
+- FRA_adm2.shp départemets
+- FRA_adm3.shp  (y compris Paris)
+- FRA_adm4.shp cantons
+- FRA_adm0.shp communes
+
+```{r france}
+require(maptools)
+path <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/"
+france.dep <- paste0(path, "FRA_adm/FRA_adm2.shp")
+shape.fr.dep <- readShapePoly(france.dep)
+plot
+dep <- shape.fr.dep@data
+
+plot(shape.fr.dep, col=dep$ID_2)
 
 ```
 
