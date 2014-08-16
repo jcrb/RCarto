@@ -9,7 +9,16 @@ output:
     toc: yes
 ---
 
+Références
+==========
+
 Les données spatiales sont traitées par de nombreux packages qui sont regroupés [ici](http://cran.r-project.org/web/views/Spatial.html). Ce site est maintenu par Roger Bivand.
+
+- Baptiste Coulmont [cartographie avec R](http://coulmont.com/cartes/rcarto.pdf)
+
+- x [Cartographie avec R](http://sirs.agrocampus-ouest.fr/prostat/wiki/images/8/8b/Cartographie_avec_R.pdf)
+
+- La cartographie et les analyses spatiales avec R [IFREMER](https://www.ifremer.fr/sextant_doc/sextant/sextant/valorIG_2012/04_Cartographie_Avec_R.pdf)
 
 Utilisation de gmap
 ===================
@@ -271,6 +280,8 @@ Application pour la France. Le fichier une fois dézippé contient 5 shapefiles 
 - FRA_adm4.shp cantons
 - FRA_adm0.shp communes
 
+La carte de France obtenue est déformée ?
+
 ```{r france}
 require(maptools)
 path <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/"
@@ -281,5 +292,39 @@ dep <- shape.fr.dep@data
 
 plot(shape.fr.dep, col=dep$ID_2)
 
+```
+Site [IGN](http://professionnels.ign.fr/geofla)
+===============================================
+
+La série GEOFLA propose plusieurs ensembles de shapefile:
+- cantons
+- arrondissements
+- départements
+- régions
+
+```{r IGN}
+path <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/"
+file <- "France2013/DEPARTEMENTS/DEPARTEMENT.shp"
+france.dep <- paste0(path, file)
+shape.fr.dep <- readShapePoly(france.dep)
+plot
+dep <- shape.fr.dep@data
+
+dep <- shape.fr.dep@data
+```
+Le fichier département contient les éléments suivants:
+
+```{r IGN_names}
+names(dep)
+```
+
+Librairie worldHires
+====================
+
+```{r woldhires}
+library(mapdata)
+map('worldHires',xlim=range(-10,10),ylim=range(40,52))
+map('worldHires',region=c('France','Spain'),xlim=range(-10,10),ylim=range(40,52),col=c('red','green'),fill=T)
+captures<-(cbind(c('France','Spain','Portugal','Belgium'),as.numeric(c(12,15,25,10))))
 ```
 
