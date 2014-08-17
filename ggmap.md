@@ -2,7 +2,20 @@
 JcB  
 05/07/2014  
 
+Références
+==========
+
 Les données spatiales sont traitées par de nombreux packages qui sont regroupés [ici](http://cran.r-project.org/web/views/Spatial.html). Ce site est maintenu par Roger Bivand.
+
+- Baptiste Coulmont [cartographie avec R](http://coulmont.com/cartes/rcarto.pdf)
+
+- x [Cartographie avec R](http://sirs.agrocampus-ouest.fr/prostat/wiki/images/8/8b/Cartographie_avec_R.pdf)
+
+- La cartographie et les analyses spatiales avec R [IFREMER](https://www.ifremer.fr/sextant_doc/sextant/sextant/valorIG_2012/04_Cartographie_Avec_R.pdf)
+
+- [portail Sig](http://www.portailsig.org/content/r-spatial-principes-generaux-et-exemples-de-representations-cartographiques-brutes-sans-trai)
+
+-[Cartographie des voies romaines](http://www.yvesago.net/pourquoi/2014/03/cartographie-avec-r-metz-un-carrefour-de-voies-romaines.html). Joli programme R avec application vecteur/raster. Liens vers des BD historiques en accès libre.
 
 Utilisation de gmap
 ===================
@@ -532,6 +545,8 @@ Application pour la France. Le fichier une fois dézippé contient 5 shapefiles 
 - FRA_adm4.shp cantons
 - FRA_adm0.shp communes
 
+La carte de France obtenue est déformée ?
+
 
 ```r
 require(maptools)
@@ -546,7 +561,7 @@ plot
 ## 
 ## function (x, y, ...) 
 ## standardGeneric("plot")
-## <environment: 0x2974b80>
+## <environment: 0x3f52bc8>
 ## Methods may be defined for arguments: x, y
 ## Use  showMethods("plot")  for currently available ones.
 ```
@@ -558,4 +573,231 @@ plot(shape.fr.dep, col=dep$ID_2)
 ```
 
 ![plot of chunk france](./ggmap_files/figure-html/france.png) 
+Site [IGN](http://professionnels.ign.fr/geofla)
+===============================================
+
+La série GEOFLA propose plusieurs ensembles de shapefile:
+- cantons
+- arrondissements
+- départements
+- régions
+
+
+```r
+path <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/"
+file <- "France2013/DEPARTEMENTS/DEPARTEMENT.shp"
+france.dep <- paste0(path, file)
+shape.fr.dep <- readShapePoly(france.dep)
+plot
+```
+
+```
+## standardGeneric for "plot" defined from package "graphics"
+## 
+## function (x, y, ...) 
+## standardGeneric("plot")
+## <environment: 0x3f52bc8>
+## Methods may be defined for arguments: x, y
+## Use  showMethods("plot")  for currently available ones.
+```
+
+```r
+dep <- shape.fr.dep@data
+
+dep <- shape.fr.dep@data
+```
+Le fichier département contient les éléments suivants:
+
+
+```r
+names(dep)
+```
+
+```
+##  [1] "ID_GEOFLA"  "CODE_DEPT"  "NOM_DEPT"   "CODE_CHF"   "NOM_CHF"   
+##  [6] "X_CHF_LIEU" "Y_CHF_LIEU" "X_CENTROID" "Y_CENTROID" "CODE_REG"  
+## [11] "NOM_REGION"
+```
+
+Librairie worldHires
+====================
+
+
+```r
+library(mapdata)
+```
+
+```
+## Loading required package: maps
+```
+
+```r
+map('worldHires',xlim=range(-10,10),ylim=range(40,52))
+```
+
+![plot of chunk woldhires](./ggmap_files/figure-html/woldhires1.png) 
+
+```r
+map('worldHires',region=c('France','Spain'),xlim=range(-10,10),ylim=range(40,52),col=c('red','green'),fill=T)
+```
+
+![plot of chunk woldhires](./ggmap_files/figure-html/woldhires2.png) 
+
+```r
+captures<-(cbind(c('France','Spain','Portugal','Belgium'),as.numeric(c(12,15,25,10))))
+```
+
+
+Package maps
+============
+
+source
+
+
+```r
+library(maps)
+m <- map(database = "world", regions = ".", projection = "gilbert", xlim = c(-23, 45), ylim = c(-35, 35))
+```
+
+```
+## Loading required package: mapproj
+```
+
+```r
+m$names
+```
+
+```
+##   [1] "South Africa"                          
+##   [2] "Iraq"                                  
+##   [3] "Lake Malawi"                           
+##   [4] "Ethiopia"                              
+##   [5] "Guinea-Bissau:?"                       
+##   [6] "Iran"                                  
+##   [7] "Egypt"                                 
+##   [8] "Libya"                                 
+##   [9] "Sudan"                                 
+##  [10] "Chad"                                  
+##  [11] "Tunisia"                               
+##  [12] "Algeria"                               
+##  [13] "Mali"                                  
+##  [14] "Mauritania"                            
+##  [15] "Morocco"                               
+##  [16] "Western Sahara"                        
+##  [17] "Senegal"                               
+##  [18] "Gambia"                                
+##  [19] "Guinea-Bissau"                         
+##  [20] "Guinea"                                
+##  [21] "Ivory Coast"                           
+##  [22] "Liberia"                               
+##  [23] "Sierra Leone"                          
+##  [24] "Ivory Coast:Aby Penninsula"            
+##  [25] "Ghana"                                 
+##  [26] "Burkina Faso"                          
+##  [27] "Niger"                                 
+##  [28] "Benin"                                 
+##  [29] "Togo"                                  
+##  [30] "Nigeria"                               
+##  [31] "Cameroon"                              
+##  [32] "Central African Republic"              
+##  [33] "Zaire"                                 
+##  [34] "Congo"                                 
+##  [35] "Gabon"                                 
+##  [36] "Equatorial Guinea:Rio Muni"            
+##  [37] "Angola:Cabinda"                        
+##  [38] "Uganda"                                
+##  [39] "Rwanda"                                
+##  [40] "Zambia"                                
+##  [41] "Angola"                                
+##  [42] "Burundi"                               
+##  [43] "Namibia"                               
+##  [44] "South Africa:Walvis Bay"               
+##  [45] "Botswana"                              
+##  [46] "Mozambique"                            
+##  [47] "Swaziland"                             
+##  [48] "Zimbabwe"                              
+##  [49] "Malawi"                                
+##  [50] "Tanzania"                              
+##  [51] "Kenya"                                 
+##  [52] "Somalia"                               
+##  [53] "Djibouti"                              
+##  [54] "Syria"                                 
+##  [55] "Lebanon"                               
+##  [56] "Jordan"                                
+##  [57] "Israel"                                
+##  [58] "Egypt:Sinai"                           
+##  [59] "Gaza Strip"                            
+##  [60] "Saudi Arabia"                          
+##  [61] "Yemen"                                 
+##  [62] "Neutral Zone"                          
+##  [63] "Lake Albert"                           
+##  [64] "Lake Tanganyika"                       
+##  [65] "Lake Kariba"                           
+##  [66] "Lake Victoria"                         
+##  [67] "Egypt:Buheirat el Timsah"              
+##  [68] "Great Bitter Lake"                     
+##  [69] "West Bank"                             
+##  [70] "Uganda:Rubafu"                         
+##  [71] "Lesotho"                               
+##  [72] "Tanzania:Zanzibar"                     
+##  [73] "Ethiopia:Dehalak Deset"                
+##  [74] "Cape Verde:Sal"                        
+##  [75] "Comoros:Grande Comore"                 
+##  [76] "Mozambique:Ilha do Bazaruto"           
+##  [77] "Madagascar"                            
+##  [78] "Tunisia:Jerba"                         
+##  [79] "Madeira Islands:Porto Santo"           
+##  [80] "Sao Tome and Principe:Ilha da Sao Tome"
+##  [81] "Sao Tome and Principe:Ilha do Principe"
+##  [82] "Angola:Ilha da Baia dos Tigres"        
+##  [83] "Saudi Arabia:Jazair Farasan:North"     
+##  [84] "Guinea-Bissau:?"                       
+##  [85] "Guinea-Bissau:?"                       
+##  [86] "Saudi Arabia:Jazair Farasan:South"     
+##  [87] "Canary Islands:Gomera"                 
+##  [88] "Canary Islands:Fuerteventura"          
+##  [89] "Canary Islands:Gran Canaria"           
+##  [90] "Mauritania:Ile Tidra"                  
+##  [91] "Cape Verde:Boa Vista"                  
+##  [92] "Guinea-Bissau:Formosa"                 
+##  [93] "Canary Islands:Hierro"                 
+##  [94] "Guinea-Bissau:?"                       
+##  [95] "Sierra Leone:Sherbro Island"           
+##  [96] "Cyprus"                                
+##  [97] "Kenya:Mombasa Island"                  
+##  [98] "UK:Saint Helena Island"                
+##  [99] "Tanzania:Pemba Island"                 
+## [100] "Egypt:Ras Burun:East"                  
+## [101] "Tunisia:Shergui Island"                
+## [102] "Malawi:Likoma Island"                  
+## [103] "Canary Islands:Tenerife"               
+## [104] "Ethiopia:T'ana Hayk"                   
+## [105] "Egypt:Ras Burun:West"                  
+## [106] "Malawi:Chisamula Island"               
+## [107] "Tanzania:Mafia Island"                 
+## [108] "Kenya:Patta Island"                    
+## [109] "Canary Islands:Lanzarote"              
+## [110] "Madeira Islands:Madeira"               
+## [111] "France:Ile Juan de Nova"               
+## [112] "UK:Ascension Island"                   
+## [113] "Equatorial Guinea:Annobon"             
+## [114] "Portugal:Ilheus Selvagens"             
+## [115] "Canary Islands:La Palma"               
+## [116] "Comoros:Moheli"                        
+## [117] "Equatorial Guinea:Fernando Po"         
+## [118] "Guinea-Bissau:?"                       
+## [119] "Guinea-Bissau:?"                       
+## [120] "Guinea-Bissau:?"                       
+## [121] "Guinea-Bissau:Orango"                  
+## [122] "Comoros:Anjouan"                       
+## [123] "Mozambique:Ilha da Inhaca"
+```
+
+```r
+ebola <- c("Liberia", "Sierra Leone", "Nigeria")
+cols <- ifelse(is.element(m$names, ebola), "red", "light grey")
+map(database = "world", regions = ".", projection = "gilbert",xlim = c(-23, 45), ylim = c(-35, 35), add = TRUE, fill = TRUE, col = cols)
+```
+
+![plot of chunk maps](./ggmap_files/figure-html/maps.png) 
 

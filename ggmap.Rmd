@@ -20,6 +20,10 @@ Les données spatiales sont traitées par de nombreux packages qui sont regroup�
 
 - La cartographie et les analyses spatiales avec R [IFREMER](https://www.ifremer.fr/sextant_doc/sextant/sextant/valorIG_2012/04_Cartographie_Avec_R.pdf)
 
+- [portail Sig](http://www.portailsig.org/content/r-spatial-principes-generaux-et-exemples-de-representations-cartographiques-brutes-sans-trai)
+
+-[Cartographie des voies romaines](http://www.yvesago.net/pourquoi/2014/03/cartographie-avec-r-metz-un-carrefour-de-voies-romaines.html). Joli programme R avec application vecteur/raster. Liens vers des BD historiques en accès libre.
+
 Utilisation de gmap
 ===================
 
@@ -326,5 +330,24 @@ library(mapdata)
 map('worldHires',xlim=range(-10,10),ylim=range(40,52))
 map('worldHires',region=c('France','Spain'),xlim=range(-10,10),ylim=range(40,52),col=c('red','green'),fill=T)
 captures<-(cbind(c('France','Spain','Portugal','Belgium'),as.numeric(c(12,15,25,10))))
+```
+
+
+Package maps
+============
+
+source [Faire une carte avec R](ftp://ftp.cirad.fr/pub/group-r/groupe-r/Fiches/Carto.pdf) de Brubo Lancelot (2009).
+
+application: carte de l'Afrique avec les payys touchés par Ebola
+
+```{r maps}
+library(maps)
+m <- map(database = "world", regions = ".", projection = "gilbert", xlim = c(-23, 45), ylim = c(-35, 35))
+m$names
+ebola <- c("Liberia", "Sierra Leone", "Nigeria","Guinea")
+
+cols <- ifelse(is.element(m$names, ebola), "red", "light grey")
+map(database = "world", regions = ".", projection = "gilbert",xlim = c(-23, 45), ylim = c(-35, 35), add = TRUE, fill = TRUE, col = cols)
+
 ```
 
