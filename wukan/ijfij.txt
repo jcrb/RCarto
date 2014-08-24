@@ -1,0 +1,14 @@
+i	j	fij
+a	b	10
+a	c	20
+a	d	30
+b	a	10
+b	c	20
+b	d	30
+c	f	10
+c	g	20
+c	d	30
+d	g	10
+d	f	20
+d	c	30
+

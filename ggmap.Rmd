@@ -22,7 +22,11 @@ Les données spatiales sont traitées par de nombreux packages qui sont regroup�
 
 - [portail Sig](http://www.portailsig.org/content/r-spatial-principes-generaux-et-exemples-de-representations-cartographiques-brutes-sans-trai)
 
--[Cartographie des voies romaines](http://www.yvesago.net/pourquoi/2014/03/cartographie-avec-r-metz-un-carrefour-de-voies-romaines.html). Joli programme R avec application vecteur/raster. Liens vers des BD historiques en accès libre.
+- [Cartographie des voies romaines](http://www.yvesago.net/pourquoi/2014/03/cartographie-avec-r-metz-un-carrefour-de-voies-romaines.html). Joli programme R avec application vecteur/raster. Liens vers des BD historiques en accès libre.
+
+- [rCarto](http://wukan.ums-riate.fr/rencontres-r/scripts.html), un package de cartographie statistique. Nombreux liens.
+
+- [Commission européenne](http://epp.eurostat.ec.europa.eu/portal/page/portal/gisco_Geographical_information_maps/popups/references/administrative_units_statistical_units_1): cartes au format shapefile. Un fichier __CNTR_2010_03M_SH__ se trouve dans /home/jcb/Documents/CartographieR (a tester).
 
 Utilisation de gmap
 ===================
@@ -348,6 +352,169 @@ ebola <- c("Liberia", "Sierra Leone", "Nigeria","Guinea")
 
 cols <- ifelse(is.element(m$names, ebola), "red", "light grey")
 map(database = "world", regions = ".", projection = "gilbert",xlim = c(-23, 45), ylim = c(-35, 35), add = TRUE, fill = TRUE, col = cols)
+
+```
+
+Création d’une matrice de distances routières avec l’API de Google Maps
+========================================================================
+
+source: http://rgeomatic.hypotheses.org/198
+
+```{r distances}
+
+
+# librairies
+library(RCurl)
+library(RJSONIO)
+ 
+# import de données
+dataOrig<-read.csv("ville.csv",sep=";",encoding="latin1")
+dataDest<-read.csv("ville.csv",sep=";",encoding="latin1")
+ 
+# nombre d'origines et de destination
+dOrig<-dim(dataOrig)[1]
+dDest<-dim(dataDest)[1]
+ 
+# creation de la matrice vide
+req <-matrix(nrow=dOrig,ncol=dDest,dimnames=list(dataOrig$NOM,dataDest$NOM))
+ 
+# création de la matrice des requêtes à envoyer
+for (i in 1:dOrig){
+  for (j in 1:dDest){
+    req[i,j] <-paste("http://maps.googleapis.com/maps/api/distancematrix/json?origins=",
+                     paste(dataOrig$Y[i],dataOrig$X[i],sep=","),
+                     "&destinations=",
+                     paste(dataDest$Y[j],dataDest$X[j],sep=","),
+                     "&mode=driving&language=en&sensor=false",
+                     sep="")
+  }
+}
+ 
+# reception des requêtes
+result<-apply(X=req,c(1,2),function(x) 
+  {try(getURL(URLencode(x)),silent=TRUE)})
+ 
+# fonction de parsage des réponses 
+decode<-function(x){
+  # décodage du résultat de la requête
+  if (length(fromJSON(x)$rows[[1]]$elements[[1]])!=1){
+    fromJSON(x)$rows[[1]]$elements[[1]]$duration$value
+  } else {
+    NA
+  }
+}
+mat<-apply(X=result,c(1,2), decode)
+matG<-round(mat/60,0)
+
+```
+
+Visualisation de données médiatiques et géographiques avec R
+============================================================
+
+source: http://wukan.ums-riate.fr/wukan/
+
+```{r wukan}
+# chargement des packages nécessaires
+library(sqldf)
+
+# sauvegarde des parametres graphiques
+oldpar <- par(no.readonly = TRUE)
+# lecture de la table
+load("wukan/wukan.Rdata")
+
+# selection de colonnes et renomages
+wukan <- sqldf("SELECT Ctry AS 'ctry' ,start AS 'time1',datesemaine AS 'time2', nbArt, jrnl FROM wukan")
+
+# transformation du format de la date
+wukan$time1 <- as.Date(wukan$time1, format = "%d/%m/%Y")
+
+# agrégation des articles par semaine
+wukanH <- sqldf("SELECT time1, time2, sum(nbArt) AS 'nbArt' FROM wukan GROUP BY time1 ORDER BY time1")
+
+# nombre maximal d'article par semaine
+maxArt <- max(wukanH$nbArt)
+
+# gestion des marges
+par(mgp = c(3, 0.4, 0))
+
+# affichage du graphique
+barplot(wukanH$nbArt, names.arg = wukanH$time1, space = 0, ylim = c(0, maxArt), 
+    beside = TRUE, adj = 0.5, xlab = "Temps (semaines)", ylab = "Nb. Articles", 
+    cex.names = 0.6, las = 2, yaxt = "n", col = "#CCEBC5", main = "Diffusion hebdomadaire d'informations sur Wukan")
+axis(2, at = seq(0, 200, 50), pos = 0, las = 1, cex.axis = 0.6, lwd = 0.5, tck = -0.03)
+
+# restauration des parametres graphiques initiaux
+par(oldpar)
+
+```
+commentaires sur le graphique barplot:
+
+barplot(
+
+- wukanH$nbArt, colonne à afficher
+- names.arg = wukanH$time1, nom du rectangle = date de la semaine
+- space = 0, aucun espace entre les colonnes => ressemble à un histogramme
+- ylim = c(0, maxArt), étendue de l'axe des y
+- beside = TRUE, les colonnes sont disposées les unes à côté des autres
+- adj = 0.5, le texte est centré (par)
+- xlab = "Temps (semaines)", 
+- ylab = "Nb. Articles", 
+- cex.names = 0.6, taille de la police de l'axe des x
+- las = 2, écrit perpendiculairement à l'axe des x
+- yaxt = "n", l'axe des y n'est pas dessiné (par) Par défaut vaut "s" show
+- col = "#CCEBC5", couleur des rectangles
+- main = "Diffusion hebdomadaire d'informations sur Wukan")
+
+dessin spécifique del'axe y:
+
+axis(
+- 2, axe vertical gauche
+- at = seq(0, 200, 50), position des graduations
+- pos = 0, position de la ligne (axis). Pas d'espace entre l'axe des X et celui des y
+- las = 1, perpendiculaire à l'axe des y
+- cex.axis = 0.6, taille des caractères
+- lwd = 0.5, épaisseur de l'axe
+- tck = -0.03 longueur des graduations (par)
+)
+
+Le graphique hebdomadaire interactif
+------------------------------------
+
+Utilisation du package googleVis qui permet de créer assez facilement des graphiques interactifs utilisant les outils google chart. Nous créons ici un graphique du type AnnotatedTimeLine. 
+
+```{r}
+# chargement des packages nécessaires
+library(googleVis)
+
+# création de la table à représenter
+df <- wukanH
+df$Title <- NA # on ajoute 2 colonnes
+df$Annotation <- NA
+
+# les annotations à représenter sur le graph: on utilise les 2 nouvelles colonnes
+df$Title[8] <- "Sep 21-23"
+df$Title[20] <- "Dec 12-14"
+df$Title[25] <- "Jan 17"
+df$Title[27] <- "Feb 1"
+df$Title[28] <- "Feb 11"
+df$Title[31] <- "Mar 3"
+df$Annotation[8] <- "Attack of the PCC building and a police station"
+df$Annotation[20] <- "Death of Xue Jinbo, flee of the PCC officials and police, siege of the village"
+df$Annotation[25] <- "Villagers from the Baiyun district threatened to turn the district into a \"second Wukan\""
+df$Annotation[27] <- "1st round of the Wukan municipal election"
+df$Annotation[28] <- "2nd round of the Wukan municipal election"
+df$Annotation[31] <- "3d round of the Wukan municipal election"
+
+# les paramètres du graph
+AnnoTimeLine <- gvisAnnotatedTimeLine(df, datevar = "time1", date.format = "%Y - %m - %d", 
+    numvar = "nbArt", titlevar = "Title", annotationvar = "Annotation", options = list(displayAnnotations = TRUE, 
+        legendPosition = "sameRow", displayRangeSelector = FALSE, displayZoomButtons = FALSE, 
+        gvis.language = "en", width = 900, height = 300), chartid = "Wukan_events")
+
+# Affichage du graph
+print(AnnoTimeLine, "chart")
+
+
 
 ```
 

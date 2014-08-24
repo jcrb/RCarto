@@ -1,0 +1,5 @@
+	a	b	c	d	f	g
+a	NA	10	20	30	NA	NA
+b	10	NA	20	30	NA	NA
+c	NA	NA	NA	30	10	20
+d	NA	NA	30	NA	20	10

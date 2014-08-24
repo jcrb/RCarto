@@ -1,0 +1,641 @@
+Newspaper	newspaperok	start	end	nbArt	Ctry	jrnl	datesemaine
+Financial Times (Available to Academic Subscribers Only)	Financial Times	21/11/2011	27/11/2011	2	GBR	1	1194
+Financial Times (Available to Academic Subscribers Only)	Financial Times	05/12/2011	11/12/2011	1	GBR	1	1196
+Financial Times (Available to Academic Subscribers Only)	Financial Times	12/12/2011	18/12/2012	4	GBR	1	1197
+Financial Times (Available to Academic Subscribers Only)	Financial Times	19/12/2011	25/12/2011	6	GBR	1	1198
+Financial Times (Available to Academic Subscribers Only)	Financial Times	26/12/2011	01/01/2012	3	GBR	1	1199
+Financial Times (Available to Academic Subscribers Only)	Financial Times	02/01/2012	08/01/2012	1	GBR	1	1200
+Financial Times (Available to Academic Subscribers Only)	Financial Times	16/01/2012	22/01/2012	2	GBR	1	1202
+Financial Times (FT.Com) (Available to Academic Subscribers Only)	Financial Times	23/01/2012	29/01/2012	1	GBR	1	1203
+Financial Times (Available to Academic Subscribers Only)	Financial Times	30/01/2012	05/02/2012	4	GBR	1	1204
+Financial Times (Available to Academic Subscribers Only)	Financial Times	06/02/2012	12/02/2012	2	GBR	1	1205
+Financial Times (Available to Academic Subscribers Only)	Financial Times	13/02/2012	19/02/2012	1	GBR	1	1206
+Financial Times (Available to Academic Subscribers Only)	Financial Times	20/02/2012	26/02/2012	1	GBR	1	1207
+Financial Times (Available to Academic Subscribers Only)	Financial Times	05/03/2012	11/03/2012	1	GBR	1	1209
+Financial Times (FT.Com) (Available to Academic Subscribers Only)	Financial Times	12/03/2012	18/03/2012	1	GBR	1	1210
+Financial Times (Available to Academic Subscribers Only)	Financial Times	19/03/2012	25/03/2012	3	GBR	1	1211
+Financial Times (Available to Academic Subscribers Only)	Financial Times	16/04/2012	22/04/2012	1	GBR	1	1215
+Financial Times (Available to Academic Subscribers Only)	Financial Times	23/04/2012	29/04/2012	1	GBR	1	1216
+Financial Times (Available to Academic Subscribers Only)	Financial Times	30/04/2012	06/05/2012	1	GBR	1	1217
+South China Morning Post	South China Morning Post	21/11/2011	27/11/2011	1	HKG	2	1194
+South China Morning Post	South China Morning Post	28/11/2011	04/12/2011	3	HKG	2	1195
+South China Morning Post	South China Morning Post	05/12/2011	11/12/2011	1	HKG	2	1196
+South China Morning Post	South China Morning Post	12/12/2011	18/12/2012	8	HKG	2	1197
+South China Morning Post 	South China Morning Post	19/12/2011	25/12/2011	19	HKG	2	1198
+South China Morning Post	South China Morning Post	26/12/2011	01/01/2012	7	HKG	2	1199
+South China Morning Post	South China Morning Post	02/01/2012	08/01/2012	4	HKG	2	1200
+South China Morning Post	South China Morning Post	09/01/2012	15/01/2012	3	HKG	2	1201
+South China Morning Post	South China Morning Post	16/01/2012	22/01/2012	5	HKG	2	1202
+South China Morning Post	South China Morning Post	30/01/2012	05/02/2012	4	HKG	2	1204
+South China Morning Post	South China Morning Post	06/02/2012	12/02/2012	5	HKG	2	1205
+South China Morning Post	South China Morning Post	13/02/2012	19/02/2012	4	HKG	2	1206
+South China Morning Post	South China Morning Post	20/02/2012	26/02/2012	3	HKG	2	1207
+South China Morning Post	South China Morning Post	27/02/2012	04/03/2012	5	HKG	2	1208
+South China Morning Post	South China Morning Post	05/03/2012	11/03/2012	4	HKG	2	1209
+South China Morning Post	South China Morning Post	12/03/2012	18/03/2012	2	HKG	2	1210
+South China Morning Post	South China Morning Post	19/03/2012	25/03/2012	2	HKG	2	1211
+South China Morning Post	South China Morning Post	26/03/2012	01/04/2012	2	HKG	2	1212
+South China Morning Post	South China Morning Post	02/04/2012	08/04/2012	1	HKG	2	1213
+South China Morning Post	South China Morning Post	23/04/2012	29/04/2012	1	HKG	2	1216
+South China Morning Post	South China Morning Post	07/05/2012	13/05/2012	2	HKG	2	1218
+South China Morning Post	South China Morning Post	14/05/2012	20/05/2012	2	HKG	2	1219
+The Telegraph Online (U.K.) 	The Daily Telegraph	12/12/2011	18/12/2012	15	GBR	3	1197
+The Telegraph Online (U.K.)	The Daily Telegraph	19/12/2011	25/12/2011	6	GBR	3	1198
+The Telegraph Online (U.K.)	The Daily Telegraph	26/12/2011	01/01/2012	4	GBR	3	1199
+The Telegraph Online (U.K.)	The Daily Telegraph	16/01/2012	22/01/2012	2	GBR	3	1202
+The Telegraph Online (U.K.)	The Daily Telegraph	30/01/2012	05/02/2012	2	GBR	3	1204
+The Telegraph Online (U.K.)	The Daily Telegraph	06/02/2012	12/02/2012	2	GBR	3	1205
+The Telegraph Online (U.K.)	The Daily Telegraph	13/02/2012	19/02/2012	1	GBR	3	1206
+The Telegraph Online (U.K.)	The Daily Telegraph	27/02/2012	04/03/2012	1	GBR	3	1208
+The Telegraph Online (U.K.)	The Daily Telegraph	12/03/2012	18/03/2012	1	GBR	3	1210
+The Telegraph Online (U.K.)	The Daily Telegraph	19/03/2012	25/03/2012	3	GBR	3	1211
+The Telegraph Online (U.K.)	The Daily Telegraph	23/04/2012	29/04/2012	3	GBR	3	1216
+The New York Times	The New York Times	12/12/2011	18/12/2012	3	USA	4	1197
+The New York Times	The New York Times	19/12/2011	25/12/2011	7	USA	4	1198
+The New York Times	The New York Times	26/12/2011	01/01/2012	5	USA	4	1199
+The New York Times	The New York Times	02/01/2012	08/01/2012	2	USA	4	1200
+The New York Times	The New York Times	16/01/2012	22/01/2012	2	USA	4	1202
+The New York Times	The New York Times	30/01/2012	05/02/2012	2	USA	4	1204
+The New York Times	The New York Times	06/02/2012	12/02/2012	1	USA	4	1205
+The New York Times	The New York Times	27/02/2012	04/03/2012	2	USA	4	1208
+The New York Times	The New York Times	07/05/2012	13/05/2012	1	USA	4	1218
+		01/08/2011	07/08/2011	0		5	1178
+		08/08/2011	14/08/2011	0		5	1179
+		15/08/2011	21/08/2011	0		5	1180
+		22/08/2011	28/08/2011	0		5	1181
+		29/08/2011	04/09/2011	0		5	1182
+		05/09/2011	11/09/2011	0		5	1183
+		12/09/2011	18/09/2011	0		5	1184
+South China Morning Post		19/09/2011	25/09/2011	3	HKG	5	1185
+Morning Star Online		19/09/2011	25/09/2011	2	GBR	5	1185
+Financial Times (Available to Academic Subscribers Only)		19/09/2011	25/09/2011	1	GBR	5	1185
+South China Morning Post		26/09/2011	02/10/2011	3	HKG	5	1186
+The Times (London)		26/09/2011	02/10/2011	2	GBR	5	1186
+Financial Times (Available to Academic Subscribers Only)		26/09/2011	02/10/2011	1	GBR	5	1186
+The Guardian (U.K.)		26/09/2011	02/10/2011	1	GBR	5	1186
+The Irish Times		26/09/2011	02/10/2011	1	IRL	5	1186
+TODAY (Singapore)		26/09/2011	02/10/2011	1	SGP	5	1186
+Waikato Times		26/09/2011	02/10/2011	1	NZL	5	1186
+South China Morning Post		03/10/2011	09/10/2011	2	HKG	5	1187
+Vancouver Sun		10/10/2011	16/10/2011	1	CAN	5	1188
+		17/10/2011	23/10/2011	0		5	1189
+South China Morning Post		24/10/2011	30/10/2011	1	HKG	5	1190
+South China Morning Post		31/10/2011	06/11/2011	1	HKG	5	1191
+		07/11/2011	13/11/2011	0		5	1192
+		14/11/2011	20/11/2011	0		5	1193
+El Cronista Comercial (Spanish Language)	El Cronista Comercial	21/11/2011	27/11/2011	1	ARG	5	1194
+Publico (Portuguese Language)	Publico	21/11/2011	27/11/2011	1	PRT	5	1194
+The Jakarta Globe	The Jakarta Globe	21/11/2011	27/11/2011	1	IDN	5	1194
+Diario Financiero (Chile, Spanish Language)	Diario Financiero	05/12/2011	11/12/2011	1	CHL	5	1196
+Bangkok Post (Thailand)	Bangkok Post	12/12/2011	18/12/2012	1	THA	5	1197
+Berliner Kurier (German Language)	Berliner Kurier	12/12/2011	18/12/2012	1	DEU	5	1197
+Berliner Morgenpost Online (German Language)	Berliner Morgenpost	12/12/2011	18/12/2012	3	DEU	5	1197
+Berliner Zeitung (German Language)	Berliner Zeitung	12/12/2011	18/12/2012	1	DEU	5	1197
+Buffalo News (N.Y.)	Buffalo News	12/12/2011	18/12/2012	1	USA	5	1197
+Calgary Herald	Calgary Herald	12/12/2011	18/12/2012	1	CAN	5	1197
+Corriere della Sera (Italian Language)	Corriere della Sera	12/12/2011	18/12/2012	1	ITA	5	1197
+Dagens Næringsliv (Norwegian Language)	Dagens Næringsliv	12/12/2011	18/12/2012	1	NOR	5	1197
+Daily Telegraph (Australia)	Daily Telegraph	12/12/2011	18/12/2012	2	AUS	5	1197
+De Gelderlander (Dutch Language)	De Gelderlander	12/12/2011	18/12/2012	1	NLD	5	1197
+De Stentor (Dutch Language)	De Stentor	12/12/2011	18/12/2012	1	NLD	5	1197
+De Telegraaf (Dutch Language)	De Telegraaf	12/12/2011	18/12/2012	1	NLD	5	1197
+De Twentsche Courant Tubantia (Dutch Language)	De Twentsche Courant Tubantia	12/12/2011	18/12/2012	1	NLD	5	1197
+Der Bund (Switzerland, German Language)	Der Bund	12/12/2011	18/12/2012	1	CHE	5	1197
+Der Standard (German Language)	Der Standard	12/12/2011	18/12/2012	1	AUT	5	1197
+Die Presse (German Language)	Die Presse	12/12/2011	18/12/2012	1	AUT	5	1197
+Die Welt (German Language)	Die Welt	12/12/2011	18/12/2012	1	DEU	5	1197
+Edmonton Journal	Edmonton Journal	12/12/2011	18/12/2012	3	CAN	5	1197
+El Comercio (Peru, Spanish Language)	El Comercio (Peru)	12/12/2011	18/12/2012	1	PER	5	1197
+El Correo (Spanish Language)	El Correo	12/12/2011	18/12/2012	2	ESP	5	1197
+El Diario Vasco (Spanish Language)	El Diario Vasco	12/12/2011	18/12/2012	1	ESP	5	1197
+El Mundo (Spanish Language)	El Mundo	12/12/2011	18/12/2012	1	ESP	5	1197
+El País - Nacional (Spanish Language)	El País - Nacional	12/12/2011	18/12/2012	1	ESP	5	1197
+Financial Express (India)	Financial Express	12/12/2011	18/12/2012	1	IND	5	1197
+Hawke's Bay Today	Hawke's Bay Today	12/12/2011	18/12/2012	1	NZL	5	1197
+i (U.K.)	i	12/12/2011	18/12/2012	2	GBR	5	1197
+Indian Express	Indian Express	12/12/2011	18/12/2012	1	IND	5	1197
+International Herald Tribune	International Herald Tribune	12/12/2011	18/12/2012	3	USA	5	1197
+L' Orient-Le Jour (French Language)	L' Orient-Le Jour	12/12/2011	18/12/2012	1	LBN	5	1197
+La Gaceta (Spanish Language)	La Gaceta	12/12/2011	18/12/2012	1	ESP	5	1197
+La Opinión de A Coruña (Spanish Language)	La Opinión de A Coruña	12/12/2011	18/12/2012	1	ESP	5	1197
+La Vanguardia (Spanish Language)	La Vanguardia	12/12/2011	18/12/2012	1	ESP	5	1197
+La Voz de Galicia (Spanish Language)	La Voz de Galicia	12/12/2011	18/12/2012	2	ESP	5	1197
+Le Progres Egyptien (French Language)	Le Progres Egyptien	12/12/2011	18/12/2012	1	EGY	5	1197
+London Evening Standard (U.K.)	London Evening Standard	12/12/2011	18/12/2012	1	GBR	5	1197
+Mail & Guardian Online (Johannesburg)	Mail & Guardian Online	12/12/2011	18/12/2012	1	ZAF	5	1197
+Märkische Allgemeine (German Language)	Märkische Allgemeine	12/12/2011	18/12/2012	1	DEU	5	1197
+Midi Libre (French Language)	Midi Libre	12/12/2011	18/12/2012	1	FRA	5	1197
+Morning Star Online	Morning Star Online	12/12/2011	18/12/2012	1	GBR	5	1197
+Mural (Spanish Language)	Mural	12/12/2011	18/12/2012	1	MEX	5	1197
+MyPaper	MyPaper	12/12/2011	18/12/2012	3	SGP	5	1197
+Neue Zürcher Zeitung (Switzerland, German Language)	Neue Zürcher Zeitung	12/12/2011	18/12/2012	2	CHE	5	1197
+NZZ am Sonntag (Switzerland, German Language)	NZZ am Sonntag	12/12/2011	18/12/2012	2	CHE	5	1197
+Ostsee-Zeitung (German Language)	Ostsee-Zeitung	12/12/2011	18/12/2012	1	DEU	5	1197
+Ottawa Citizen	Ottawa Citizen	12/12/2011	18/12/2012	2	CAN	5	1197
+Ouest France (French Language)	Ouest France	12/12/2011	18/12/2012	1	FRA	5	1197
+Pioneiro (Portuguese Language)	Pioneiro	12/12/2011	18/12/2012	1	BRA	5	1197
+Politiken (Danish Language)	Politiken	12/12/2011	18/12/2012	1	DNK	5	1197
+Provinciale Zeeuwse Courant (Dutch Language)	Provinciale Zeeuwse Courant	12/12/2011	18/12/2012	1	NLD	5	1197
+Reforma (Spanish Language)	Reforma	12/12/2011	18/12/2012	1	MEX	5	1197
+Rheinische Post (German Language)	Rheinische Post	12/12/2011	18/12/2012	1	DEU	5	1197
+Stuttgarter Zeitung (German Language)	Stuttgarter Zeitung	12/12/2011	18/12/2012	1	DEU	5	1197
+Süddeutsche Zeitung (German Language)	Süddeutsche Zeitung	12/12/2011	18/12/2012	3	DEU	5	1197
+Tages Anzeiger (German Language)	Tages Anzeiger	12/12/2011	18/12/2012	1	CHE	5	1197
+taz - die tageszeitung (German Language)	taz - die tageszeitung	12/12/2011	18/12/2012	3	DEU	5	1197
+The Advertiser (Adelaide)	The Advertiser	12/12/2011	18/12/2012	1	AUS	5	1197
+The Australian	The Australian	12/12/2011	18/12/2012	2	AUS	5	1197
+The Courier-Mail (Australia)	The Courier-Mail	12/12/2011	18/12/2012	1	AUS	5	1197
+The Daily Mirror (U.K.)	The Daily Mirror	12/12/2011	18/12/2012	3	GBR	5	1197
+The Daily Post (New Zealand)	The Daily Post	12/12/2011	18/12/2012	1	NZL	5	1197
+The Hindu (India)	The Hindu	12/12/2011	18/12/2012	2	IND	5	1197
+The Irish Times	The Irish Times	12/12/2011	18/12/2012	2	IRL	5	1197
+The Mail on Sunday (U.K.)	The Mail on Sunday	12/12/2011	18/12/2012	1	GBR	5	1197
+The New Zealand Herald	The New Zealand Herald	12/12/2011	18/12/2012	1	NZL	5	1197
+The Observer (U.K.)	The Observer	12/12/2011	18/12/2012	1	GBR	5	1197
+The Sunday Telegraph (U.K.)	The Sunday Telegraph	12/12/2011	18/12/2012	1	GBR	5	1197
+The Times (London)	The Times	12/12/2011	18/12/2012	2	GBR	5	1197
+The Times of India	The Times of India	12/12/2011	18/12/2012	1	IND	5	1197
+The Toronto Star	The Toronto Star	12/12/2011	18/12/2012	3	CAN	5	1197
+The Wall Street Journal	The Wall Street Journal	12/12/2011	18/12/2012	4	USA	5	1197
+The Wall Street Journal Asia	The Wall Street Journal Asia	12/12/2011	18/12/2012	3	HKG	5	1197
+The Wall Street Journal Europe	The Wall Street Journal Europe	12/12/2011	18/12/2012	1	BEL	5	1197
+The Washington Post	The Washington Post	12/12/2011	18/12/2012	2	USA	5	1197
+The Washington Times	The Washington Times	12/12/2011	18/12/2012	1	USA	5	1197
+TODAY (Singapore)	TODAY	12/12/2011	18/12/2012	2	SGP	5	1197
+Vancouver Province	Vancouver Province	12/12/2011	18/12/2012	2	CAN	5	1197
+Vancouver Sun	Vancouver Sun	12/12/2011	18/12/2012	4	CAN	5	1197
+Weekend Argus	Weekend Argus	12/12/2011	18/12/2012	1	ZAF	5	1197
+Welt kompakt (German Language)	Welt kompakt	12/12/2011	18/12/2012	1	DEU	5	1197
+WELT online (German Language)	WELT online	12/12/2011	18/12/2012	2	DEU	5	1197
+Weser Kurier (German Language)	Weser Kurier	12/12/2011	18/12/2012	1	DEU	5	1197
+Zero Hora (Portuguese Language)	Zero Hora	12/12/2011	18/12/2012	1	BRA	5	1197
+24 Heures (French Language)	24 Heures	19/12/2011	25/12/2011	1	CHE	5	1198
+AD - Algemeen Dagblad (Dutch Language)	AD - Algemeen Dagblad	19/12/2011	25/12/2011	1	NLD	5	1198
+Barrie Examiner	Barrie Examiner	19/12/2011	25/12/2011	1	CAN	5	1198
+Berliner Morgenpost (German Language)	Berliner Morgenpost	19/12/2011	25/12/2011	1	DEU	5	1198
+BN/DeStem (Dutch Language)	BN/DeStem	19/12/2011	25/12/2011	1	NLD	5	1198
+Brabants Dagblad (Dutch Language)	Brabants Dagblad	19/12/2011	25/12/2011	1	NLD	5	1198
+Brantford Expositor	Brantford Expositor	19/12/2011	25/12/2011	1	CAN	5	1198
+Brockville Recorder and Times	Brockville Recorder and Times	19/12/2011	25/12/2011	1	CAN	5	1198
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	19/12/2011	25/12/2011	2	HKG	5	1198
+Cornwall Standard-Freeholder	Cornwall Standard-Freeholder	19/12/2011	25/12/2011	1	CAN	5	1198
+Daily News (South Africa)	Daily News	19/12/2011	25/12/2011	1	ZAF	5	1198
+Daily The Pak Banker	Daily The Pak Banker	19/12/2011	25/12/2011	1	PAK	5	1198
+De Stentor (Dutch Language)	De Stentor	19/12/2011	25/12/2011	1	NLD	5	1198
+De Telegraaf (Dutch Language)	De Telegraaf	19/12/2011	25/12/2011	2	NLD	5	1198
+Edmonton Journal	Edmonton Journal	19/12/2011	25/12/2011	2	CAN	5	1198
+Eindhovens Dagblad (Dutch Language)	Eindhovens Dagblad	19/12/2011	25/12/2011	1	NLD	5	1198
+El Comercio (Spain, Spanish Language)	El Comercio (Spain)	19/12/2011	25/12/2011	1	ESP	5	1198
+El Cronista Comercial (Spanish Language)	El Cronista Comercial	19/12/2011	25/12/2011	1	ARG	5	1198
+El Diario Vasco (Spanish Language)	El Diario Vasco	19/12/2011	25/12/2011	1	ESP	5	1198
+El País - Nacional (Spanish Language)	El País - Nacional	19/12/2011	25/12/2011	2	ESP	5	1198
+Financial Times Deutschland (German Language)	Financial Times Deutschland	19/12/2011	25/12/2011	1	DEU	5	1198
+Hong Kong Economic Journal (Chinese Language - Traditional)	Hong Kong Economic Journal	19/12/2011	25/12/2011	1	HKG	5	1198
+i (U.K.)	i	19/12/2011	25/12/2011	1	GBR	5	1198
+Indian Express	Indian Express	19/12/2011	25/12/2011	2	IND	5	1198
+Industry Updates	Industry Updates	19/12/2011	25/12/2011	1	CHN	5	1198
+International Herald Tribune	International Herald Tribune	19/12/2011	25/12/2011	4	USA	5	1198
+Kashmir Monitor	Kashmir Monitor	19/12/2011	25/12/2011	1	IND	5	1198
+Kingston Whig Standard	Kingston Whig Standard	19/12/2011	25/12/2011	1	CAN	5	1198
+L' Orient-Le Jour (French Language)	L' Orient-Le Jour	19/12/2011	25/12/2011	1	LBN	5	1198
+La Nueva España (Spanish Language)	La Nueva España	19/12/2011	25/12/2011	3	ESP	5	1198
+La Rioja (Spanish Language)	La Rioja	19/12/2011	25/12/2011	1	ESP	5	1198
+La Tribune (French Language)	La Tribune	19/12/2011	25/12/2011	1	FRA	5	1198
+La Verdad (Spanish Language)	La Verdad	19/12/2011	25/12/2011	1	ESP	5	1198
+La Voz de Cadiz (Spanish Language)	La Voz de Cadiz	19/12/2011	25/12/2011	1	ESP	5	1198
+La Voz de Galicia (Spanish Language)	La Voz de Galicia	19/12/2011	25/12/2011	1	ESP	5	1198
+Las Provincias (Spanish Language)	Las Provincias	19/12/2011	25/12/2011	1	ESP	5	1198
+Libération (French Language)	Libération	19/12/2011	25/12/2011	3	FRA	5	1198
+L'Indépendant (French Language)	L'Indépendant	19/12/2011	25/12/2011	1	FRA	5	1198
+Manawatu Standard (N.Z.)	Manawatu Standard	19/12/2011	25/12/2011	1	NZL	5	1198
+Manila Bulletin	Manila Bulletin	19/12/2011	25/12/2011	1	PHL	5	1198
+Ming Pao Daily News (Chinese Language - Traditional)	Ming Pao Daily News	19/12/2011	25/12/2011	2	HKG	5	1198
+Morning Star Online	Morning Star Online	19/12/2011	25/12/2011	2	GBR	5	1198
+Mural (Spanish Language)	Mural	19/12/2011	25/12/2011	2	MEX	5	1198
+MyPaper	MyPaper	19/12/2011	25/12/2011	3	SGP	5	1198
+Northern Advocate	Northern Advocate	19/12/2011	25/12/2011	1	NZL	5	1198
+Orillia Packet & Times	Orillia Packet & Times	19/12/2011	25/12/2011	1	CAN	5	1198
+Owen Sound Sun Times	Owen Sound Sun Times	19/12/2011	25/12/2011	1	CAN	5	1198
+Pembroke Daily Observer	Pembroke Daily Observer	19/12/2011	25/12/2011	1	CAN	5	1198
+People’s Daily Online (Spanish Language)	People’s Daily Online	19/12/2011	25/12/2011	2	CHN	5	1198
+Peterborough Examiner	Peterborough Examiner	19/12/2011	25/12/2011	1	CAN	5	1198
+Pretoria News	Pretoria News	19/12/2011	25/12/2011	1	ZAF	5	1198
+Reforma (Spanish Language)	Reforma	19/12/2011	25/12/2011	2	MEX	5	1198
+Sarnia Observer	Sarnia Observer	19/12/2011	25/12/2011	1	CAN	5	1198
+Sault Star	Sault Star	19/12/2011	25/12/2011	1	CAN	5	1198
+Shanghai Daily	Shanghai Daily	19/12/2011	25/12/2011	1	CHN	5	1198
+St. Louis Post-Dispatch	St. Louis Post-Dispatch	19/12/2011	25/12/2011	1	USA	5	1198
+Sudbury Star	Sudbury Star	19/12/2011	25/12/2011	1	CAN	5	1198
+Süddeutsche Zeitung (German Language)	Süddeutsche Zeitung	19/12/2011	25/12/2011	2	DEU	5	1198
+Sur (Spanish Language)	Sur	19/12/2011	25/12/2011	1	ESP	5	1198
+Taipei Times	Taipei Times	19/12/2011	25/12/2011	1	TWN	5	1198
+taz - die tageszeitung (German Language)	taz - die tageszeitung	19/12/2011	25/12/2011	3	DEU	5	1198
+The Australian	The Australian	19/12/2011	25/12/2011	1	AUS	5	1198
+The Gold Coast Bulletin	The Gold Coast Bulletin	19/12/2011	25/12/2011	1	AUS	5	1198
+The Hindu (India)	The Hindu	19/12/2011	25/12/2011	1	IND	5	1198
+The Independent (London)	The Independent	19/12/2011	25/12/2011	1	GBR	5	1198
+The Irish Times	The Irish Times	19/12/2011	25/12/2011	4	IRL	5	1198
+The Jakarta Globe	The Jakarta Globe	19/12/2011	25/12/2011	1	IDN	5	1198
+The Marlborough Express	The Marlborough Express	19/12/2011	25/12/2011	1	NZL	5	1198
+The Star	The Star	19/12/2011	25/12/2011	1	ZAF	5	1198
+The Sydney Morning Herald	The Sydney Morning Herald	19/12/2011	25/12/2011	1	AUS	5	1198
+The Telegraph (India)	The Telegraph	19/12/2011	25/12/2011	2	IND	5	1198
+The Times of India	The Times of India	19/12/2011	25/12/2011	1	IND	5	1198
+The Toronto Star	The Toronto Star	19/12/2011	25/12/2011	2	CAN	5	1198
+The Wall Street Journal	The Wall Street Journal	19/12/2011	25/12/2011	4	USA	5	1198
+The Wall Street Journal Asia	The Wall Street Journal Asia	19/12/2011	25/12/2011	5	HKG	5	1198
+The Wall Street Journal Europe	The Wall Street Journal Europe	19/12/2011	25/12/2011	1	BEL	5	1198
+The Washington Post	The Washington Post	19/12/2011	25/12/2011	4	USA	5	1198
+Timmins Daily Press	Timmins Daily Press	19/12/2011	25/12/2011	1	CAN	5	1198
+TODAY (Singapore)	TODAY	19/12/2011	25/12/2011	3	SGP	5	1198
+Vancouver Sun	Vancouver Sun	19/12/2011	25/12/2011	1	CAN	5	1198
+China Daily	China Daily	26/12/2011	01/01/2012	3	CHN	5	1199
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	26/12/2011	01/01/2012	3	HKG	5	1199
+Corriere della Sera (Italian Language)	Corriere della Sera	26/12/2011	01/01/2012	2	ITA	5	1199
+Daily News Egypt	Daily News Egypt	26/12/2011	01/01/2012	1	EGY	5	1199
+Diario Financiero (Chile, Spanish Language)	Diario Financiero	26/12/2011	01/01/2012	1	CHL	5	1199
+DNA - Daily News & Analysis	DNA - Daily News & Analysis	26/12/2011	01/01/2012	1	IND	5	1199
+El Correo (Spanish Language)	El Correo	26/12/2011	01/01/2012	1	ESP	5	1199
+El Norte de Castilla (Spanish Language)	El Norte de Castilla	26/12/2011	01/01/2012	2	ESP	5	1199
+El Pais - English Edition	El Pais - English Edition	26/12/2011	01/01/2012	1	ESP	5	1199
+Folha de São Paulo (Portuguese Language)	Folha de São Paulo	26/12/2011	01/01/2012	2	BRA	5	1199
+Indian Express	Indian Express	26/12/2011	01/01/2012	2	IND	5	1199
+Industry Updates	Industry Updates	26/12/2011	01/01/2012	1	CHN	5	1199
+International Herald Tribune	International Herald Tribune	26/12/2011	01/01/2012	4	USA	5	1199
+ItaliaOggi (Italian Language)	ItaliaOggi	26/12/2011	01/01/2012	1	ITA	5	1199
+Joins.com	Joins.com	26/12/2011	01/01/2012	1	KOR	5	1199
+Kashmir Monitor	Kashmir Monitor	26/12/2011	01/01/2012	1	IND	5	1199
+Korea Times	Korea Times	26/12/2011	01/01/2012	1	KOR	5	1199
+La Croix (French Language)	La Croix	26/12/2011	01/01/2012	1	FRA	5	1199
+Le Temps (French Language)	Le Temps	26/12/2011	01/01/2012	1	CHE	5	1199
+Libération (French Language)	Libération	26/12/2011	01/01/2012	1	FRA	5	1199
+Mint	Mint	26/12/2011	01/01/2012	1	IND	5	1199
+MyPaper	MyPaper	26/12/2011	01/01/2012	1	SGP	5	1199
+New Indian Express	New Indian Express	26/12/2011	01/01/2012	1	IND	5	1199
+Ottawa Citizen	Ottawa Citizen	26/12/2011	01/01/2012	1	CAN	5	1199
+Ouest France (French Language)	Ouest France	26/12/2011	01/01/2012	1	FRA	5	1199
+People’s Daily Online (Spanish Language)	People’s Daily Online	26/12/2011	01/01/2012	2	CHN	5	1199
+Philippine Daily Inquirer	Philippine Daily Inquirer	26/12/2011	01/01/2012	1	PHL	5	1199
+Pittsburgh Post-Gazette	Pittsburgh Post-Gazette	26/12/2011	01/01/2012	1	USA	5	1199
+Shenzhen Daily	Shenzhen Daily	26/12/2011	01/01/2012	1	CHN	5	1199
+Straits Times	Straits Times	26/12/2011	01/01/2012	2	SGP	5	1199
+Süddeutsche Zeitung (German Language)	Süddeutsche Zeitung	26/12/2011	01/01/2012	1	DEU	5	1199
+Sunday Business Post	Sunday Business Post	26/12/2011	01/01/2012	1	IRL	5	1199
+Tages Anzeiger (German Language)	Tages Anzeiger	26/12/2011	01/01/2012	1	CHE	5	1199
+The Australian	The Australian	26/12/2011	01/01/2012	1	AUS	5	1199
+The China Post (Taiwan)	The China Post	26/12/2011	01/01/2012	1	TWN	5	1199
+The Christian Science Monitor	The Christian Science Monitor	26/12/2011	01/01/2012	1	USA	5	1199
+The Irish Times	The Irish Times	26/12/2011	01/01/2012	2	IRL	5	1199
+The Jakarta Globe	The Jakarta Globe	26/12/2011	01/01/2012	3	IDN	5	1199
+The Statesman (India)	The Statesman	26/12/2011	01/01/2012	1	IND	5	1199
+sundaytimes.co.uk	The Sunday Times	26/12/2011	01/01/2012	1	GBR	5	1199
+The Sunday Times (London)	The Sunday Times	26/12/2011	01/01/2012	1	GBR	5	1199
+The Sydney Morning Herald	The Sydney Morning Herald	26/12/2011	01/01/2012	1	AUS	5	1199
+The Times (London)	The Times	26/12/2011	01/01/2012	5	GBR	5	1199
+The Toronto Sun	The Toronto Sun	26/12/2011	01/01/2012	1	CAN	5	1199
+The Wall Street Journal Asia	The Wall Street Journal Asia	26/12/2011	01/01/2012	1	HKG	5	1199
+The Warrnambool Standard	The Warrnambool Standard	26/12/2011	01/01/2012	1	AUS	5	1199
+The Washington Post	The Washington Post	26/12/2011	01/01/2012	1	USA	5	1199
+TODAY (Singapore)	TODAY	26/12/2011	01/01/2012	2	SGP	5	1199
+WELT online (German Language)	WELT online	26/12/2011	01/01/2012	1	DEU	5	1199
+Dagens Næringsliv (Norwegian Language)	Dagens Næringsliv	02/01/2012	08/01/2012	1	NOR	5	1200
+De Telegraaf (Dutch Language)	De Telegraaf	02/01/2012	08/01/2012	1	NLD	5	1200
+Der Bund (Switzerland, German Language)	Der Bund	02/01/2012	08/01/2012	1	CHE	5	1200
+Diario de León (Spanish Language)	Diario de León	02/01/2012	08/01/2012	1	ESP	5	1200
+Indian Express	Indian Express	02/01/2012	08/01/2012	1	IND	5	1200
+International Herald Tribune	International Herald Tribune	02/01/2012	08/01/2012	1	USA	5	1200
+L'Humanité (French Language)	L'Humanité	02/01/2012	08/01/2012	1	FRA	5	1200
+Morning Star Online	Morning Star Online	02/01/2012	08/01/2012	1	GBR	5	1200
+Shenzhen Daily	Shenzhen Daily	02/01/2012	08/01/2012	2	CHN	5	1200
+Tages Anzeiger (German Language)	Tages Anzeiger	02/01/2012	08/01/2012	1	CHE	5	1200
+taz - die tageszeitung (German Language)	taz - die tageszeitung	02/01/2012	08/01/2012	1	DEU	5	1200
+The Korea Herald	The Korea Herald	02/01/2012	08/01/2012	2	KOR	5	1200
+The Philadelphia Inquirer	The Philadelphia Inquirer	02/01/2012	08/01/2012	1	USA	5	1200
+The Providence Journal (R.I.)	The Providence Journal	02/01/2012	08/01/2012	2	USA	5	1200
+The Times (London)	The Times	02/01/2012	08/01/2012	2	GBR	5	1200
+The Toronto Star	The Toronto Star	02/01/2012	08/01/2012	1	CAN	5	1200
+The Wall Street Journal Asia	The Wall Street Journal Asia	02/01/2012	08/01/2012	1	HKG	5	1200
+TODAY (Singapore)	TODAY	02/01/2012	08/01/2012	3	SGP	5	1200
+Weekly Cutting Edge	Weekly Cutting Edge	02/01/2012	08/01/2012	1	PAK	5	1200
+Buffalo News (N.Y.)	Buffalo News	09/01/2012	15/01/2012	1	USA	5	1201
+Cape Times	Cape Times	09/01/2012	15/01/2012	1	ZAF	5	1201
+China Daily	China Daily	09/01/2012	15/01/2012	1	CHN	5	1201
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	09/01/2012	15/01/2012	1	HKG	5	1201
+Daily Star (Lebanon)	Daily Star	09/01/2012	15/01/2012	1	LBN	5	1201
+El Comercio (Spain, Spanish Language)	El Comercio (Spain)	09/01/2012	15/01/2012	1	ESP	5	1201
+El País (Uruguay, Spanish Language)	El País	09/01/2012	15/01/2012	1	URY	5	1201
+Herald	Herald	09/01/2012	15/01/2012	1	IND	5	1201
+Industry Updates	Industry Updates	09/01/2012	15/01/2012	1	CHN	5	1201
+International Herald Tribune	International Herald Tribune	09/01/2012	15/01/2012	1	USA	5	1201
+La Nacion (Chile, Spanish Language)	La Nacion	09/01/2012	15/01/2012	3	CHL	5	1201
+La Verdad (Spanish Language)	La Verdad	09/01/2012	15/01/2012	1	ESP	5	1201
+La Voz de Cadiz (Spanish Language)	La Voz de Cadiz	09/01/2012	15/01/2012	1	ESP	5	1201
+Las Provincias (Spanish Language)	Las Provincias	09/01/2012	15/01/2012	1	ESP	5	1201
+Le Figaro (French Language)	Le Figaro	09/01/2012	15/01/2012	1	FRA	5	1201
+Morning Star Online	Morning Star Online	09/01/2012	15/01/2012	1	GBR	5	1201
+MyPaper	MyPaper	09/01/2012	15/01/2012	1	SGP	5	1201
+New Indian Express	New Indian Express	09/01/2012	15/01/2012	1	IND	5	1201
+People’s Daily Online (Spanish Language)	People’s Daily Online	09/01/2012	15/01/2012	1	CHN	5	1201
+Politiken (Danish Language)	Politiken	09/01/2012	15/01/2012	1	DNK	5	1201
+Pretoria News	Pretoria News	09/01/2012	15/01/2012	1	ZAF	5	1201
+Straits Times	Straits Times	09/01/2012	15/01/2012	4	SGP	5	1201
+The Jakarta Globe	The Jakarta Globe	09/01/2012	15/01/2012	1	IDN	5	1201
+The Mercury	The Mercury	09/01/2012	15/01/2012	1	ZAF	5	1201
+The Nation (Thailand)	The Nation	09/01/2012	15/01/2012	1	THA	5	1201
+The Star	The Star	09/01/2012	15/01/2012	1	ZAF	5	1201
+TODAY (Singapore)	TODAY	09/01/2012	15/01/2012	1	SGP	5	1201
+24 heures Montréal (French Language)	24 heures Montréal	16/01/2012	22/01/2012	1	CAN	5	1202
+Brabants Dagblad (Dutch Language)	Brabants Dagblad	16/01/2012	22/01/2012	1	NLD	5	1202
+Calgary Herald	Calgary Herald	16/01/2012	22/01/2012	1	CAN	5	1202
+China Daily	China Daily	16/01/2012	22/01/2012	1	CHN	5	1202
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	16/01/2012	22/01/2012	1	HKG	5	1202
+Corriere della Sera (Italian Language)	Corriere della Sera	16/01/2012	22/01/2012	1	ITA	5	1202
+Die Presse (German Language)	Die Presse	16/01/2012	22/01/2012	1	AUT	5	1202
+Eindhovens Dagblad (Dutch Language)	Eindhovens Dagblad	16/01/2012	22/01/2012	1	NLD	5	1202
+El Cronista Comercial (Spanish Language)	El Cronista Comercial	16/01/2012	22/01/2012	1	ARG	5	1202
+Gooi- en Eemlander (Dutch Language)	Gooi- en Eemlander	16/01/2012	22/01/2012	1	NLD	5	1202
+Haarlems Dagblad (Dutch Language)	Haarlems Dagblad	16/01/2012	22/01/2012	1	NLD	5	1202
+IJmuider Courant (Dutch Language)	IJmuider Courant	16/01/2012	22/01/2012	1	NLD	5	1202
+Indian Express	Indian Express	16/01/2012	22/01/2012	1	IND	5	1202
+International Herald Tribune	International Herald Tribune	16/01/2012	22/01/2012	1	USA	5	1202
+La Croix (French Language)	La Croix	16/01/2012	22/01/2012	1	FRA	5	1202
+La Vanguardia (Spanish Language)	La Vanguardia	16/01/2012	22/01/2012	1	ESP	5	1202
+Le Temps (French Language)	Le Temps	16/01/2012	22/01/2012	1	CHE	5	1202
+Leidsch Dagblad (Dutch Language)	Leidsch Dagblad	16/01/2012	22/01/2012	1	NLD	5	1202
+Morning Star Online	Morning Star Online	16/01/2012	22/01/2012	1	GBR	5	1202
+MyPaper	MyPaper	16/01/2012	22/01/2012	1	SGP	5	1202
+Noordhollands Dagblad (Dutch Language)	Noordhollands Dagblad	16/01/2012	22/01/2012	1	NLD	5	1202
+Ottawa Citizen	Ottawa Citizen	16/01/2012	22/01/2012	1	CAN	5	1202
+People’s Daily Online (Spanish Language)	People’s Daily Online	16/01/2012	22/01/2012	1	CHN	5	1202
+Publico (Portuguese Language)	Publico	16/01/2012	22/01/2012	2	PRT	5	1202
+Publico Online (Portuguese Language)	Publico	16/01/2012	22/01/2012	1	PRT	5	1202
+taz - die tageszeitung (German Language)	taz - die tageszeitung	16/01/2012	22/01/2012	1	DEU	5	1202
+The Advertiser (Adelaide)	The Advertiser	16/01/2012	22/01/2012	1	AUS	5	1202
+The Advocate (Burnie, Australia)	The Advocate	16/01/2012	22/01/2012	1	AUS	5	1202
+The Australian	The Australian	16/01/2012	22/01/2012	1	AUS	5	1202
+Guardian.co.uk	The Guardian	16/01/2012	22/01/2012	2	GBR	5	1202
+The Guardian (U.K.)	The Guardian	16/01/2012	22/01/2012	1	GBR	5	1202
+The Irish Times	The Irish Times	16/01/2012	22/01/2012	1	IRL	5	1202
+The Toronto Star	The Toronto Star	16/01/2012	22/01/2012	1	CAN	5	1202
+The Wall Street Journal	The Wall Street Journal	16/01/2012	22/01/2012	1	USA	5	1202
+The Wall Street Journal Americas (Spanish Language)	The Wall Street Journal Americas	16/01/2012	22/01/2012	1	USA	5	1202
+The Wall Street Journal Asia	The Wall Street Journal Asia	16/01/2012	22/01/2012	2	HKG	5	1202
+The Wall Street Journal Online (Japanese Language)	The Wall Street Journal Online (Japanese Language)	16/01/2012	22/01/2012	1	JPN	5	1202
+The West Australian	The West Australian	16/01/2012	22/01/2012	1	AUS	5	1202
+Times Of Oman	Times Of Oman	16/01/2012	22/01/2012	1	OMN	5	1202
+Vancouver Sun	Vancouver Sun	16/01/2012	22/01/2012	1	CAN	5	1202
+Basler Zeitung (Switzerland, German Language)	Basler Zeitung	23/01/2012	29/01/2012	1	CHE	5	1203
+Corriere della Sera (Italian Language)	Corriere della Sera	23/01/2012	29/01/2012	1	ITA	5	1203
+Dagens Industri (Swedish Language)	Dagens Industri	23/01/2012	29/01/2012	1	SWE	5	1203
+El Norte de Castilla (Spanish Language)	El Norte de Castilla	23/01/2012	29/01/2012	1	ESP	5	1203
+El País - Nacional (Spanish Language)	El País - Nacional	23/01/2012	29/01/2012	1	ESP	5	1203
+La Rioja (Spanish Language)	La Rioja	23/01/2012	29/01/2012	1	ESP	5	1203
+Süddeutsche Zeitung (German Language)	Süddeutsche Zeitung	23/01/2012	29/01/2012	1	DEU	5	1203
+The Katmandu Post	The Katmandu Post	23/01/2012	29/01/2012	1	NPL	5	1203
+The Mail on Sunday (U.K.)	The Mail on Sunday	23/01/2012	29/01/2012	1	GBR	5	1203
+Berliner Zeitung (German Language)	Berliner Zeitung	30/01/2012	05/02/2012	1	DEU	5	1204
+China Daily	China Daily	30/01/2012	05/02/2012	2	CHN	5	1204
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	30/01/2012	05/02/2012	2	HKG	5	1204
+Daily The Pak Banker	Daily The Pak Banker	30/01/2012	05/02/2012	1	PAK	5	1204
+El Correo (Spanish Language)	El Correo	30/01/2012	05/02/2012	1	ESP	5	1204
+El Diario Vasco (Spanish Language)	El Diario Vasco	30/01/2012	05/02/2012	1	ESP	5	1204
+El Mundo (Spanish Language)	El Mundo	30/01/2012	05/02/2012	1	ESP	5	1204
+El Periódico de Catalunya (Spanish Language)	El Periódico de Catalunya	30/01/2012	05/02/2012	1	ESP	5	1204
+Financial Times Deutschland (German Language)	Financial Times Deutschland	30/01/2012	05/02/2012	1	DEU	5	1204
+Hoy (Spain, Spanish Language)	Hoy	30/01/2012	05/02/2012	1	ESP	5	1204
+Industry Updates	Industry Updates	30/01/2012	05/02/2012	2	CHN	5	1204
+International Herald Tribune	International Herald Tribune	30/01/2012	05/02/2012	1	USA	5	1204
+National Post (Canada)	National Post	30/01/2012	05/02/2012	1	CAN	5	1204
+Ottawa Citizen	Ottawa Citizen	30/01/2012	05/02/2012	1	CAN	5	1204
+People’s Daily Online (Spanish Language)	People’s Daily Online	30/01/2012	05/02/2012	2	CHN	5	1204
+Pittsburgh Post-Gazette	Pittsburgh Post-Gazette	30/01/2012	05/02/2012	1	USA	5	1204
+Reforma (Spanish Language)	Reforma	30/01/2012	05/02/2012	1	MEX	5	1204
+Süddeutsche Zeitung (German Language)	Süddeutsche Zeitung	30/01/2012	05/02/2012	1	DEU	5	1204
+The Age (Melbourne, Australia)	The Age	30/01/2012	05/02/2012	1	AUS	5	1204
+The Australian	The Australian	30/01/2012	05/02/2012	1	AUS	5	1204
+The Christian Science Monitor	The Christian Science Monitor	30/01/2012	05/02/2012	1	USA	5	1204
+The Globe and Mail (Canada)	The Globe and Mail	30/01/2012	05/02/2012	1	CAN	5	1204
+The Jakarta Globe	The Jakarta Globe	30/01/2012	05/02/2012	1	IDN	5	1204
+The Wall Street Journal	The Wall Street Journal	30/01/2012	05/02/2012	2	USA	5	1204
+The Wall Street Journal Asia	The Wall Street Journal Asia	30/01/2012	05/02/2012	2	HKG	5	1204
+TODAY (Singapore)	TODAY	30/01/2012	05/02/2012	1	SGP	5	1204
+WELT online (German Language)	WELT online	30/01/2012	05/02/2012	1	DEU	5	1204
+Barron's Online	Barron's	06/02/2012	12/02/2012	1	USA	5	1205
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	06/02/2012	12/02/2012	1	HKG	5	1205
+Corriere della Sera (Italian Language)	Corriere della Sera	06/02/2012	12/02/2012	1	ITA	5	1205
+International Herald Tribune	International Herald Tribune	06/02/2012	12/02/2012	1	USA	5	1205
+La Croix (French Language)	La Croix	06/02/2012	12/02/2012	2	FRA	5	1205
+People’s Daily Online (French Language)	People’s Daily Online	06/02/2012	12/02/2012	1	CHN	5	1205
+Shenzhen Daily	Shenzhen Daily	06/02/2012	12/02/2012	1	CHN	5	1205
+The Australian	The Australian	06/02/2012	12/02/2012	1	AUS	5	1205
+The Christian Science Monitor	The Christian Science Monitor	06/02/2012	12/02/2012	1	USA	5	1205
+The Edmonton Sun	The Edmonton Sun	06/02/2012	12/02/2012	1	CAN	5	1205
+The Globe and Mail (Breaking News)	The Globe and Mail	06/02/2012	12/02/2012	2	CAN	5	1205
+The Globe and Mail (Canada)	The Globe and Mail	06/02/2012	12/02/2012	1	CAN	5	1205
+The Hindu (India)	The Hindu	06/02/2012	12/02/2012	2	IND	5	1205
+The Wall Street Journal	The Wall Street Journal	06/02/2012	12/02/2012	1	USA	5	1205
+The Wall Street Journal Asia	The Wall Street Journal Asia	06/02/2012	12/02/2012	1	HKG	5	1205
+The Washington Times	The Washington Times	06/02/2012	12/02/2012	1	USA	5	1205
+Wirtschaftsblatt (German Language)	Wirtschaftsblatt	06/02/2012	12/02/2012	1	AUT	5	1205
+Barron's	Barron's	13/02/2012	19/02/2012	1	USA	5	1206
+Blick (German Language)	Blick	13/02/2012	19/02/2012	1	DEU	5	1206
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	13/02/2012	19/02/2012	1	HKG	5	1206
+Nikkei Report	Nikkei Report	13/02/2012	19/02/2012	1	JPN	5	1206
+The Age (Melbourne, Australia)	The Age	13/02/2012	19/02/2012	1	AUS	5	1206
+The Philadelphia Inquirer	The Philadelphia Inquirer	13/02/2012	19/02/2012	1	USA	5	1206
+TODAY (Singapore)	TODAY	13/02/2012	19/02/2012	1	SGP	5	1206
+Winnipeg Free Press (Manitoba, Canada)	Winnipeg Free Press	13/02/2012	19/02/2012	1	CAN	5	1206
+Bangkok Post (Thailand)	Bangkok Post	20/02/2012	26/02/2012	1	THA	5	1207
+Berliner Zeitung (German Language)	Berliner Zeitung	20/02/2012	26/02/2012	1	DEU	5	1207
+El País - Nacional (Spanish Language)	El País - Nacional	20/02/2012	26/02/2012	2	ESP	5	1207
+El Periódico de Catalunya (Spanish Language)	El Periódico de Catalunya	20/02/2012	26/02/2012	1	ESP	5	1207
+Financial Times Deutschland (German Language)	Financial Times Deutschland	20/02/2012	26/02/2012	1	DEU	5	1207
+La Repubblica (Italian Language)	La Repubblica	20/02/2012	26/02/2012	1	ITA	5	1207
+La Voz de Galicia (Spanish Language)	La Voz de Galicia	20/02/2012	26/02/2012	1	ESP	5	1207
+Straits Times	Straits Times	20/02/2012	26/02/2012	2	SGP	5	1207
+The Australian Financial Review	The Australian Financial Review	20/02/2012	26/02/2012	1	AUS	5	1207
+The China Post (Taiwan)	The China Post	20/02/2012	26/02/2012	1	TWN	5	1207
+The Nation (Thailand)	The Nation	20/02/2012	26/02/2012	1	THA	5	1207
+The Statesman (India)	The Statesman	20/02/2012	26/02/2012	1	IND	5	1207
+24 Heures (French Language)	24 Heures	27/02/2012	04/03/2012	1	CHE	5	1208
+Basler Zeitung (Switzerland, German Language)	Basler Zeitung	27/02/2012	04/03/2012	1	CHE	5	1208
+China Daily	China Daily	27/02/2012	04/03/2012	2	CHN	5	1208
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	27/02/2012	04/03/2012	2	HKG	5	1208
+Corriere della Sera (Italian Language)	Corriere della Sera	27/02/2012	04/03/2012	2	ITA	5	1208
+Daily The Pak Banker	Daily The Pak Banker	27/02/2012	04/03/2012	1	PAK	5	1208
+Diari de Girona (Catalan Language)	Diari de Girona	27/02/2012	04/03/2012	1	ESP	5	1208
+Die Südostschweiz (German Language)	Die Südostschweiz	27/02/2012	04/03/2012	1	CHE	5	1208
+El Correo (Spanish Language)	El Correo	27/02/2012	04/03/2012	1	ESP	5	1208
+El Diario Vasco (Spanish Language)	El Diario Vasco	27/02/2012	04/03/2012	1	ESP	5	1208
+El Mercurio (Spanish Language)	El Mercurio	27/02/2012	04/03/2012	1	CHL	5	1208
+Il Giornale (Italian Language)	Il Giornale	27/02/2012	04/03/2012	1	ITA	5	1208
+Il Giorno (Italian Language)	Il Giorno	27/02/2012	04/03/2012	1	ITA	5	1208
+Il Resto del Carlino (Italian Language)	Il Resto del Carlino	27/02/2012	04/03/2012	1	ITA	5	1208
+Joins.com	Joins.com	27/02/2012	04/03/2012	1	KOR	5	1208
+La Nazione (Italian Language)	La Nazione	27/02/2012	04/03/2012	1	ITA	5	1208
+La Nouvelle République Dimanche (French Language)	La Nouvelle République Dimanche	27/02/2012	04/03/2012	1	FRA	5	1208
+La Tribune de Genève (French Language)	La Tribune de Genève	27/02/2012	04/03/2012	1	CHE	5	1208
+La Voix du Nord (French Language)	La Voix du Nord	27/02/2012	04/03/2012	1	FRA	5	1208
+Le Parisien-Aujourd'hui en France (French Language)	Le Parisien-Aujourd'hui en France	27/02/2012	04/03/2012	2	FRA	5	1208
+Libération (French Language)	Libération	27/02/2012	04/03/2012	2	FRA	5	1208
+MF - WSJ Europe (Italian Language)	MF - WSJ Europe	27/02/2012	04/03/2012	1	ITA	5	1208
+Midi Libre (French Language)	Midi Libre	27/02/2012	04/03/2012	1	FRA	5	1208
+NZZ am Sonntag (Switzerland, German Language)	NZZ am Sonntag	27/02/2012	04/03/2012	1	CHE	5	1208
+People’s Daily Online (French Language)	People’s Daily Online	27/02/2012	04/03/2012	1	CHN	5	1208
+Pittsburgh Post-Gazette	Pittsburgh Post-Gazette	27/02/2012	04/03/2012	1	USA	5	1208
+Reforma (Spanish Language)	Reforma	27/02/2012	04/03/2012	1	MEX	5	1208
+Sud Ouest (French Language)	Sud Ouest	27/02/2012	04/03/2012	1	FRA	5	1208
+The Age (Melbourne, Australia)	The Age	27/02/2012	04/03/2012	1	AUS	5	1208
+The Australian	The Australian	27/02/2012	04/03/2012	3	AUS	5	1208
+The Hindu (India)	The Hindu	27/02/2012	04/03/2012	1	IND	5	1208
+The Jakarta Globe	The Jakarta Globe	27/02/2012	04/03/2012	3	IDN	5	1208
+The Nation (Thailand)	The Nation	27/02/2012	04/03/2012	1	THA	5	1208
+The Sydney Morning Herald	The Sydney Morning Herald	27/02/2012	04/03/2012	1	AUS	5	1208
+The Times (London)	The Times	27/02/2012	04/03/2012	2	GBR	5	1208
+The Times of India - Delhi Edition	The Times of India	27/02/2012	04/03/2012	1	IND	5	1208
+The Toronto Star	The Toronto Star	27/02/2012	04/03/2012	1	CAN	5	1208
+The Wall Street Journal	The Wall Street Journal	27/02/2012	04/03/2012	1	USA	5	1208
+The Wall Street Journal Asia	The Wall Street Journal Asia	27/02/2012	04/03/2012	1	HKG	5	1208
+The Washington Post	The Washington Post	27/02/2012	04/03/2012	1	USA	5	1208
+TODAY (Singapore)	TODAY	27/02/2012	04/03/2012	1	SGP	5	1208
+USA Today	USA Today	27/02/2012	04/03/2012	1	USA	5	1208
+Centre Presse (French Language)	Centre Presse	05/03/2012	11/03/2012	1	FRA	5	1209
+China Daily	China Daily	05/03/2012	11/03/2012	2	CHN	5	1209
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	05/03/2012	11/03/2012	2	HKG	5	1209
+Der Bund (Switzerland, German Language)	Der Bund	05/03/2012	11/03/2012	1	CHE	5	1209
+Die Presse (German Language)	Die Presse	05/03/2012	11/03/2012	2	AUT	5	1209
+El Comercio (Peru, Spanish Language)	El Comercio (Peru)	05/03/2012	11/03/2012	1	PER	5	1209
+Financial Times Deutschland (German Language)	Financial Times Deutschland	05/03/2012	11/03/2012	1	DEU	5	1209
+Herald	Herald	05/03/2012	11/03/2012	1	IND	5	1209
+Industry Updates	Industry Updates	05/03/2012	11/03/2012	1	CHN	5	1209
+International Herald Tribune	International Herald Tribune	05/03/2012	11/03/2012	1	USA	5	1209
+La Croix (French Language)	La Croix	05/03/2012	11/03/2012	1	FRA	5	1209
+La Nouvelle République du Centre Ouest (French Language)	La Nouvelle République du Centre Ouest	05/03/2012	11/03/2012	1	FRA	5	1209
+La Tribune de Genève (French Language)	La Tribune de Genève	05/03/2012	11/03/2012	1	CHE	5	1209
+Le Figaro (French Language)	Le Figaro	05/03/2012	11/03/2012	2	FRA	5	1209
+Le Temps (French Language)	Le Temps	05/03/2012	11/03/2012	1	CHE	5	1209
+Lejdc.fr (French Language)	Lejdc.fr	05/03/2012	11/03/2012	1	FRA	5	1209
+Les Echos (French Language)	Les Echos	05/03/2012	11/03/2012	3	FRA	5	1209
+Les Echos.fr (French Language)	Les Echos	05/03/2012	11/03/2012	1	FRA	5	1209
+Libération (French Language)	Libération	05/03/2012	11/03/2012	1	FRA	5	1209
+L'Indépendant (French Language)	L'Indépendant	05/03/2012	11/03/2012	1	FRA	5	1209
+MyPaper	MyPaper	05/03/2012	11/03/2012	2	SGP	5	1209
+Neue Zürcher Zeitung (Switzerland, German Language)	Neue Zürcher Zeitung	05/03/2012	11/03/2012	3	CHE	5	1209
+Ouest France (French Language)	Ouest France	05/03/2012	11/03/2012	1	FRA	5	1209
+Publico (Portuguese Language)	Publico	05/03/2012	11/03/2012	1	PRT	5	1209
+Shenzhen Daily	Shenzhen Daily	05/03/2012	11/03/2012	1	CHN	5	1209
+Straits Times	Straits Times	05/03/2012	11/03/2012	2	SGP	5	1209
+Stuttgarter Nachrichten (German Language)	Stuttgarter Nachrichten	05/03/2012	11/03/2012	1	DEU	5	1209
+Stuttgarter Zeitung (German Language)	Stuttgarter Zeitung	05/03/2012	11/03/2012	1	DEU	5	1209
+Sud Ouest (French Language)	Sud Ouest	05/03/2012	11/03/2012	2	FRA	5	1209
+Süddeutsche Zeitung (German Language)	Süddeutsche Zeitung	05/03/2012	11/03/2012	2	DEU	5	1209
+Tages Anzeiger (German Language)	Tages Anzeiger	05/03/2012	11/03/2012	1	CHE	5	1209
+taz - die tageszeitung (German Language)	taz - die tageszeitung	05/03/2012	11/03/2012	1	DEU	5	1209
+The Age (Melbourne, Australia)	The Age	05/03/2012	11/03/2012	2	AUS	5	1209
+The Australian	The Australian	05/03/2012	11/03/2012	1	AUS	5	1209
+The Jakarta Globe	The Jakarta Globe	05/03/2012	11/03/2012	1	IDN	5	1209
+The Sydney Morning Herald	The Sydney Morning Herald	05/03/2012	11/03/2012	2	AUS	5	1209
+The Times (London)	The Times	05/03/2012	11/03/2012	2	GBR	5	1209
+thetimes.co.uk	The Times	05/03/2012	11/03/2012	1	GBR	5	1209
+The Wall Street Journal	The Wall Street Journal	05/03/2012	11/03/2012	2	USA	5	1209
+The Wall Street Journal Americas (Portuguese Language)	The Wall Street Journal Americas (Portuguese Language)	05/03/2012	11/03/2012	1	USA	5	1209
+The Wall Street Journal Asia	The Wall Street Journal Asia	05/03/2012	11/03/2012	2	HKG	5	1209
+The Washington Post	The Washington Post	05/03/2012	11/03/2012	2	USA	5	1209
+Vancouver Sun	Vancouver Sun	05/03/2012	11/03/2012	2	CAN	5	1209
+Waikato Times	Waikato Times	05/03/2012	11/03/2012	2	NZL	5	1209
+ZEIT online (German Language)	ZEIT online	05/03/2012	11/03/2012	1	DEU	5	1209
+24 Heures (French Language)	24 Heures	12/03/2012	18/03/2012	1	CHE	5	1210
+Brabants Dagblad (Dutch Language)	Brabants Dagblad	12/03/2012	18/03/2012	1	NLD	5	1210
+Calgary Herald	Calgary Herald	12/03/2012	18/03/2012	1	CAN	5	1210
+Corriere della Sera (Italian Language)	Corriere della Sera	12/03/2012	18/03/2012	1	ITA	5	1210
+Dagens Industri (Swedish Language)	Dagens Industri	12/03/2012	18/03/2012	1	SWE	5	1210
+De Twentsche Courant Tubantia (Dutch Language)	De Twentsche Courant Tubantia	12/03/2012	18/03/2012	1	NLD	5	1210
+Eindhovens Dagblad (Dutch Language)	Eindhovens Dagblad	12/03/2012	18/03/2012	1	NLD	5	1210
+El Correo (Spanish Language)	El Correo	12/03/2012	18/03/2012	1	ESP	5	1210
+El Diario Vasco (Spanish Language)	El Diario Vasco	12/03/2012	18/03/2012	1	ESP	5	1210
+El País (Uruguay, Spanish Language)	El País	12/03/2012	18/03/2012	1	URY	5	1210
+El Periódico de Catalunya (Spanish Language)	El Periódico de Catalunya	12/03/2012	18/03/2012	1	ESP	5	1210
+Financial Times Deutschland (German Language)	Financial Times Deutschland	12/03/2012	18/03/2012	2	DEU	5	1210
+Gaceta.es (Spanish Language)	Gaceta.es	12/03/2012	18/03/2012	1	ESP	5	1210
+Irish Independent	Irish Independent	12/03/2012	18/03/2012	1	IRL	5	1210
+Joins.com	Joins.com	12/03/2012	18/03/2012	1	KOR	5	1210
+La Jornada (Mexico, Spanish Language)	La Jornada	12/03/2012	18/03/2012	1	MEX	5	1210
+La Tribune de Genève (French Language)	La Tribune de Genève	12/03/2012	18/03/2012	1	CHE	5	1210
+La Vanguardia (Spanish Language)	La Vanguardia	12/03/2012	18/03/2012	1	ESP	5	1210
+La Verdad (Spanish Language)	La Verdad	12/03/2012	18/03/2012	1	ESP	5	1210
+Le Figaro (French Language)	Le Figaro	12/03/2012	18/03/2012	1	FRA	5	1210
+Les Echos.fr (French Language)	Les Echos	12/03/2012	18/03/2012	1	FRA	5	1210
+L'Humanité (French Language)	L'Humanité	12/03/2012	18/03/2012	1	FRA	5	1210
+O Estado de São Paulo (Portuguese Language)	O Estado de São Paulo	12/03/2012	18/03/2012	1	BRA	5	1210
+Ottawa Citizen	Ottawa Citizen	12/03/2012	18/03/2012	1	CAN	5	1210
+The Statesman (India)	The Statesman	12/03/2012	18/03/2012	1	IND	5	1210
+The Sunday Times (London)	The Sunday Times	12/03/2012	18/03/2012	1	GBR	5	1210
+The Sydney Morning Herald	The Sydney Morning Herald	12/03/2012	18/03/2012	1	AUS	5	1210
+The Times of India	The Times of India	12/03/2012	18/03/2012	1	IND	5	1210
+The Wall Street Journal Deutschland (German Language)	The Wall Street Journal Deutschland	12/03/2012	18/03/2012	1	DEU	5	1210
+The Weekly Times	The Weekly Times	12/03/2012	18/03/2012	1	AUS	5	1210
+Vancouver Province	Vancouver Province	12/03/2012	18/03/2012	1	CAN	5	1210
+Vancouver Sun	Vancouver Sun	12/03/2012	18/03/2012	1	CAN	5	1210
+Diario Financiero (Chile, Spanish Language)	Diario Financiero	19/03/2012	25/03/2012	1	CHL	5	1211
+El Comercio (Peru, Spanish Language)	El Comercio (Peru)	19/03/2012	25/03/2012	1	PER	5	1211
+La Nación (Argentina, Spanish Language)	La Nación	19/03/2012	25/03/2012	1	ARG	5	1211
+La Repubblica (Italian Language)	La Repubblica	19/03/2012	25/03/2012	3	ITA	5	1211
+The Age (Melbourne, Australia)	The Age	19/03/2012	25/03/2012	1	AUS	5	1211
+The Guardian (U.K.)	The Guardian	19/03/2012	25/03/2012	2	GBR	5	1211
+The Irish Times	The Irish Times	19/03/2012	25/03/2012	1	IRL	5	1211
+The Washington Times	The Washington Times	19/03/2012	25/03/2012	1	USA	5	1211
+TODAY (Singapore)	TODAY	19/03/2012	25/03/2012	1	SGP	5	1211
+Business Line (The Hindu) (India)	Business Line	26/03/2012	01/04/2012	1	IND	5	1212
+El Nacional (Venezuela, Spanish Language)	El Nacional	26/03/2012	01/04/2012	1	VEN	5	1212
+La Repubblica (Italian Language)	La Repubblica	26/03/2012	01/04/2012	4	ITA	5	1212
+Le Temps (French Language)	Le Temps	26/03/2012	01/04/2012	1	CHE	5	1212
+Straits Times	Straits Times	26/03/2012	01/04/2012	1	SGP	5	1212
+taz - die tageszeitung (German Language)	taz - die tageszeitung	26/03/2012	01/04/2012	1	DEU	5	1212
+The Wall Street Journal Asia	The Wall Street Journal Asia	26/03/2012	01/04/2012	1	HKG	5	1212
+The Wall Street Journal Online	The Wall Street Journal Online	26/03/2012	01/04/2012	1	USA	5	1212
+The Korea Herald	The Korea Herald	02/04/2012	08/04/2012	1	KOR	5	1213
+Financial Times Deutschland (German Language)	Financial Times Deutschland	09/04/2012	15/04/2012	2	DEU	5	1214
+Taipei Times	Taipei Times	09/04/2012	15/04/2012	1	TWN	5	1214
+The Wall Street Journal Asia	The Wall Street Journal Asia	09/04/2012	15/04/2012	1	HKG	5	1214
+China Daily	China Daily	16/04/2012	22/04/2012	1	CHN	5	1215
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	16/04/2012	22/04/2012	1	HKG	5	1215
+Taipei Times	Taipei Times	16/04/2012	22/04/2012	1	TWN	5	1215
+The Australian Financial Review	The Australian Financial Review	16/04/2012	22/04/2012	1	AUS	5	1215
+The Globe and Mail (Canada)	The Globe and Mail	16/04/2012	22/04/2012	1	CAN	5	1215
+businesswatch.21cbh.com	businesswatch.21cbh.com	23/04/2012	29/04/2012	1	CHN	5	1216
+China Daily	China Daily	23/04/2012	29/04/2012	1	CHN	5	1216
+China Daily - Hong Kong Edition	China Daily - Hong Kong Edition	23/04/2012	29/04/2012	2	HKG	5	1216
+Hindustan Times	Hindustan Times	23/04/2012	29/04/2012	1	IND	5	1216
+MyPaper	MyPaper	23/04/2012	29/04/2012	1	SGP	5	1216
+People’s Daily Online (Spanish Language)	People’s Daily Online	23/04/2012	29/04/2012	2	CHN	5	1216
+Shanghai Daily	Shanghai Daily	23/04/2012	29/04/2012	1	CHN	5	1216
+Shenzhen Daily	Shenzhen Daily	23/04/2012	29/04/2012	2	CHN	5	1216
+The New Zealand Herald	The New Zealand Herald	23/04/2012	29/04/2012	1	NZL	5	1216
+The Sydney Morning Herald	The Sydney Morning Herald	23/04/2012	29/04/2012	1	AUS	5	1216
+The Washington Post	The Washington Post	23/04/2012	29/04/2012	1	USA	5	1216
+TODAY (Singapore)	TODAY	23/04/2012	29/04/2012	1	SGP	5	1216
+Der Tagesspiegel (German Language)	Der Tagesspiegel	30/04/2012	06/05/2012	1	DEU	5	1217
+El Cronista Comercial (Spanish Language)	El Cronista Comercial	30/04/2012	06/05/2012	1	ARG	5	1217
+The Australian Financial Review	The Australian Financial Review	30/04/2012	06/05/2012	1	AUS	5	1217
+The Philadelphia Inquirer	The Philadelphia Inquirer	30/04/2012	06/05/2012	1	USA	5	1217
+The Wall Street Journal	The Wall Street Journal	30/04/2012	06/05/2012	1	USA	5	1217
+The Wall Street Journal Asia	The Wall Street Journal Asia	30/04/2012	06/05/2012	1	HKG	5	1217
+Times Of Oman	Times Of Oman	30/04/2012	06/05/2012	1	OMN	5	1217
+TODAY (Singapore)	TODAY	30/04/2012	06/05/2012	1	SGP	5	1217
+businesswatch.21cbh.com	businesswatch.21cbh.com	07/05/2012	13/05/2012	1	CHN	5	1218
+Charleston Gazette	Charleston Gazette	07/05/2012	13/05/2012	1	USA	5	1218
+Financial Express (India)	Financial Express	07/05/2012	13/05/2012	1	IND	5	1218
+Global Times (National Edition)	Global Times	07/05/2012	13/05/2012	2	CHN	5	1218
+International Herald Tribune	International Herald Tribune	07/05/2012	13/05/2012	1	USA	5	1218
+Libération (French Language)	Libération	07/05/2012	13/05/2012	1	FRA	5	1218
+The Age (Melbourne, Australia)	The Age	07/05/2012	13/05/2012	1	AUS	5	1218
+Times Record News (Wichita Falls, Texas)	Times Record News	07/05/2012	13/05/2012	1	USA	5	1218
+International Herald Tribune	International Herald Tribune	14/05/2012	20/05/2012	1	USA	5	1219
+Le Figaro (French Language)	Le Figaro	14/05/2012	20/05/2012	1	FRA	5	1219
+Ming Pao Daily News (Chinese Language - Traditional)	Ming Pao Daily News	14/05/2012	20/05/2012	1	HKG	5	1219
+National Post (Canada)	National Post	14/05/2012	20/05/2012	1	CAN	5	1219
+Straits Times	Straits Times	14/05/2012	20/05/2012	1	SGP	5	1219
+Financial Times Deutschland (German Language)	Financial Times Deutschland	21/05/2012	27/05/2012	1	DEU	5	1220
+Khaleej Times	Khaleej Times	21/05/2012	27/05/2012	1	ARE	5	1220
+New Indian Express	New Indian Express	21/05/2012	27/05/2012	1	IND	5	1220
+USA Today	USA Today	21/05/2012	27/05/2012	1	USA	5	1220
