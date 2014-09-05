@@ -311,20 +311,46 @@ La série GEOFLA propose plusieurs ensembles de shapefile:
 - régions
 
 ```{r IGN}
+require(maptools)
 path <- "/home/jcb/Documents/NRBCE/EBOLA/cartes/"
 file <- "France2013/DEPARTEMENTS/DEPARTEMENT.shp"
 france.dep <- paste0(path, file)
 shape.fr.dep <- readShapePoly(france.dep)
-plot
-dep <- shape.fr.dep@data
+plot(shape.fr.dep)
 
 dep <- shape.fr.dep@data
+
 ```
 Le fichier département contient les éléments suivants:
 
 ```{r IGN_names}
 names(dep)
 ```
+Pour créer une carte des régions, on fusionne les départements ayant le même code région:
+```{r regions_france}
+contour <- unionSpatialPolygons(shape.fr.dep, IDs = shape.fr.dep@data$NOM_REGION)
+plot(contour)
+
+for(i in 1:22){print(paste(i, contour@polygons[[i]]@ID))}
+# ou plus simplement
+names(contour)
+
+col= rep("gray", 28)
+col[1] <- "red"
+plot(contour, col=col)
+col[2] <- "blue"
+plot(contour, col=col)
+col[3] <- "green"
+plot(contour, col=col)
+col[4] <- "yellow"
+plot(contour, col=col)
+col[5] <- "orange"
+plot(contour, col=col)
+col[6] <- "white"
+plot(contour, col=col)
+
+```
+L'objet résultant dessine la carte de France de régions mais a perdu son dataframe => il faudra le recréer. L'objet __contour__ de type _SpatialPolygons_ est formé de 22 polygones correspondant au 22 régions. Pour chaque polygone on a les coordonnées du centoide __labpt__.
 
 Librairie worldHires
 ====================
@@ -348,10 +374,14 @@ application: carte de l'Afrique avec les payys touchés par Ebola
 library(maps)
 m <- map(database = "world", regions = ".", projection = "gilbert", xlim = c(-23, 45), ylim = c(-35, 35))
 m$names
-ebola <- c("Liberia", "Sierra Leone", "Nigeria","Guinea")
+ebola <- c("Liberia", "Sierra Leone", "Nigeria","Guinea", "Senegal", "Zaire")
 
 cols <- ifelse(is.element(m$names, ebola), "red", "light grey")
+cols[33] <- "yellow" # Zaire
+cols[17] <- "orange" # Sénégal
+cols[30] <- "orange" # Nigeria
 map(database = "world", regions = ".", projection = "gilbert",xlim = c(-23, 45), ylim = c(-35, 35), add = TRUE, fill = TRUE, col = cols)
+title("Ebola: pays touchés au 1/9/2014")
 
 ```
 
