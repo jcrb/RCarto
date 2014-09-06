@@ -358,8 +358,8 @@ data <- data.frame(names(reg))
 rownames(data) <- names(reg)
 region <- SpatialPolygonsDataFrame(reg, data = data)
 regID <- c(42,72,83,25,26,53,24,21,94,43,23,11,91,74,41,73,31,52,22,54,93,82)
-data$regID <- regID
-names(data) <- c("reg.nom", "reg.id")
+region@data$regID <- regID
+names(region@data) <- c("reg.nom", "reg.id")
 save(region, file = "france_region.RData")
 
 ```
