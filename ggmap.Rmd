@@ -323,34 +323,47 @@ dep <- shape.fr.dep@data
 ```
 Le fichier département contient les éléments suivants:
 
-```{r IGN_names}
+```{r IGN_names, message=FALSE}
 names(dep)
 ```
 Pour créer une carte des régions, on fusionne les départements ayant le même code région:
 ```{r regions_france}
-contour <- unionSpatialPolygons(shape.fr.dep, IDs = shape.fr.dep@data$NOM_REGION)
-plot(contour)
+reg <- unionSpatialPolygons(shape.fr.dep, IDs = shape.fr.dep@data$NOM_REGION)
+plot(reg)
 
-for(i in 1:22){print(paste(i, contour@polygons[[i]]@ID))}
+for(i in 1:22){print(paste(i, reg@polygons[[i]]@ID))}
 # ou plus simplement
-names(contour)
+names(reg)
 
 col= rep("gray", 28)
 col[1] <- "red"
-plot(contour, col=col)
+plot(reg, col=col)
 col[2] <- "blue"
-plot(contour, col=col)
+plot(reg, col=col)
 col[3] <- "green"
-plot(contour, col=col)
+plot(reg, col=col)
 col[4] <- "yellow"
-plot(contour, col=col)
+plot(reg, col=col)
 col[5] <- "orange"
-plot(contour, col=col)
+plot(reg, col=col)
 col[6] <- "white"
-plot(contour, col=col)
+plot(reg, col=col)
 
 ```
 L'objet résultant dessine la carte de France de régions mais a perdu son dataframe => il faudra le recréer. L'objet __contour__ de type _SpatialPolygons_ est formé de 22 polygones correspondant au 22 régions. Pour chaque polygone on a les coordonnées du centoide __labpt__.
+
+On va transformer l'objet _reg_ en un __SpatialPolygonsDataFrame__ en lui ajoutant un dataframe. Il est impératif que le noms des lignes du datafrme soit identique et dans le même ordre que celui du slot _ID_ (ex. reg@polygons[[1]]@ID pour le polydone 1). On récupère cette information par l'instruction __names(reg)__. Pour démarrer on crée un dataframe ne comprtant qu'une colonne avec le nom des régions. L'objet résultant est __region__. On ajoute une deuxième colonne pour l'identifiant des régions. Le tout est sauvegardé dans le fichier __france_region.RData__:
+```{r}
+data <- data.frame(names(reg))
+rownames(data) <- names(reg)
+region <- SpatialPolygonsDataFrame(reg, data = data)
+regID <- c(42,72,83,25,26,53,24,21,94,43,23,11,91,74,41,73,31,52,22,54,93,82)
+data$regID <- regID
+names(data) <- c("reg.nom", "reg.id")
+save(region, file = "france_region.RData")
+
+```
+
 
 Librairie worldHires
 ====================
