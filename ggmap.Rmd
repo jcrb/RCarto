@@ -557,7 +557,52 @@ AnnoTimeLine <- gvisAnnotatedTimeLine(df, datevar = "time1", date.format = "%Y -
 # Affichage du graph
 print(AnnoTimeLine, "chart")
 
+```
 
+OSM - Geofabrik
+===============
 
+Exploite les shapefile téléchargés sur geofabrik. Il s'agit de la région Alsace. Les sources dont dans le dossier Resural/Distancier.
+
+```{r}
+path <- "/home/jcb/Documents/Resural/DISTANCIER/alsace-latest.shp/"
+
+```
+
+Landuse
+-------
+
+```{r}
+osm.shp <- paste0(path, "landuse.shp")
+landuse <- readShapePoly(osm.shp)
+plot(landuse)
+slotNames(landuse)
+d <- landuse@data
+summary(d$type)
+
+```
+
+Natural
+-------
+
+```{r}
+osm.shp <- paste0(path, "natural.shp")
+natural <-  readShapePoly(osm.shp)
+plot(natural)
+slotNames(natural)
+d <- natural@data
+View(d)
+summary(d$type)
+
+Places
+-------
+
+```{r}
+osm.shp <- paste0(path, "places.shp")
+places <-  readShapePoly(osm.shp)
+plot(places)
+slotNames(places)
+d <- places@data
+summary(d$type)
 ```
 
