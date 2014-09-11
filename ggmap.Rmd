@@ -593,16 +593,41 @@ slotNames(natural)
 d <- natural@data
 View(d)
 summary(d$type)
+```
 
 Places
 -------
 
 ```{r}
 osm.shp <- paste0(path, "places.shp")
-places <-  readShapePoly(osm.shp)
+places <-  readShapePoints(osm.shp)
 plot(places)
 slotNames(places)
 d <- places@data
 summary(d$type)
 ```
 
+Points
+-------
+
+```{r}
+osm.shp <- paste0(path, "points.shp")
+points <-  readShapePoints(osm.shp)
+plot(points)
+slotNames(points)
+d <- points@data
+summary(d$type)
+```
+
+Roads
+-----
+
+
+```{r}
+osm.shp <- paste0(path, "roads.shp")
+roads <-  readShapeLines(osm.shp)
+plot(roads)
+slotNames(roads)
+d <- roads@data
+summary(d$type)
+```
