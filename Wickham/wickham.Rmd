@@ -1,0 +1,110 @@
+---
+title: "Plotting polygon shapefiles"
+author: "jcb"
+date: "8 mai 2015"
+output: html_document
+---
+
+source: [Plotting polygon shapefiles](https://github.com/hadley/ggplot2/wiki/plotting-polygon-shapefiles) de Hadley Wickham.
+
+Objectif
+--------
+Use ggplot2 to plot polygons contained in a shapefile.
+
+Packages
+--------
+```{r packages, echo=FALSE, message=FALSE, warning=FALSE, comment=""}
+require("rgdal") # requires sp, will use proj.4 if installed
+  require("maptools")
+  require("ggplot2")
+  require("plyr")
+```
+Data
+----
+Les shapefiles Alsace, Lorraine, Champagne-Ardennes sont dans le dossier __data__. (source: [Shapefile des régions et départements français](http://www.actualitix.com/shapefile-des-regions-au-niveau-departemental.html))
+
+Un shapefile est un groupe de fichiers contenant des géométries et des attributs répondant à la norme ESRI. On s'intéresse ici aux géométries de type polygone.
+Par exemple le fichier __alsace__ contient les éléments:
+
+- _.dbf_ contient les attribut
+- _.prj_ type de projection. Permet de merger plusieurs SHP ayant des projections différentes. Utilisé par _rgdal_ pour reprojeter un SHP.
+- _.sbn_
+- _.sbx_
+- _.shp_ contient les géométries
+- _.shx_
+
+The elements of the two files _.dbf_ et _.shp_ are linked by their offsets in the file: the first geometric feature (offset 0 in the shp) has its attributes in the first attribute tuple (offset 0 in the dbf file).  There is a one-to-one relationship between geometry tuples and attribute tuples.  This structure will be key when preparing shapefile contents for ggplot2.
+
+Preparation
+------------
+Les éléments du shapefile sont chargés dans un objet spatial et transformés pour être utilisés par ggplot2
+
+```{r}
+# setwd("Wickham")
+
+als <- readOGR(dsn = "data/alsace", layer = "alsace")
+lor <- readOGR(dsn = "data/lorraine", layer = "lorraine")
+cha <- readOGR(dsn = "data/champagne-ardenne", layer = "champagne-ardenne")
+names(als@data)
+names(lor@data)
+names(cha@data)
+
+par(mar = rep(0,4)) # on fait de la place
+
+plot(als)
+plot(lor)
+plot(cha)
+
+# data
+d.als <- als@data
+d.lor <- lor@data
+d.cha <- cha@data
+
+# Champagne: chef-lieu et nom département
+points(d.cha$X_CHF_LIEU*100, d.cha$Y_CHF_LIEU*100, col = "red", pch = 19)
+text(d.cha$X_CHF_LIEU*100, d.cha$Y_CHF_LIEU*100, d.cha$NOM_CHF, cex=0.8, pos=4)
+text(d.cha$X_CENTROID*100, d.cha$Y_CENTROID*100, paste0(d.cha$NOM_DEPT, " (", d.cha$CODE_DEPT,")"), cex=0.6, pos=1)
+
+
+
+als@data$id = rownames(als@data)
+als.points = fortify(als, region="id")
+als.df = join(als.points, als@data, by="id")
+```
+
+Notes
+-----
+L'objet __als__ est une instance de la classe sp::SpatialPolygonsDataFrame, qui contient les polygones et leurs attributs. Toute manipulation spatiale (comme une re-projection) sont réalisées sur cet objet.
+
+ggplot2 trace les polygones en utilisant __geom_polygon__ qui attend un dataframe standard contenant les arrêtes des polygones et les attributs. Ces informations sont contenues dans __als__ mais doivent être transformées en un dataframe standard.
+
+Les slots de _als_ sont:
+
+    bbox
+    data
+    plotOrder
+    polygons
+    proj4string
+
+Les slots qui nous intéressent sont utah@data (the geometry attributes) et utah@polygons (the geometry features). Les attributes et les features sont liés les unes aux autres par de sorte que la relation est implicite.  
+Les relations entre attibuts doivent être explicites de sorte que les geometry attributes  puissent être joints aux geometry features.
+
+  utah@data$id = rownames(utah@data)
+
+explicitly identifies attribute rows by the .dbf offset.
+
+  utah.points = fortify(utah, region="id")
+
+melts the polygons into points, tags each point with the id value of the corresponding attribute row, and tags each point with values from the polygon from which the point was derived.
+
+region selects the feature attribute name to tag each row in the new data frame.  Each geometry feature offset gets the value from the feature attribute at the same offset.  In this case, it is utah@data$id.  The attribute utah.points$id contains the mapped value.  If a different attribute were used (region="LEVEL3"), utah.points$id would contain the corresponding value of utah@data$LEVEL3.
+
+utah.points attributes include spatial coordinates (long and lat), group (coordinates having the same group belongs to the same polygon), and id (each id identifies a feature attribute tuple).
+
+One of the remaining attributes is hole.  Each polygon in utah@polygons is defined by one or more polygons. When defined by multiple polygons, the sub-polygons may be disjunct islands or holes. A hole part should remove geometry from its utah@polgons instance.  When utah.points is created and individual polygons are melted, the hole state is retained, but this information is not used by ggplot2. Depending on the rendering sequence of the polygons, holes may overlay and obscure other polygons, or, more likely and more problematic, polygons are rendered without their fill removed from the hole, which obscures what should be seen through the hole.
+
+  utah.df = join(utah.points, utah@data, by="id")
+
+joins the points to their corresponding attributes and finalizes the data preparation.
+
+  

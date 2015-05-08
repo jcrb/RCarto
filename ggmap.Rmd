@@ -28,6 +28,10 @@ Les données spatiales sont traitées par de nombreux packages qui sont regroup�
 
 - [Commission européenne](http://epp.eurostat.ec.europa.eu/portal/page/portal/gisco_Geographical_information_maps/popups/references/administrative_units_statistical_units_1): cartes au format shapefile. Un fichier __CNTR_2010_03M_SH__ se trouve dans /home/jcb/Documents/CartographieR (a tester).
 
+- [Shapefile des régions et départements français](http://www.actualitix.com/shapefile-des-regions-au-niveau-departemental.html) extraits de l'IGN.
+
+- [Plotting polygon shapefiles](https://github.com/hadley/ggplot2/wiki/plotting-polygon-shapefiles) de Hadley Wickham. Voir onglet __wickham.Rmd__
+
 Utilisation de gmap
 ===================
 
