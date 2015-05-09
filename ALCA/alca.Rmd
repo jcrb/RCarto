@@ -1,0 +1,47 @@
+---
+title: "ALCA"
+author: "JcB"
+date: "08/05/2015"
+output: html_document
+---
+
+```{r}
+require("rgdal") # requires sp, will use proj.4 if installed
+require("maptools")
+
+path <- "../IGN_GEOFLA_2014/GEOFLA_2-0_COMMUNE_SHP_LAMB93_FXX_2014-12-05/GEOFLA/1_DONNEES_LIVRAISON_2014-12-00066/GEOFLA_2-0_SHP_LAMB93_FR-ED141/COMMUNE"
+file <-"COMMUNE"
+france <- readOGR(dsn = path, layer = file)
+d.france <- france@data
+
+par(mar = rep(0,4)) # on fait de la place
+
+# extraction d'un départementst<-france[france$CODE_DEPT==67,]
+br <- france[france$CODE_DEPT == 67,]
+plot(alsace)
+
+# extraction d'une région
+lorraine <-  france[france$NOM_REG == "LORRAINE",]
+plot(lorraine)
+
+alsace <-  france[france$NOM_REG == "ALSACE",]
+plot(alsace)
+
+# extraction ALCA
+alca <-  france[france$NOM_REG %in% c("ALSACE","LORRAINE","CHAMPAGNE-ARDENNES"),]
+
+# données régionames
+d.alsace <- alsace@data
+names(d.alsace)
+
+```
+Haguenau
+--------
+Commune de France la plus étendue à cause de sa fôret => densité corrigée = nb habitants / superficie - 13742 hectares (foret indivise de Haguenau)
+
+Capacités hospitalières
+-----------------------
+La meilleure source est le répertoire __[scope.santé](http://www.scopesante.fr)__ et notamment les fiches détaillées, accessibles à l'adresse http://www.scopesante.fr/fiches-detaillees/ + FINESS géographique. Exemple pour Haguenau: http://www.scopesante.fr/fiches-detaillees/670000157/. La rubrique __ndicateurs volumétriques d'activité__ renseigne sur les lits
+
+Enquete [FEDORU](https://docs.google.com/spreadsheets/d/1m6vgG0A-4BAQPHr_HNZehpZ5A8EkEDgoE5JlUFcNXv8/edit#gid=213026183) sur les SU, SAMU, SMUR. Lefichier complété au 8/5/2015 est enregistré dans RPU_Doc/Cartographie.
+

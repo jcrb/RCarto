@@ -1,0 +1,53 @@
+---
+title: "GeocodeHERE"
+author: "JcB"
+date: "07/11/2014"
+output: html_document
+---
+
+Ca package permet de récupérer les coordonnées d'objet cartographiques à partir de la base de données Nokia. Par rapport au programme Google, le nombre de requêtes autorisées est de 10.000 par jour contre 2500.
+
+source: http://blog.corynissen.com/2014/11/geocodehere-01-is-on-cran.html
+
+La fonction  [ggmap::geocode()](http://cran.r-project.org/web/packages/ggmap/index.html) fait la m^eme chose mais geocode permet le travail par paquets
+
+```{r}
+install.packages("geocodeHERE", repo="http://cran.rstudio.com",dependencies=TRUE)
+library(geocodeHERE)
+geocodeHERE_simple("wrigley field chicago IL")
+d <- chicago_landmarks
+
+geocodeHERE_simple("Hôpital de Wissembourg, wissembourg france")
+geocodeHERE_simple("wissembourg france")
+
+geocodeHERE_simple("forbach france")
+geocodeHERE_simple("Hôpital Marie-Madeleine, forbach france") # faux
+geocodeHERE_simple("centre hospitalier, forbach france") # exact
+
+```
+
+Application: recherche des coordonnées des hôpitaux d'Alsace-Lorraine à partir du fichier des logiciels utilisés dans les SU. A partir de ce fichier on récupère l'adresse des hôpitaux. 
+
+file <- "/home/jcb/Documents/CartographieR/RCarto/GeoCodeHERE/ENQUETE LOGICIEL su_France.csv"
+d <- read.csv(file)
+d <- d[d$Région %in% c("ALSACE", "LORRAINE"),]
+ad <- paste(addresses$Adresse, addresses$Libelle.routage, "France")
+a <- array()
+b <- array()
+for(i in 1:n){x <- geocodeHERE_simple(ad[i]); a[i] <- x[1]; b[i] <- x[2]}
+c <- cbind(a,b)
+
+save(d, file <- "alslor.Rda")
+save(a, file = "alslor_lat.Rda")
+save(b, file = "alslor_lon.Rda")
+save(c, file = "alslor_latlon.Rda")
+
+Un seul établissement n'est pas trouvé: Mulhouse. Le pb vient de l'ortographe du nom de la rue (Docteur est abrégé en DR). Après correction on obtient les bonnes coordonnées:
+
+geocodeHERE_simple("20 rue du docteur laennec Mulhouse france")
+
+$Latitude
+[1] 47.72475
+
+$Longitude
+[1] 7.346184

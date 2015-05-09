@@ -1,0 +1,54 @@
+\documentclass[a4paper]{article}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % le texte source doit être utf8 sinon latin1
+
+\begin{document}
+
+\title{Project Report Template}
+\author{JcB \& Graham Williams}
+\maketitle\thispagestyle{empty}
+
+\section{Introduction}
+Un paragraphe ou deux pour introduire le sujet.
+
+\section{Question de recherche}
+Describe discussions with client (business experts) and record
+decisions made and shared understanding of the business problem.
+
+\section{Les données source}
+Identifier les les sources de données et discuter de leur accès avec les propriétaires de ces données. Documenter les données sources, leur intégrité, leur origine et les dater.
+
+\section{Préparation des données}
+
+charger les données dans R et réaliser diverses transformations pour les adapter à l'analyse et à la modélisation.
+
+\section{Exploration des données}
+Il faut toujours commencer par comprendre le données en les explorant sous différents angles.
+Les résumés et des graphiques simples sont une aide précieuse.
+
+\section{Construire un modèle}
+Inclure tous les modèles imaginés et les différents paramètres testés.
+Inclure le code R et les évaluations des modèles
+
+\section{Deployer}
+Choisir le modèle à déployer et l'exporter.
+
+
+\section{Utilisation de RStudio}
+
+RStudio supporte le style ancien \emph{Sweave} et la version moderne \emph{knir}. Pour utiliser \emph{knir}, il faut en informer RStudio.
+Dans \texttt{Tools} $\longrightarrow$ \texttt{Project option}, sélectionner l'icone \textbf{Sweave}, puis l'option \textbf{knitr} qui sera utilisé pour weaver les fichiers \emph{.Rnw}.
+
+\section{Insérer du code R}
+
+<<example_random_mean>>=
+x <- runif(1000) * 1000
+head(x)
+mean(x)
+@
+
+Pour afficher sur une ligne utiliser \begin{verbatim} \Sexpr{} \end{verbatim}, par exemple \begin{verbatim} \Sexpr{Sys.Date()} \end{verbatim} donne \Sexpr{Sys.Date()}.
+
+
+\end{document}

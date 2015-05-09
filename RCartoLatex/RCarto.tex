@@ -1,0 +1,115 @@
+\documentclass[a4paper]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % le texte source doit être utf8 sinon latin1
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Project Report Template}
+\author{JcB \& Graham Williams}
+\maketitle\thispagestyle{empty}
+
+\section{Introduction}
+Un paragraphe ou deux pour introduire le sujet.
+
+\section{Question de recherche}
+Describe discussions with client (business experts) and record
+decisions made and shared understanding of the business problem.
+
+\section{Les données source}
+Identifier les les sources de données et discuter de leur accès avec les propriétaires de ces données. Documenter les données sources, leur intégrité, leur origine et les dater.
+
+\section{Préparation des données}
+
+charger les données dans R et réaliser diverses transformations pour les adapter à l'analyse et à la modélisation.
+
+\section{Exploration des données}
+Il faut toujours commencer par comprendre le données en les explorant sous différents angles.
+Les résumés et des graphiques simples sont une aide précieuse.
+
+\section{Construire un modèle}
+Inclure tous les modèles imaginés et les différents paramètres testés.
+Inclure le code R et les évaluations des modèles
+
+\section{Deployer}
+Choisir le modèle à déployer et l'exporter.
+
+
+\section{Utilisation de RStudio}
+
+RStudio supporte le style ancien \emph{Sweave} et la version moderne \emph{knir}. Pour utiliser \emph{knir}, il faut en informer RStudio.
+Dans \texttt{Tools} $\longrightarrow$ \texttt{Project option}, sélectionner l'icone \textbf{Sweave}, puis l'option \textbf{knitr} qui sera utilisé pour weaver les fichiers \emph{.Rnw}.
+
+\section{Insérer du code R}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x} \hlkwb{<-} \hlkwd{runif}\hlstd{(}\hlnum{1000}\hlstd{)} \hlopt{*} \hlnum{1000}
+\hlkwd{head}\hlstd{(x)}
+\end{alltt}
+\begin{verbatim}
+## [1] 668.2 224.5 206.1 814.7 173.3 157.8
+\end{verbatim}
+\begin{alltt}
+\hlkwd{mean}\hlstd{(x)}
+\end{alltt}
+\begin{verbatim}
+## [1] 496
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Pour afficher sur une ligne utiliser \begin{verbatim} \Sexpr{} \end{verbatim}, par exemple \begin{verbatim} 2014-09-14 \end{verbatim} donne 2014-09-14.
+
+
+\end{document}
