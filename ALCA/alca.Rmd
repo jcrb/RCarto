@@ -116,3 +116,17 @@ proj4string (d78WGS84)
 plot (d78WGS84, axes = TRUE, las=2)
 title ("epsg 4326 #  WGS 84")
 
+Utiliser OSM
+------------
+```{r}
+library("OpenStreetMap", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+Nantes <- c(47.227962,-1.558113)
+map <- openmap(c(Nantes[1]+0.1,Nantes[2]-0.2), c(Nantes[1]-0.1,Nantes[2]+0.2),type='osm')
+plot(map,raster=TRUE)
+map <- openmap(c(Nantes[1]+0.2,Nantes[2]-0.3), c(Nantes[1]-0.1,Nantes[2]+0.2),type='osm')
+plot(map,raster=TRUE)
+map <- openmap(c(Nantes[1]+0.01,Nantes[2]-0.02), c(Nantes[1]-0.01,Nantes[2]+0.02),type='osm')
+plot(map,raster=TRUE)
+
+```
+
