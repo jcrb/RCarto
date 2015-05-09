@@ -45,3 +45,74 @@ La meilleure source est le répertoire __[scope.santé](http://www.scopesante.fr
 
 Enquete [FEDORU](https://docs.google.com/spreadsheets/d/1m6vgG0A-4BAQPHr_HNZehpZ5A8EkEDgoE5JlUFcNXv8/edit#gid=213026183) sur les SU, SAMU, SMUR. Lefichier complété au 8/5/2015 est enregistré dans RPU_Doc/Cartographie.
 
+Changer de projection
+----------------------
+
+source [seminR](http://rug.mnhn.fr/semin-r/PDF/semin-R_carto_RBaudoin_170311.pdf) pp 25-27
+
+Système géographique de référence
+Avoir le bon CRS !
+
+Accès aux données du fichier des codes de référence EPSG
+EPSG <-make_EPSG ()
+
+Recherche du bon code, 
+exemple pour les projections Lambert xx
+(EPSG_Lambert <- EPSG [grep("Lambert", EPSG$note), 1:2] )
+
+Trois codes incontournables
+
+row  |  code EPSG  |  note  |  argument   
+-----|-------------|--------|----------   
+249  |  4326       |  WGS 84  |  +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs   
+584  |  2154       |  RGF93 / Lambert-93  | +proj=lcc +lat_1=49 +lat_2=44 
++lat_0=46.5 +lon_0=3 +x_0=700000 
++y_0=6600000 +ellps=GRS80 +towgs84=0,
+0,0,0,0,0,0 +units=m +no_defs   
+2985  |  27572  |  NTF (Paris) / Lambert zone II  |  +proj=lcc +lat_1=46.8 +lat_0=46.
+8 +lon_0=0 +k_0=0.99987742 +x_0=600000 
++y_0=2200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 
++pm=paris +units=m +no_defs   
+
+WGS 84 :  système géodésique mondial (World Geodesic System 1984). Celui de Google Earth.
+
+NTF : Nouvelle Triangulation pour la France (1873 - 1991).
+
+RGF : Réseau Géodésique Français(à partir de 1990).
+
+RGF93 :Réseau géodésique français légal pour la métropole depuis le décret du 26.12.2000
+
+Lambert :     système de projection utilisé pour la France (4 zones).
+
+Lambert93 : projection associée au système géodésique RGF93 (compatible avec WGS84)
+
+Changer de système de référence pour des objets de classe : Spatial... [ librairie sp ]
+library (rgdal)
+d78 <- readOGR ("Dept78.TAB", layer="Dept78")
+proj4string (d78) 
+# Affiche le système de référence (CRS)
+"+proj=lcc +lat_1=45.898918964419 +lat_2=47.696014502038 +lat_0=46.8 +lon_0=0 +x_0=600000 +y_0=2200000 +a=6378249.2 +b=6356515.000000472 +towgs84=-168,-60,320,-0,-0,-0,0+pm=2.337229166667 +units=m +no_defs"
+
+plot (d78, axes = TRUE, las=2)
+
+title ("epsg 27572 - NTF (Paris) / Lambert zone II")
+
+Reprojeter en RGF93, code EPSG : 2154 
+
+d78RGF93 <-spTransform(d78, CRS ("+init=epsg:2154") )
+proj4string (d78RGF93)
+"+init=epsg:2154 +proj=lcc +lat_1=49 +l
+at_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 
++y_0=6600000 +ellps=GRS80 +towgs84=0,
+0,0,0,0,0,0 +units=m +no_defs"
+plot (d78RGF93, axes = TRUE, las=2)
+title ("epsg 2154 #  RGF93 / Lambert-93")
+
+
+Reprojeter en WGS 84 , code EPSG : 4326
+d78WGS84 <- spTransform(d78, CRS ("+init=epsg:4326") )
+proj4string (d78WGS84)
+"+init=epsg:4326 +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
+plot (d78WGS84, axes = TRUE, las=2)
+title ("epsg 4326 #  WGS 84")
+
