@@ -26,7 +26,7 @@ require("maptools")
 
 path <- "../../IGN_GEOFLA_2014/GEOFLA_2-0_COMMUNE_SHP_LAMB93_FXX_2014-12-05/GEOFLA/1_DONNEES_LIVRAISON_2014-12-00066/GEOFLA_2-0_SHP_LAMB93_FR-ED141/COMMUNE"
 file <-"COMMUNE"
-france <- readOGR(dsn = path, layer = file)
+france <- readOGR(dsn = path, layer = file, encoding = "latin1") # règle le pb de accents
 d.france <- france@data
 
 par(mar = rep(0,4)) # on fait de la place

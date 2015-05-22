@@ -1,0 +1,41 @@
+---
+title: "Codes Postaux"
+author: "JcB"
+date: "22/05/2015"
+output: html_document
+---
+
+Fond de carte des codes postaux
+===============================
+
+Cartogaphie des codes postaux de la France et plus particulièrement de l'Alsace. Les données sont au format __shapefile__ et sont stockées dans le dossier __CartographieR/Fond de carte des codes postaux/codes_postaux__.
+
+[source du document](https://www.data.gouv.fr/fr/datasets/fond-de-carte-des-codes-postaux/)
+
+```{r init}
+require("rgdal") # requires sp, will use proj.4 if installed
+require("maptools")
+
+path <- "../../Fond de carte des codes postaux/codes_postaux"
+file <-"codes_postaux_region"
+france <- readOGR(dsn = path, layer = file, encoding = "latin1")
+d.france <- france@data
+names(d.france)
+head(d.france)
+
+par(mar = rep(0,4)) # on fait de la place
+
+# extraction d'un départementst<-france[france$CODE_DEPT==67,]
+br <- france[france$DEP == 67,]
+plot(br)
+
+```
+Les données géographiques sont fournies en projection Lambert 93 au format ESRI Shape et Mapinfo.
+
+Liste des champs:
+id        		:	identifiant du code postal à 5 chiffres
+lib			:	libellé du code postal
+dep			:	code du département
+surf		        :	superficie (en km²)
+pop2010		        :	population estimée en 2010
+men2010		        :	nombre de ménages estimé en 2010
