@@ -5,14 +5,22 @@ date: "08/05/2015"
 output: html_document
 ---
 
-Les fichiers Shapefile sont dans le dossier __CartographieR/IGN_GEOFLA_2014__.
+Les fichiers Shapefile sont dans le dossier __CartographieR/IGN_GEOFLA_2014__. Une source importante est [R pour les géographes](http://framabook.org/16-r-et-espace/).
 
-```{r}
+Ce travail à pour objectif de représenter la cartographie de la région ALCA en utilisant les techniques décrites dans le document de référence.
+
+```{}
 CartographieR + IGN_GEOFLA_2014
               |
               + RCarto + ALCA
                        + Wickham
+```
 
+Le fond de carte utilisé est celui de l'IGN [Geofla 2014](http://professionnels.ign.fr/geofla). Le données sont au format shapefile et chargées avec __readOGR__ qui demande 2 paramètres: le nom du dossier contenant le fichier et le nom du fichier.
+
+L'instruction provoque le chargement de la France entière, découpées par communes. Les données sont stockées dans __d.france__. On extrait ensuite les différentes régions d'intér^et.
+
+```{r}
 require("rgdal") # requires sp, will use proj.4 if installed
 require("maptools")
 
@@ -25,7 +33,7 @@ par(mar = rep(0,4)) # on fait de la place
 
 # extraction d'un départementst<-france[france$CODE_DEPT==67,]
 br <- france[france$CODE_DEPT == 67,]
-plot(alsace)
+plot(br)
 
 # extraction d'une région
 lorraine <-  france[france$NOM_REG == "LORRAINE",]
@@ -35,10 +43,39 @@ alsace <-  france[france$NOM_REG == "ALSACE",]
 plot(alsace)
 
 # extraction ALCA
-alca <-  france[france$NOM_REG %in% c("ALSACE","LORRAINE","CHAMPAGNE-ARDENNES"),]
+alca <-  france[france$NOM_REG %in% c("ALSACE","LORRAINE","CHAMPAGNE-ARDENNE"),]
 plot(alca)
+d.alca <- alca@data
+# utilisation de unionSpatialPolygons pour les REGIONS
+alca.region <- unionSpatialPolygons(alca, IDs = alca@data$CODE_REG)
+plot(alca.region)
 
-# données régionames
+# carte des départements
+alca.dept <- unionSpatialPolygons(alca, IDs = alca@data$CODE_DEPT)
+plot(alca.dept, main = "Les 10 départements ALCA")
+
+# régions et départements
+plot(alca.dept, main = "Les 3 régions et 10 départements ALCA")
+plot(alca.region, border = "blue", lwd = 2, add = TRUE)
+# échelle
+ech = 50000 # longueur de l'échelle en mètres
+x = par()$usr[1]
+y = par()$usr[3]
+arrows(x + 1000, y + 1000, x + ech, y + 1000, lwd = 2, code = 3, angle = 90, length = 0.05)
+text(x + 25500, y + 15000, "50 km", cex = 1)
+# corection des caractères anormaux
+d.alca$STATUT <- factor(gsub("\xe9", "é", d.alca$STATUT, fixed = FALSE))
+# capitales régionales
+x <- d.alca$X_CHF_LIEU[d.alca$STATUT == "Préfecture de région"]
+y <- d.alca$Y_CHF_LIEU[d.alca$STATUT == "Préfecture de région"]
+nom <- d.alca$NOM_COM[d.alca$STATUT == "Préfecture de région"]
+
+points(x, y, col = "red", pch = 19, cex = 1.2)
+text(x, y, labels = nom, cex = 0.8, pos = c(4,2,4))
+# préfectures
+
+
+# données régionales
 d.alsace <- alsace@data
 names(d.alsace)
 ```
@@ -79,7 +116,6 @@ y = par()$usr[3]
 
 arrows(x + 1000, y + 1000, x + ech, y + 1000, lwd = 2, code = 3, angle = 90, length = 0.05)
 text(x + 2550, y + 1500, "5 km", cex = 1)
-
 
 ```
 
@@ -167,7 +203,7 @@ title ("epsg 4326 #  WGS 84")
 Utiliser OSM
 ------------
 ```{r}
-library("OpenStreetMap", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+library("OpenStreetMap")
 Nantes <- c(47.227962,-1.558113)
 map <- openmap(c(Nantes[1]+0.1,Nantes[2]-0.2), c(Nantes[1]-0.1,Nantes[2]+0.2),type='osm')
 plot(map,raster=TRUE)
