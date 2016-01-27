@@ -1,0 +1,20 @@
+---
+title: "Leaflet"
+author: "JcB"
+date: "11/11/2015"
+output: html_document
+---
+
+source: http://datascienceplus.com/building-interactive-maps-with-leaflet/
+
+```{r, echo=FALSE}
+library(leaflet)
+library(magrittr)
+
+SFmap <- leaflet(width = 800, height = 600) %>% 
+  addTiles() %>% 
+  setView(-122.42, 37.78, zoom = 13) %>% 
+  addMarkers(-122.42, 37.78, popup = 'Bay Area')
+SFmap
+```
+

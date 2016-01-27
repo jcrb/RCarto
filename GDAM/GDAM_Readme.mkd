@@ -1,0 +1,103 @@
+Laboratoire d'écologie université de Davies (CA)
+================================================
+
+Développe des projets de cartographie en R, notamment le package __raster__ et la base de données cartographique __GDAM__.
+
+Le site est accessible [ici](http://biogeo.ucdavis.edu/index.html)
+
+L'onglet __Projects__ permet d'accéder notammant à _GDAM_ [Global Administrative Boundaries (GADM)](http://gadm.org/). GDAM est une BD de l'ensemble des pays du monde permettant de télécharger les limites administratives à différents niveaux et en fonction de différent format ntamment __SHP__ et __R__ (SpatialPolygonDataFrame).
+
+Les objets _SpatialPolygonDataFrame_ sont stockés avec l'extension __.rds__ et peuvent être récupérés avec la fonction __readRDS(file.rds)__ du package __sp__.
+
+L'ensemble des packages utilisés pour la cartographie avec R sont décits par [Roger Bivand](https://cran.r-project.org/web/views/Spatial.html) avec notamment un paragraphhe consacré au suivi des maladies.
+
+
+Exemple d'utilisation des pakages avec GDAM: carte de Singapour
+---------------------------------------------------------------
+
+![singapour](Rplot03.png)
+```
+This can get you started (if you're the ggplot2 sort of person).
+
+raster::getData will pull the data without a manual download. I'm not sure what you need admin-level-wise, so I went with Admin1.
+
+ggplot2::fortify takes the spatial data and makes it something ggplot2 can work with. It would normally use the polygon id, but you can substitute other identifiers from the shapefile. i went with the region name.
+
+i made a dummy data frame for a random choropleth and then proceed to
+plot the base map and fill layers.
+
+viridis is a nice scale, but you'd ideally want to cut or cut2 some
+levels since it's unlikely you have data that should be on a
+continuous scale (just guessing tho).
+
+the projection i chose is a pretty gd one for that region with those
+lat/lon boundaries.
+
+library(raster)
+library(rgeos)
+library(maptools)
+library(ggplot2)
+library(ggalt)
+library(ggthemes)
+library(viridis)
+
+sg <- getData(country="SGP", level=1)
+
+sg_map <- fortify(sg, region="NAME_1")
+
+choro_dat <- data.frame(region=sg@data$NAME_1,
+                        value=sample(100, nrow(sg@data)),
+                        stringsAsFactors=FALSE)
+
+gg <- ggplot()
+gg <- gg + geom_map(data=sg_map, map=sg_map,
+                    aes(x=long, y=lat, map_id=id),
+                    color="#b2b2b200", fill="#ffffff00", size=0.15)
+gg <- gg + geom_map(data=choro_dat, map=sg_map,
+                    aes(fill=value, map_id=region),
+                    color="#b2b2b2", size=0.15)
+gg <- gg + coord_proj("+proj=aea +lon_0=103.8474")
+gg <- gg + scale_fill_viridis(name="Measure")
+gg <- gg + theme_map()
+gg <- gg + theme(legend.position="bottom")
+gg
+```
+![singapour2](Rplot04.png)
+
+Essai avec le Nigeria (épidémie de fièvre de Lassa
+--------------------------------------------------
+
+Trois niveaux administratifs:
+
+### Niveau 0 (contour du pays)
+
+![Nigeria0](Rplot02.png)
+```
+setwd("~/Documents/CartographieR/RCarto/GDAM/")
+nga <- readRDS("Nigeria/NGA_adm0.rds")
+nga.df <- nga@data
+View(nga.df)
+plot(nga)
+nga@bbox
+nga@proj4string
+```
+### Niveau 1 (Etats/province)
+
+![Nigeria1](Rplot01.png)
+```
+nga1 <- readRDS("Nigeria/NGA_adm1.rds")
+plot(nga1)
+nga1.df <- nga1@data
+```
+### Niveau 2 (subdivision des états)
+
+![Nigeria2](Rplot.png)
+```
+nga2 <- readRDS("Nigeria/NGA_adm2.rds")
+plot(nga2)
+```
+
+France
+------
+
+Cinq niveaux: ToDo
