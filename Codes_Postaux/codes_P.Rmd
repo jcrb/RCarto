@@ -1,0 +1,102 @@
+---
+title: "Codes Postaux"
+author: "JcB"
+date: "22/05/2015"
+output: html_document
+---
+
+Fond de carte des codes postaux
+===============================
+
+Cartogaphie des codes postaux de la France et plus particulièrement de l'Alsace. Les données sont au format __shapefile__ et sont stockées dans le dossier __CartographieR/Fond de carte des codes postaux/codes_postaux__.
+
+[source du document](https://www.data.gouv.fr/fr/datasets/fond-de-carte-des-codes-postaux/)
+
+```{r init}
+require("rgdal") # requires sp, will use proj.4 if installed
+require("maptools")
+
+path <- "../../Fond de carte des codes postaux/codes_postaux"
+file <-"codes_postaux_region"
+france <- readOGR(dsn = path, layer = file, encoding = "latin1")
+d.france <- france@data
+names(d.france)
+head(d.france)
+
+par(mar = rep(0,4)) # on fait de la place
+
+```
+
+Les données géographiques sont fournies en projection Lambert 93 au format ESRI Shape et Mapinfo.
+
+Liste des champs:
+id        		:	identifiant du code postal à 5 chiffres
+lib			:	libellé du code postal
+dep			:	code du département
+surf		        :	superficie (en km²)
+pop2010		        :	population estimée en 2010
+men2010		        :	nombre de ménages estimé en 2010
+
+code postal 67000
+-----------------
+```{r }
+cp67000 <- france[france$ID == 67000,]
+plot(cp67000)
+
+class(cp67000)
+
+# récupère les données
+d.cp67000 <- cp67000@data
+d.cp67000
+
+# récupère les coordonnées du centroïde
+lab <- cp67000@polygons[[1]]@labpt
+# affiche le code postal
+text(lab[1], lab[2], d.cp67000$ID)
+
+```
+
+Ensemble des codes postaux de Strasbourg
+----------------------------------------
+```{r cpStr}
+# Zone des codes postaux de Strasbourg
+cpStr <- france[france$ID %in% c(67000,67100,67200,67300),]
+plot(cpStr, border = "gray80", lwd = 3, main = "Codes postaux de Strasbourg")
+
+# récupère les données
+d.cpStr <- cpStr@data
+# corriger les factors qui ontplus de 6000 niveaux...
+d.cpStr$ID <- factor(d.cpStr$ID)
+d.cpStr$LIB <- factor(d.cpStr$LIB)
+d.cpStr$DEP <- factor(d.cpStr$DEP)
+
+d.cpStr
+
+# affiche les CP au centre du centroïde
+for(i in 1:4){
+        lab <- cpStr@polygons[[i]]@labpt
+        print(paste(lab[1], lab[2],  d.cpStr[i]$ID))
+        text(lab[1], lab[2], d.cpStr$ID[i], cex = 0.6, col = "gray")
+        }
+
+```
+
+Placement des hôpitaux
+-----------------------
+```{r hop, fig.height=10}
+file <- "RPU_Doc/Carto/Hopitaux_Alsace.csv"
+path <- "../../../Resural/Stat Resural/"
+hop67 <- read.csv(paste0(path, file))
+names(hop67)
+# tracé du fond et des CP
+plot(cpStr, border = "gray80", lwd = 3, main = "SU polyvalents de Strasbourg")
+for(i in 1:4){
+        lab <- cpStr@polygons[[i]]@labpt
+        text(lab[1], lab[2], d.cpStr$ID[i], cex = 0.7, col = "gray")
+        }
+# Place les SU. Le point est prop au nombre de lits
+points(hop67$LAMB93_X, hop67$LAMB93_Y, col = "red", pch = 19, cex = hop67$LITS_TOT / 250)
+text(hop67$LAMB93_X, hop67$LAMB93_Y, hop67$HOPITAL, cex = 0.8, pos = 4)
+
+```
+

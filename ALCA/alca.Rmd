@@ -5,20 +5,35 @@ date: "08/05/2015"
 output: html_document
 ---
 
+Les fichiers Shapefile sont dans le dossier __CartographieR/IGN_GEOFLA_2014__. Une source importante est [R pour les géographes](http://framabook.org/16-r-et-espace/).
+
+Ce travail à pour objectif de représenter la cartographie de la région ALCA en utilisant les techniques décrites dans le document de référence.
+
+```{}
+CartographieR + IGN_GEOFLA_2014
+              |
+              + RCarto + ALCA
+                       + Wickham
+```
+
+Le fond de carte utilisé est celui de l'IGN [Geofla 2014](http://professionnels.ign.fr/geofla). Le données sont au format shapefile et chargées avec __readOGR__ qui demande 2 paramètres: le nom du dossier contenant le fichier et le nom du fichier.
+
+L'instruction provoque le chargement de la France entière, découpées par communes. Les données sont stockées dans __d.france__. On extrait ensuite les différentes régions d'intér^et.
+
 ```{r}
 require("rgdal") # requires sp, will use proj.4 if installed
 require("maptools")
 
-path <- "../IGN_GEOFLA_2014/GEOFLA_2-0_COMMUNE_SHP_LAMB93_FXX_2014-12-05/GEOFLA/1_DONNEES_LIVRAISON_2014-12-00066/GEOFLA_2-0_SHP_LAMB93_FR-ED141/COMMUNE"
+path <- "../../IGN_GEOFLA_2014/GEOFLA_2-0_COMMUNE_SHP_LAMB93_FXX_2014-12-05/GEOFLA/1_DONNEES_LIVRAISON_2014-12-00066/GEOFLA_2-0_SHP_LAMB93_FR-ED141/COMMUNE"
 file <-"COMMUNE"
-france <- readOGR(dsn = path, layer = file)
+france <- readOGR(dsn = path, layer = file, encoding = "latin1") # règle le pb de accents
 d.france <- france@data
 
 par(mar = rep(0,4)) # on fait de la place
 
 # extraction d'un départementst<-france[france$CODE_DEPT==67,]
 br <- france[france$CODE_DEPT == 67,]
-plot(alsace)
+plot(br)
 
 # extraction d'une région
 lorraine <-  france[france$NOM_REG == "LORRAINE",]
@@ -28,13 +43,82 @@ alsace <-  france[france$NOM_REG == "ALSACE",]
 plot(alsace)
 
 # extraction ALCA
-alca <-  france[france$NOM_REG %in% c("ALSACE","LORRAINE","CHAMPAGNE-ARDENNES"),]
+alca <-  france[france$NOM_REG %in% c("ALSACE","LORRAINE","CHAMPAGNE-ARDENNE"),]
+plot(alca)
+d.alca <- alca@data
+# utilisation de unionSpatialPolygons pour les REGIONS
+alca.region <- unionSpatialPolygons(alca, IDs = alca@data$CODE_REG)
+plot(alca.region)
 
-# données régionames
+# carte des départements
+alca.dept <- unionSpatialPolygons(alca, IDs = alca@data$CODE_DEPT)
+plot(alca.dept, main = "Les 10 départements ALCA")
+
+# régions et départements
+plot(alca.dept, main = "Les 3 régions et 10 départements ALCA")
+plot(alca.region, border = "blue", lwd = 2, add = TRUE)
+# échelle
+ech = 50000 # longueur de l'échelle en mètres
+x = par()$usr[1]
+y = par()$usr[3]
+arrows(x + 1000, y + 1000, x + ech, y + 1000, lwd = 2, code = 3, angle = 90, length = 0.05)
+text(x + 25500, y + 15000, "50 km", cex = 1)
+# corection des caractères anormaux
+d.alca$STATUT <- factor(gsub("\xe9", "é", d.alca$STATUT, fixed = FALSE))
+# capitales régionales
+x <- d.alca$X_CHF_LIEU[d.alca$STATUT == "Préfecture de région"]
+y <- d.alca$Y_CHF_LIEU[d.alca$STATUT == "Préfecture de région"]
+nom <- d.alca$NOM_COM[d.alca$STATUT == "Préfecture de région"]
+
+points(x, y, col = "red", pch = 19, cex = 1.2)
+text(x, y, labels = nom, cex = 0.8, pos = c(4,2,4))
+# préfectures
+
+
+# données régionales
 d.alsace <- alsace@data
 names(d.alsace)
+```
+
+Hôpitaux d'Alsace
+-----------------
+Les caractéristiques et la geomocalisation des hôpitaux alsaciens est dans __RPU_Doc/Carto/Hopitaux_Alsace.csv
+
+```{r hop67}
+file <- "RPU_Doc/Carto/Hopitaux_Alsace.csv"
+path <- "../../../Resural/Stat Resural/"
+hop67 <- read.csv(paste0(path, file))
+names(hop67)
+
+# carte de l'Alsace
+plot(alsace)
+# implantation des hôpitaux
+points(hop67$LAMB93_X, hop67$LAMB93_Y, col = "red", pch = 19)
+# détail Strasbourg
+str <- alsace[alsace$NOM_COM == "STRASBOURG",]
+plot(str)
+# Place les SU. Le point est prop au nombre de lits
+points(hop67$LAMB93_X, hop67$LAMB93_Y, col = "red", pch = 19, cex = hop67$LITS_TOT / 250)
+text(hop67$LAMB93_X, hop67$LAMB93_Y, hop67$HOPITAL, cex = 0.8, pos = 4)
+
+# place des SU. le point est prop au nombre de passages moyen en 2013 (SAE)
+par(mar = c(0,0,0,0))
+plot(str)
+points(hop67$LAMB93_X, hop67$LAMB93_Y, col = "green", pch = 19, cex = hop67$URG_JOUR/50)
+text(hop67$LAMB93_X, hop67$LAMB93_Y, hop67$HOPITAL, cex = 0.8, pos = 4)
+urg.moy.jour <- c(50, 100, 150, 200)
+legend("topleft", legend = urg.moy.jour, pch = 19, col = "green", pt.cex = urg.moy.jour/50, bty = "n", title = "moyenne des passages\n par jour")
+
+# échelle
+ech = 5000 # longueur de l'échelle en mètres
+x = par()$usr[1]
+y = par()$usr[3]
+
+arrows(x + 1000, y + 1000, x + ech, y + 1000, lwd = 2, code = 3, angle = 90, length = 0.05)
+text(x + 2550, y + 1500, "5 km", cex = 1)
 
 ```
+
 Haguenau
 --------
 Commune de France la plus étendue à cause de sa fôret => densité corrigée = nb habitants / superficie - 13742 hectares (foret indivise de Haguenau)
@@ -119,7 +203,7 @@ title ("epsg 4326 #  WGS 84")
 Utiliser OSM
 ------------
 ```{r}
-library("OpenStreetMap", lib.loc="/Library/Frameworks/R.framework/Versions/3.1/Resources/library")
+library("OpenStreetMap")
 Nantes <- c(47.227962,-1.558113)
 map <- openmap(c(Nantes[1]+0.1,Nantes[2]-0.2), c(Nantes[1]-0.1,Nantes[2]+0.2),type='osm')
 plot(map,raster=TRUE)

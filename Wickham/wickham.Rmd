@@ -42,7 +42,7 @@ Les éléments du shapefile sont chargés dans un objet spatial et transformés 
 ```{r}
 # setwd("Wickham")
 
-als <- readOGR(dsn = "data/alsace", layer = "alsace")
+als <- readOGR(dsn = "data/alsace", layer = "alsace") # als <- readOGR(dsn = "Wickham/data/alsace", layer = "alsace") console
 lor <- readOGR(dsn = "data/lorraine", layer = "lorraine")
 cha <- readOGR(dsn = "data/champagne-ardenne", layer = "champagne-ardenne")
 names(als@data)
@@ -107,4 +107,73 @@ One of the remaining attributes is hole.  Each polygon in utah@polygons is defin
 
 joins the points to their corresponding attributes and finalizes the data preparation.
 
-  
+Projection avec ggplot
+======================
+
+source: https://github.com/hadley/ggplot2/wiki/plotting-polygon-shapefiles
+
+```{r, fig.width=10, fig.height=8}
+als <- readOGR(dsn = "data/alsace", layer = "alsace")
+als@data$id = rownames(als@data)
+als.points = fortify(als, region="id")
+als.df = join(als.points, als@data, by="id")
+
+ggplot(als.df) +
+aes(long,lat,group=group,fill=CODE_DEPT)+
+geom_polygon() +
+geom_path(color="white") +
+coord_equal() +
+scale_fill_brewer("Région Alsace")
+
+```
+
+```{r, fig.width=10, fig.height=8}
+als <- readOGR(dsn = "data/alsace", layer = "alsace")
+als@data$id = rownames(als@data)
+als.points = fortify(als, region="id")
+als.df = join(als.points, als@data, by="id")
+
+ggplot(als.df) +
+aes(long,lat,group=group,fill=CODE_REG)+
+geom_polygon() +
+geom_path(color="white") +
+coord_equal() +
+scale_fill_brewer("Région Alsace")
+
+label_points = coordinates(als)
+
+```
+
+Alsace par communes
+---------------------------
+
+```{r}
+als_com <- readOGR(dsn = "data/alsace_communes", layer = "alsace") # Wickham/
+com67 <- als_com@data
+als_com@data$id = rownames(als_com@data)
+als_com.points = fortify(als_com, region="id")
+als_com.df = join(als_com.points, als_com@data, by="id")
+```
+
+```{r}
+ggplot(als_com.df) +
+aes(long,lat,group=group,fill=CODE_DEPT)+
+geom_polygon() +
+geom_path(color="white") +
+coord_equal() +
+scale_fill_brewer("Région Alsace")
+
+```
+
+```{r}
+ggplot(als_com.df) +
+aes(long,lat,group=group,fill=STATUT)+
+geom_polygon() +
+geom_path(color="white") +
+coord_equal() +
+scale_fill_brewer("Région Alsace")
+```
+
+
+
+
