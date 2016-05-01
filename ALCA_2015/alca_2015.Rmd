@@ -1,0 +1,57 @@
+---
+title: "ALCA 2015"
+author: "jcb"
+date: "1 mai 2016"
+output: html_document
+---
+
+Cartes IGN 2015
+===============
+
+Les cartes IGN 2015 intègrent les nouvelles régions. La colonne REG_NOM 2015 est différente de la colonne REG_NOM 2014. 
+
+```{r}
+require("rgdal") # requires sp, will use proj.4 if installed
+require("maptools")
+
+# Version macbook
+path <- "/Users/jcb/Documents/R/GEOFLA_2-1_COMMUNE_SHP_LAMB93_FXX_2015-12-01/GEOFLA/1_DONNEES_LIVRAISON_2015/GEOFLA_2-1_SHP_LAMB93_FR-ED152/COMMUNE"
+
+file <-"COMMUNE"
+france <- readOGR(dsn = path, layer = file, encoding = "latin1") # règle le pb de accents
+d.france <- france@data
+
+par(mar = rep(0,4)) # on fait de la place
+```
+
+Création d'une colonne Ancienne Régions
+---------------------------------------
+```{r}
+france@data$ANC_REG <- ""
+france@data$ANC_REG[d.france$CODE_DEPT %in% c(8, 10, 51, 52)] <- "CHAMPAGNE-ARDENNE"
+france@data$ANC_REG[d.france$CODE_DEPT %in% c(55, 57, 54, 88)] <- "LORRAINE"
+france@data$ANC_REG[d.france$CODE_DEPT %in% c(67:68)] <- "ALSACE"
+```
+
+Exemle de la Lorraine
+```{r}
+lorraine <-  france[france$ANC_REG == "LORRAINE",]
+plot(lorraine)
+
+```
+
+Uniquement les contours des départements
+```{r}
+region.lor1 <- unionSpatialPolygons(lorraine, IDs = lorraine@data$CODE_DEPT)
+plot(region.lor1)
+```
+
+Uniquement le contour de la région 
+```{r}
+region.lor2 <- unionSpatialPolygons(lorraine, IDs = lorraine@data$CODE_REG)
+plot(region.lor2)
+
+```
+
+
+
