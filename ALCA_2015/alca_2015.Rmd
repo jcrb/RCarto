@@ -50,8 +50,17 @@ Uniquement le contour de la région
 ```{r}
 region.lor2 <- unionSpatialPolygons(lorraine, IDs = lorraine@data$CODE_REG)
 plot(region.lor2)
+```
+
+Pour ajouter les coordonnées,il faut rajouter les marges basse et gauche, puis utiliser la fonction __axis()__
+```{r}
+par(mar = c(2,2,0,0))
+plot(region.lor2)
+axis(1)
+axis(2)
 
 ```
+
 
 
 

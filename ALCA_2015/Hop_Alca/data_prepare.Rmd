@@ -1,0 +1,39 @@
+Préparation des donnnées
+========================================================
+
+Les données des ES Grand Est sont tockées dans un fichier *.csv*: 1 fichier par ES. Les données proviennent du dossier FEDORU [https://docs.google.com/spreadsheets/d/1SZ4HIfJhGRtdX-DKDJexgSpYAokGEimx0WSxYcZE_wA/edit#gid=1762187829](https://docs.google.com/spreadsheets/d/1SZ4HIfJhGRtdX-DKDJexgSpYAokGEimx0WSxYcZE_wA/edit#gid=1762187829)
+
+Une copie de ce fichier ce trouve dans ce dossier: dernière mise à jour le 2/5/2016.
+
+La première ligne est le header. L'ensembles des données sont extraites pour former un fichier *.Rda*.
+
+```{r prepare, warning=FALSE}
+getwd()
+path = "./"
+out.file <- NA
+file.names <- dir(path, pattern =".csv") # seuls les fichiers se terminant par csv sont lus
+file.names
+for(i in 1:length(file.names)){
+   file <- read.csv(paste0(path, file.names[i]), skip = 1, encoding = "UTF-8") # 
+   out.file <- rbind(out.file, file)
+ }
+
+dim(out.file)
+# supprimer la ligne 2 qui est vide
+out.file <- out.file[-2,]
+write.table(out.file, file = "../su_alca.csv", sep=",", row.names = FALSE, qmethod = "double") # , fileEncoding = "utf-8"
+
+d <- out.file
+
+# transforme la colonne 1 en dates
+d$date <- as.Date(d$Date.de.dernière.modification, "%d/%m/%Y")
+
+save(d, file = "../su_alca.Rda")
+
+names(d)
+
+str(d)  
+
+```
+          
+
