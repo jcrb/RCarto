@@ -1,6 +1,8 @@
 Préparation des donnnées
 ========================================================
 
+NB: pour réinitialiser la fenêtre graphique: dev.off()
+
 Les données des ES Grand Est sont tockées dans un fichier *.csv*: 1 fichier par ES. Les données proviennent du dossier FEDORU [https://docs.google.com/spreadsheets/d/1SZ4HIfJhGRtdX-DKDJexgSpYAokGEimx0WSxYcZE_wA/edit#gid=1762187829](https://docs.google.com/spreadsheets/d/1SZ4HIfJhGRtdX-DKDJexgSpYAokGEimx0WSxYcZE_wA/edit#gid=1762187829)
 
 Une copie de ce fichier ce trouve dans ce dossier: dernière mise à jour le 2/5/2016.
@@ -8,6 +10,7 @@ Une copie de ce fichier ce trouve dans ce dossier: dernière mise à jour le 2/5
 La première ligne est le header. L'ensembles des données sont extraites pour former un fichier *.Rda*.
 
 ```{r prepare, warning=FALSE}
+# setwd("/Users/jcb/Documents/R/RCarto/ALCA_2015/Hop_alca")
 getwd()
 path = "./"
 out.file <- NA
@@ -19,14 +22,18 @@ for(i in 1:length(file.names)){
  }
 
 dim(out.file)
-# supprimer la ligne 2 qui est vide
-out.file <- out.file[-2,]
+# supprimer la ligne 1 qui est vide
+out.file <- out.file[-1,]
+
+# Renommer les colonnes
+names(out.file) <- c("Date_modif", "Hopital", "Finess","Adresse1", "Adresse2", "CP", "Ville", "Type_SU", "Type_Structure", "Type_etab", "Adresse_Geo","Latitude","Longitude","Adresse_Geocode","Score","Precision", "Departement", "Code_Insee")
+
 write.table(out.file, file = "../su_alca.csv", sep=",", row.names = FALSE, qmethod = "double") # , fileEncoding = "utf-8"
 
 d <- out.file
 
 # transforme la colonne 1 en dates
-d$date <- as.Date(d$Date.de.dernière.modification, "%d/%m/%Y")
+d$Date_modif <- as.Date(d$Date_modif, "%d/%m/%Y")
 
 save(d, file = "../su_alca.Rda")
 
@@ -36,4 +43,215 @@ str(d)
 
 ```
           
+Transformation en Spatial_Points
+================================
 
+Convertir le data.frame en SpatialPointsDataFrame
+-------------------------------------------------
+Cete étape et réalisée par la fonction __coordinates__ du package __sp__, en spécifiant les colonnes du data.frame qui contiennent les coordonnées géographiques sous forme d'un objet _formule_ ~x_coord+y_coord. 
+
+```{r}
+library(sp)
+d2 <- d
+coordinates(d2) = ~ Longitude + Latitude
+```
+
+Ajouter les informations CRS
+----------------------------
+```{r}
+proj4string(d2) = CRS("+proj=longlat +datum=WGS84")
+```
+
+Résultat
+```{r}
+plot(d2, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SU Région Grand Est (WSG84)")
+```
+
+Ajout d'un colonne nom simplifié pour les SU
+```{r}
+n <- c("NHC", "Cl.Ste Odile","Cl. Diaconat","Cl.Ste Anne","CH Haguenau","Ped.Haguenau","CH Saverne","Ped.Saverne","CH Wissembourg","CH Selestat","CHU-Hautepierre","Ped.HTP","CH St.Louis","Diaconat-Fonderie","CH Altkirch","CH Thann","CH Hasenrain","CH Colmar","CH Guebwiller","Ped.Colmar","CH Mulhouse","Diaconat-Roosevelt","CH Sedan","CH Rethel","CH Vouziers","CH Charleville-Mezieres","CH Troyes","CH Romilly","CH Chalons","CH Epernay","VH Vitry","Cl.Courlancy","Cl.St.Andre","CHU Reims-AMH","CHU Reims\n Maison Blanche", "CH Chaumont","CH Langres","CH St Dizier","CHU Nancy-Maternité","CH Toul","CH Luneville","CH Pont à Mousson","Cl.Gentilly","CH Briey","CH Mt St Martin","CHU Nancy-Central","CHU Nancy-Brabois","CH Verdun","CH Bar le Duc","CH Forbach", "CH Forbach","CH Sarrebourg","CH St Avold","CHR Thionville", "CHR Thionville","CHR Metz Mercy", "Ped. Mercy", "HIA Legouest", "Cl. Cl.Bernard","CH Sarreguemines", "CH Sarreguemines","CH Epinal","CH St Die","CH Neufchateau","CH Remiremont","CH Remiremont", "CH Vittel")
+
+d2$SU <- n
+```
+
+
+
+Enregistrer le résultat sous forme de ShapeFile ESRI
+----------------------------------------------------
+On utilise la librairie __rgdal__. La fonctiopn __writeOGR__ nécessite les informations suivantes:
+
+- obj: fichier à enregistrer
+- dsn: nom du dossier où seront stockées les fichiers shapefile. Si le dossier n'existe pas, il est créé.
+- layer: couche = nom générique des différents fichers shp (ex. unv)
+- driver: méthode de traduction. Ici ESRI. 
+```{}
+library(rgdal)
+su_alca <- d2
+writeOGR(su_alca, "../ShapeFile_SU_Alca", "su_alca", "ESRI Shapefile")
+```
+
+Il est possible de lire le ficher SHP créé avec __readOGR__:
+```{}
+library(rgdal)
+su_alca_wsg84 = readOGR("../ShapeFile_SU_Alca", "su_alca", stringsAsFactors = FALSE)
+```
+
+Reprojeter au format Lambert 93
+===============================
+
+```{r}
+# EPSG:2154 Lambert 93
+newProj = CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+plot(d2)
+su_alca_L93 <- spTransform(d2, newProj)
+# plot(su_alca_L93, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 1, main = "SU Région Grand Est (Lambert 93)")
+```
+
+Et créer un shapefile Lambert 93
+--------------------------------
+```{}
+writeOGR(su_alca_L93, "../ShapeFile_SU_Alca_L93", "su_alca_L93", "ESRI Shapefile")
+```
+
+Fonctiopn pour dessinner une rose des vents
+===========================================
+
+Source: 
+
+- Susumu Tanimura Chusi Kuroiwa Tsutomu Mizota
+- Auxiliary Cartographic Functions in R: North Arrow, Scale Bar, and Label with a Leader Arrow
+- Journal of Statistical Software. April 2007, Volume 19, Code Snippet 1. http://www.jstatsoft.org/
+https://www.google.fr/url?sa=t&rct=j&q=&esrc=s&source=web&cd=8&ved=0ahUKEwju3PfMysXMAhUEUhQKHbX-CxMQFghcMAc&url=https%3A%2F%2Fwww.jstatsoft.org%2Farticle%2Fview%2Fv019c01%2Fv19c01.pdf&usg=AFQjCNFrX4GyIv1XK7jPEQXYrMvbUO0IvA&sig2=3HgxNrgPupWIoIpUwoPnCw
+```{r}
+#' @param loc position x, y
+#' @param size taille dans les unités de la carte
+#' @param bearing angle de rotation. N = 0
+#' @param cols
+#' @cex échelle du texte. N = 1
+#
+northarrow <- function(loc,size,bearing=0,cols,cex=1,...) {
+  # checking arguments
+  if(missing(loc))  stop("loc is missing")
+  if(missing(size))  stop("size is missing")
+  # default colors are white and black
+  if(missing(cols)) cols <- rep(c("white","black"),8)
+  # calculating coordinates of polygons
+  radii <- rep(size/c(1,4,2,4),4)
+  x <- radii[(0:15)+1]*cos((0:15)*pi/8+bearing)+loc[1]
+  y <- radii[(0:15)+1]*sin((0:15)*pi/8+bearing)+loc[2]
+  # drawing polygons
+  for (i in 1:15) {
+    x1 <- c(x[i],x[i+1],loc[1])
+    y1 <- c(y[i],y[i+1],loc[2])
+    polygon(x1,y1,col=cols[i])
+  }
+  # drawing the last polygon
+  polygon(c(x[16],x[1],loc[1]),c(y[16],y[1],loc[2]),col=cols[16])
+  # drawing letters
+  b <- c("E","N","W","S")
+  for (i in 0:3) text((size+par("cxy")[1])*cos(bearing+i*pi/2)+loc[1],(size+par("cxy")[2])*sin(bearing+i*pi/2)+loc[2],b[i+1], cex=cex)
+}
+
+scalebar <- function(loc,length,unit="km",division.cex=.8,...) {
+  if(missing(loc)) stop("loc is missing")
+  if(missing(length)) stop("length is missing")
+  x <- c(0,length/c(4,2,4/3,1),length*1.1)+loc[1]
+  y <- c(0,length/(10*3:1))+loc[2]
+  cols <- rep(c("black","white"),2)
+  for (i in 1:4) rect(x[i],y[1],x[i+1],y[2],col=cols[i])
+  for (i in 1:5) segments(x[i],y[2],x[i],y[3])
+  labels <- x[c(1,3)]-loc[1]
+  labels <- append(labels,paste(x[5]-loc[1],unit))
+  text(x[c(1,3,5)],y[4],labels=labels,adj=.5,cex=division.cex)
+}
+```
+
+Combiner le fond IGN et les SU
+==============================
+```{r alca_su, fig.height=10, fig.width=10}
+par(mar=c(2,6,1,0))
+
+# récupération du fond de carte IGN (Lambert 93)
+load("../alca3.Rda")
+plot(alca3, axes = TRUE, las = 1, col = c("palegreen","cornflowerblue", "yellow"), main = "Structures d'urgence - Région Grand Est")
+
+# Ajout des SU
+plot(su_alca_L93, add = TRUE, col = "red", pch = 16)
+
+# position des hôpitaux
+su_alca_L93$pos <- 4
+su_alca_L93$pos[35] <- 2
+su_alca_L93$pos[33] <- 3
+su_alca_L93$pos[40] <- 2
+
+# nom des hôpitaux
+text(su_alca_L93@coords[,1], su_alca_L93@coords[,2], su_alca_L93$SU, cex = 0.5, pos = su_alca_L93$pos, offset = 0.5)
+
+# échelle
+# point de départ
+x <- 950000
+y <- 6700000
+# longueur de l'échelle = 100 km
+e <- 100000
+# ligne horizontale de 100km
+lines(c(x, x + e), c(y, y))
+# deux petites lignes verticales à chaque extrémité
+lines(c(x,x), c(y-3000, y+3000))
+lines(c(x+e,x+e), c(y-3000, y+3000))
+# Légende
+text(x + e/2, y - 4000, paste(e/1000, "Km"), cex = 0.8)
+
+# Essai d'échelle avec maps
+# source: https://andybeger.com/2012/08/25/scale-and-north-arrow-for-maps-in-r/
+# pas terrible avec une échelle en mètres
+# library(maps)
+# map.scale(x, y - 5000, ratio=FALSE, relwidth=0.15)
+
+# essai
+scalebar(c(x, y - 30000), 100000, unit = "m")
+
+# Nord
+# source: https://andybeger.com/2012/08/25/scale-and-north-arrow-for-maps-in-r/
+library(GISTools)
+north.arrow(750000, y, 5000, "N")
+
+# Variante avec northarrow
+northarrow(c(800000, y), 20000)
+```
+
+```
+[1] CHU DE STRASBOURG-NHC                              CLINIQUE SAINTE ODILE                             
+ [3] CLINIQUE DES DIACONESSES                           CLINIQUE SAINTE-ANNE                              
+ [5] CENTRE HOSPITALIER DE HAGUENAU                     CENTRE HOSPITALIER DE HAGUENAU                    
+ [7] CH SAINTE-CATHERINE DE SAVERNE                     CH SAINTE-CATHERINE DE SAVERNE                    
+ [9] CH INTERCOMMUNAL DE LA LAUTER                      CENTRE HOSPITALIER DE SELESTAT                    
+[11] CHU STRASBOURG-HAUTEPIERRE                         CHU STRASBOURG-HAUTEPIERRE                        
+[13] POLYCLINIQUE DES TROIS FRONTIERES                  CLINIQUE DIACONAT-FONDERIE                        
+[15] CENTRE HOSPITALIER D ALTKIRCH                      CENTRE HOSPITALIER DE THANN                       
+[17] HOPITAL DU  HASENRAIN                              HOPITAL LOUIS PASTEUR                             
+[19] CENTRE HOSPITALIER DE GUEBWILLER                   Centre Mere enfant- Le parc                       
+[21] CENTRE HOSPITALIER DE MULHOUSE - HOPITAL EMILE MUL CLINIQUE DIACONAT-ROOSEVELT                       
+[23] CENTRE HOSPITALIER DE SEDAN                        CENTRE HOSPITALIER DE RETHEL                      
+[25] CENTRE HOSPITALIER DE VOUZIERS                     CH DE CHARLEVILLE MEZIERES                        
+[27] CENTRE HOSPITALIER DE TROYES                       GHAM - SITE DE ROMILLY-SUR-SEINE                  
+[29] CENTRE HOSPITALIER DE CHALONS                      CENTRE HOSPITALIER D'EPERNAY                      
+[31] CENTRE HOSPITALIER VITRY LE FRANCOIS               POLYCLINIQUE DE COURLANCY                         
+[33] POLYCLINIQUE SAINT ANDRE                           AMERICAN MEMORIAL HOSPITAL CHU REIMS              
+[35] HOPITAL MAISON BLANCHE CHU REIMS                   CENTRE HOSPITALIER DE CHAUMONT                    
+[37] CENTRE HOSPITALIER DE LANGRES                      CENTRE HOSPITALIER GENEVIEVE DE GAULLE ANTHONIOZ  
+[39] MATERNITE REGIONALE UNIVERSITAIRE DE NANCY         CENTRE HOSPITALIER SAINT CHARLES TOUL             
+[41] CENTRE HOSPITALIER DE LUNEVILLE                    CENTRE HOSPITALIER DE PONT A MOUSSON              
+[43] POLYCLINIQUE DE GENTILLY ET SAINT DON              CENTRE HOSPITALIER DE BRIEY                       
+[45] CH DE MT ST MARTIN (ALPHA SANTE)                   HOPITAL CENTRAL CHU NANCY                         
+[47] HOPITAUX DE BRABOIS CHU NANCY                      CENTRE HOSPITALIER DE VERDUN                      
+[49] CENTRE HOSPITALIER DE  BAR LE DUC                  CH MARIE-MADELEINE - FORBACH                      
+[51] CH MARIE-MADELEINE - FORBACH                       CH DE SARREBOURG - HÈPITAL ST NICOLAS             
+[53] HOSPITALOR HOPITAL DE ST AVOLD                     CHR METZ-THIONVILLE - HOPITAL BEL AIR             
+[55] CHR METZ-THIONVILLE - HOPITAL BEL AIR              CHR METZ - HOPITAL DE MERCY                       
+[57] CHR METZ - HOPITAL DE MERCY                        HIA LEGOUEST                                      
+[59] HOPITAL-CLINIQUE CLAUDE BERNARD                    CENTRE HOSPITALIER ROBERT PAX                     
+[61] CENTRE HOSPITALIER ROBERT PAX                      CHI E DURKHEIM PLATEAU DE LA JUSTICE              
+[63] CENTRE HOSPITALIER DE SAINT-DIE                    CENTRE HOSPITALIER  DE NEUFCHATEAU                
+[65] CENTRE HOSPITALIER DE REMIREMONT                   CENTRE HOSPITALIER DE REMIREMONT                  
+[67] CENTRE HOSPITALIER DE VITTEL 
+```

@@ -28,12 +28,12 @@ Création d'une colonne Ancienne Régions
 ---------------------------------------
 ```{r}
 france@data$ANC_REG <- ""
-france@data$ANC_REG[d.france$CODE_DEPT %in% c(8, 10, 51, 52)] <- "CHAMPAGNE-ARDENNE"
+france@data$ANC_REG[d.france$CODE_DEPT %in% c('08', 10, 51, 52)] <- "CHAMPAGNE-ARDENNE"
 france@data$ANC_REG[d.france$CODE_DEPT %in% c(55, 57, 54, 88)] <- "LORRAINE"
 france@data$ANC_REG[d.france$CODE_DEPT %in% c(67:68)] <- "ALSACE"
 ```
 
-Exemle de la Lorraine
+Exemple de la Lorraine
 ```{r}
 lorraine <-  france[france$ANC_REG == "LORRAINE",]
 plot(lorraine)
@@ -61,6 +61,29 @@ axis(2)
 
 ```
 
+Cartographie Alca
+=================
 
+Par communes:
+```{r}
+alca <-  france[france$ANC_REG %in% c("ALSACE", "CHAMPAGNE-ARDENNE", "LORRAINE"),]
+plot(alca)
+save(alca, file = "alca.Rda")
+
+```
+
+Uniquement le contour de la région 
+```{r}
+alca2 <- unionSpatialPolygons(alca, IDs = alca@data$CODE_REG)
+plot(alca2)
+save(alca2, file = "alca2.Rda")
+```
+
+Avec les limites des anciennes régions
+```{r}
+alca3 <- unionSpatialPolygons(alca, IDs = alca@data$ANC_REG)
+plot(alca3)
+save(alca3, file = "alca3.Rda")
+```
 
 
