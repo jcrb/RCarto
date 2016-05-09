@@ -1,15 +1,6 @@
----
-title: "Préparation des données de cartographie"
-author: "jcb"
-date: "5 mai 2016"
-output:
-  html_document:
-    keep_md: yes
-    number_sections: yes
-  pdf_document:
-    number_sections: yes
-    toc: yes
----
+# Préparation des données de cartographie
+jcb  
+5 mai 2016  
 
 __Source: MacBook::Documents/R/Rcarto/Alca2015/Hop_Alca/data_prepare.Rmd__
 
@@ -34,19 +25,43 @@ La première ligne est constituée de cellules fusionnées. On élimine la premi
 
 Avant la sauvegarde les noms des colonnes sont simplifiés.
 
-```{r prepare, warning=FALSE}
+
+```r
 # setwd("/Users/jcb/Documents/R/RCarto/ALCA_2015/Hop_alca")
 getwd()
+```
+
+```
+## [1] "/Users/jcb/Documents/R/RCarto/ALCA_2015/Hop_Alca"
+```
+
+```r
 path = "./"
 out.file <- NA
 file.names <- dir(path, pattern =".csv") # seuls les fichiers se terminant par csv sont lus
 file.names
+```
+
+```
+## [1] "Structures d'urgence - Alsace.csv"           
+## [2] "Structures d'urgence - Champagne-Ardenne.csv"
+## [3] "Structures d'urgence - Lorraine.csv"
+```
+
+```r
 for(i in 1:length(file.names)){
    file <- read.csv(paste0(path, file.names[i]), skip = 1, encoding = "UTF-8") # 
    out.file <- rbind(out.file, file)
  }
 
 dim(out.file)
+```
+
+```
+## [1] 68 18
+```
+
+```r
 # supprimer la ligne 1 qui est vide
 out.file <- out.file[-1,]
 
@@ -63,9 +78,41 @@ d$Date_modif <- as.Date(d$Date_modif, "%d/%m/%Y")
 save(d, file = "../su_alca.Rda")
 
 names(d)
+```
 
+```
+##  [1] "Date_modif"      "Hopital"         "Finess"         
+##  [4] "Adresse1"        "Adresse2"        "CP"             
+##  [7] "Ville"           "Type_SU"         "Type_Structure" 
+## [10] "Type_etab"       "Adresse_Geo"     "Latitude"       
+## [13] "Longitude"       "Adresse_Geocode" "Score"          
+## [16] "Precision"       "Departement"     "Code_Insee"
+```
+
+```r
 str(d)  
+```
 
+```
+## 'data.frame':	67 obs. of  18 variables:
+##  $ Date_modif     : Date, format: "2016-05-01" "2016-06-01" ...
+##  $ Hopital        : Factor w/ 59 levels "CENTRE HOSPITALIER D ALTKIRCH",..: 10 15 12 16 3 3 9 9 8 5 ...
+##  $ Finess         : int  670000025 670016237 670780162 670780212 670780337 670780337 670780345 670780345 670780543 670780691 ...
+##  $ Adresse1       : Factor w/ 59 levels "","1 - 3 rue saint jacques",..: 4 16 9 6 17 17 7 7 13 11 ...
+##  $ Adresse2       : Factor w/ 34 levels "","B.P.  1022",..: 11 1 12 1 8 8 6 6 5 9 ...
+##  $ CP             : int  67091 67100 67085 67085 67504 67504 67703 67703 67166 67606 ...
+##  $ Ville          : Factor w/ 49 levels "ALTKIRCH CEDEX",..: 10 9 10 10 4 4 6 6 13 7 ...
+##  $ Type_SU        : Factor w/ 3 levels "Adulte","Généraliste",..: 1 2 2 2 1 3 1 3 2 2 ...
+##  $ Type_Structure : Factor w/ 4 levels "ESPIC","public",..: 2 1 1 1 2 2 2 2 2 2 ...
+##  $ Type_etab      : Factor w/ 5 levels "autre","CHU/CHR",..: 2 1 1 1 4 4 4 4 4 4 ...
+##  $ Adresse_Geo    : Factor w/ 59 levels "1 - 3 rue saint jacques 68802 THANN",..: 3 16 9 6 17 17 7 7 13 11 ...
+##  $ Latitude       : num  48.6 48.6 48.6 48.6 48.8 ...
+##  $ Longitude      : num  7.75 7.76 7.74 7.79 7.78 ...
+##  $ Adresse_Geocode: Factor w/ 59 levels "","1 Avenue Molière 67200 Strasbourg",..: 3 16 8 5 17 17 6 6 12 10 ...
+##  $ Score          : num  0.8 0.94 0.8 0.82 0.73 0.73 0.82 0.82 0.76 0.84 ...
+##  $ Precision      : Factor w/ 3 levels "","housenumber",..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ Departement    : Factor w/ 10 levels "67, Bas-Rhin, Alsace",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Code_Insee     : int  67482 67482 67482 67482 67180 67180 67437 67437 67544 67462 ...
 ```
           
 Transformation en Spatial_Points
@@ -75,7 +122,8 @@ Convertir le data.frame en SpatialPointsDataFrame
 -------------------------------------------------
 Cete étape et réalisée par la fonction __coordinates__ du package __sp__, en spécifiant les colonnes du data.frame qui contiennent les coordonnées géographiques sous forme d'un objet _formule_ ~x_coord+y_coord. 
 
-```{r}
+
+```r
 library(sp)
 d2 <- d
 coordinates(d2) = ~ Longitude + Latitude
@@ -84,19 +132,24 @@ coordinates(d2) = ~ Longitude + Latitude
 Ajouter les informations CRS
 ----------------------------
 Les information CRS permmettent de savoir dans quel système de cordonnées ont été faites les mesures. Ici il s'agit du systéme WGS84.
-```{r}
+
+```r
 proj4string(d2) = CRS("+proj=longlat +datum=WGS84")
 ```
 
 Résultat
 
 On peut dessiner le dataframe résultant avec la fonction plot. Par défaut les points sont dessinés par une croix.
-```{r}
+
+```r
 plot(d2, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SU Région Grand Est (WSG84)")
 ```
 
+![](data_prepare_files/figure-html/unnamed-chunk-3-1.png)
+
 Ajout d'un colonne nom simplifié pour les SU: le nom original des SU ne convient pas pour une carte => on les redéfinit: 
-```{r}
+
+```r
 n <- c("NHC", "Cl.Ste Odile","Cl. Diaconat","Cl.Ste Anne","CH Haguenau","Ped.Haguenau","CH Saverne","Ped.Saverne","CH Wissembourg","CH Selestat","CHU-Hautepierre","Ped.HTP","CH St.Louis","Diaconat-Fonderie","CH Altkirch","CH Thann","CH Hasenrain","CH Colmar","CH Guebwiller","Ped.Colmar","CH Mulhouse","Diaconat-Roosevelt","CH Sedan","CH Rethel","CH Vouziers","CH Charleville-Mezieres","CH Troyes","CH Romilly","CH Chalons","CH Epernay","VH Vitry","Cl.Courlancy","Cl.St.Andre","CHU Reims-AMH","CHU Reims\n Maison Blanche", "CH Chaumont","CH Langres","CH St Dizier","CHU Nancy-Maternité","CH Toul","CH Luneville","CH Pont à Mousson","Cl.Gentilly","CH Briey","CH Mt St Martin","CHU Nancy-Central","CHU Nancy-Brabois","CH Verdun","CH Bar le Duc","CH Forbach", "CH Forbach","CH Sarrebourg","CH St Avold","CHR Thionville", "CHR Thionville","CHR Metz Mercy", "Ped. Mercy", "HIA Legouest", "Cl. Cl.Bernard","CH Sarreguemines", "CH Sarreguemines","CH Epinal","CH St Die","CH Neufchateau","CH Remiremont","CH Remiremont", "CH Vittel")
 
 d2$SU <- n
@@ -126,12 +179,17 @@ Reprojeter au format Lambert 93
 ===============================
 
 Le dataframe __d2__ contient les coordonnées des SU au format WGS84. On le tansfrme en coordonnées Lambert par la fonction _spTransform__ qui demande le CRS correspondant au format Lambert93.
-```{r}
+
+```r
 # EPSG:2154 Lambert 93
 newProj = CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
 
 plot(d2)
+```
 
+![](data_prepare_files/figure-html/unnamed-chunk-5-1.png)
+
+```r
 su_alca_L93 <- spTransform(d2, newProj)
 # plot(su_alca_L93, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 1, main = "SU Région Grand Est (Lambert 93)")
 ```
@@ -159,7 +217,8 @@ Source:
 
 - Susumu Tanimura Chusi Kuroiwa Tsutomu Mizota. Auxiliary Cartographic Functions in R: North Arrow, Scale Bar, and Label with a Leader Arrow. Journal of Statistical Software. April 2007, Volume 19, Code Snippet 1. http://www.jstatsoft.org/.Consulté le 5/5/2O16.
 - https://www.google.fr/url?sa=t&rct=j&q=&esrc=s&source=web&cd=8&ved=0ahUKEwju3PfMysXMAhUEUhQKHbX-CxMQFghcMAc&url=https%3A%2F%2Fwww.jstatsoft.org%2Farticle%2Fview%2Fv019c01%2Fv19c01.pdf&usg=AFQjCNFrX4GyIv1XK7jPEQXYrMvbUO0IvA&sig2=3HgxNrgPupWIoIpUwoPnCw
-```{r}
+
+```r
 #' @param loc position x, y
 #' @param size taille dans les unités de la carte
 #' @param bearing angle de rotation. N = 0
@@ -194,8 +253,8 @@ Fonction pour tracer l'échelle de la carte
 ------------------------------------------
 
 Même source que la rose des vents
-```{r}
 
+```r
 scalebar <- function(loc,length,unit="km",division.cex=.8,...) {
   if(missing(loc)) stop("loc is missing")
   if(missing(length)) stop("length is missing")
@@ -214,7 +273,8 @@ Combiner le fond IGN et les SU
 ==============================
 
 On peut maintenant combiner le fond IGN et le shapefile des SU qui sont tous les deux en coordonnées Lambert:
-```{r alca_su, fig.height=10, fig.width=10}
+
+```r
 par(mar=c(2,6,1,0))
 
 # récupération du fond de carte IGN (Lambert 93)
@@ -262,11 +322,59 @@ scalebar(c(x, y - 30000), 100000, unit = "m")
 # Nord: dessine une flèche simple
 # source: https://andybeger.com/2012/08/25/scale-and-north-arrow-for-maps-in-r/
 library(GISTools)
+```
+
+```
+## Loading required package: maptools
+```
+
+```
+## Checking rgeos availability: TRUE
+```
+
+```
+## 
+## Attaching package: 'maptools'
+```
+
+```
+## The following object is masked from 'package:sp':
+## 
+##     nowrapSpatialLines
+```
+
+```
+## Loading required package: RColorBrewer
+```
+
+```
+## Loading required package: MASS
+```
+
+```
+## Loading required package: rgeos
+```
+
+```
+## rgeos version: 0.3-11, (SVN revision 479)
+##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
+##  Linking to sp version: 1.1-0 
+##  Polygon checking: TRUE
+```
+
+```
+## Warning: replacing previous import by 'sp::nowrapSpatialLines' when loading
+## 'GISTools'
+```
+
+```r
 north.arrow(750000, y, 5000, "N")
 
 # Variante avec northarrow: dessine une rose des vents plus élaborée. Pour modifier la taille de la rose faire varier la valeur 2000
 northarrow(c(800000, y), 20000)
 ```
+
+![](data_prepare_files/figure-html/alca_su-1.png)
 
 ```
 [1] CHU DE STRASBOURG-NHC                              CLINIQUE SAINTE ODILE                             
