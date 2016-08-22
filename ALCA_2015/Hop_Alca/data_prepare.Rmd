@@ -304,3 +304,31 @@ northarrow(c(800000, y), 20000)
 [65] CENTRE HOSPITALIER DE REMIREMONT                   CENTRE HOSPITALIER DE REMIREMONT                  
 [67] CENTRE HOSPITALIER DE VITTEL 
 ```
+
+CArte des ESR
+=============
+
+```{r}
+# require("rgdal") # requires sp, will use proj.4 if installed
+# require("maptools")
+# path <- "/Users/jcb/Documents/R/GEOFLA_2-1_COMMUNE_SHP_LAMB93_FXX_2015-12-01/GEOFLA/1_DONNEES_LIVRAISON_2015/GEOFLA_2-1_SHP_LAMB93_FR-ED152/COMMUNE"
+# file <-"COMMUNE"
+# france <- readOGR(dsn = path, layer = file, encoding = "latin1") # règle le pb de accents
+# d.france <- france@data
+# par(mar = rep(0,4)) # on fait de la place
+
+# CArte des nouvelles régions
+region <- unionSpatialPolygons(france, IDs = france@data$CODE_REG)
+plot(region)
+
+# liste des ESR
+w <- which(d.france$NOM_COM %in% c("STRASBOURG", "NANCY", "LILLE", "PARIS-1ER-ARRONDISSEMENT", "LYON-1ER-ARRONDISSEMENT","MARSEILLE-1ER-ARRONDISSEMENT", "BORDEAUX", "RENNES", "CAEN", "TOULON"))
+
+# renomme les villes
+esr <- c("PARIS", "MARSEILLE", "TOULON", "LYON", "RENNES", "BORDEAUX", "STRASBOURG", "NANCY", "CAEN", "LILLE")
+points(d.france$X_CHF_LIEU[w], d.france$Y_CHF_LIEU[w], pch = 16, col = "red")
+text(d.france$X_CHF_LIEU[w], d.france$Y_CHF_LIEU[w], esr, col = "blue", cex = 0.5, pos = 4)
+
+
+```
+
