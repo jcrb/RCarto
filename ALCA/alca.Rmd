@@ -24,7 +24,9 @@ L'instruction provoque le chargement de la France entière, découpées par comm
 require("rgdal") # requires sp, will use proj.4 if installed
 require("maptools")
 
+# Version XPS
 path <- "../../IGN_GEOFLA_2014/GEOFLA_2-0_COMMUNE_SHP_LAMB93_FXX_2014-12-05/GEOFLA/1_DONNEES_LIVRAISON_2014-12-00066/GEOFLA_2-0_SHP_LAMB93_FR-ED141/COMMUNE"
+
 file <-"COMMUNE"
 france <- readOGR(dsn = path, layer = file, encoding = "latin1") # règle le pb de accents
 d.france <- france@data
@@ -129,6 +131,17 @@ La meilleure source est le répertoire __[scope.santé](http://www.scopesante.fr
 
 Enquete [FEDORU](https://docs.google.com/spreadsheets/d/1m6vgG0A-4BAQPHr_HNZehpZ5A8EkEDgoE5JlUFcNXv8/edit#gid=213026183) sur les SU, SAMU, SMUR. Lefichier complété au 8/5/2015 est enregistré dans RPU_Doc/Cartographie.
 
+Ellipsoïde
+===========
+
+Pour représenter un point de la terre il faut disposer de trois éléments:
+
+- une représentation de l'[ellipsoïde](https://fr.wikipedia.org/wiki/Ellipso%C3%AFde) terresrtre caractérisé par des demi-axes
+- un système de coordonnées geograohiques
+- un système de projection cartographique.
+
+Il existe  des milliers de systèmes en usage de part le monde. Une liste exhaustive est maintenue à jour par l'[EPSG](http://georezo.net/wiki/main/dico/epsg). Ces informations sont disponiblesdans R dans la library __rgdal__ par la fonction _make_EPSG qui retourne un dataframe de 5078 lignes et 3 colonnes. Il y a 87 codes Lambert différents.
+
 Changer de projection
 ----------------------
 
@@ -171,6 +184,7 @@ Lambert :     système de projection utilisé pour la France (4 zones).
 Lambert93 : projection associée au système géodésique RGF93 (compatible avec WGS84)
 
 Changer de système de référence pour des objets de classe : Spatial... [ librairie sp ]
+```
 library (rgdal)
 d78 <- readOGR ("Dept78.TAB", layer="Dept78")
 proj4string (d78) 
@@ -180,9 +194,11 @@ proj4string (d78)
 plot (d78, axes = TRUE, las=2)
 
 title ("epsg 27572 - NTF (Paris) / Lambert zone II")
+```
 
 Reprojeter en RGF93, code EPSG : 2154 
 
+```
 d78RGF93 <-spTransform(d78, CRS ("+init=epsg:2154") )
 proj4string (d78RGF93)
 "+init=epsg:2154 +proj=lcc +lat_1=49 +l
@@ -191,14 +207,17 @@ at_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000
 0,0,0,0,0,0 +units=m +no_defs"
 plot (d78RGF93, axes = TRUE, las=2)
 title ("epsg 2154 #  RGF93 / Lambert-93")
-
+```
 
 Reprojeter en WGS 84 , code EPSG : 4326
+
+```
 d78WGS84 <- spTransform(d78, CRS ("+init=epsg:4326") )
 proj4string (d78WGS84)
 "+init=epsg:4326 +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
 plot (d78WGS84, axes = TRUE, las=2)
 title ("epsg 4326 #  WGS 84")
+```
 
 Utiliser OSM
 ------------

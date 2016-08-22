@@ -1,0 +1,237 @@
+---
+title: "R et Espace"
+author: "jcb"
+date: "20 août 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#install.packages("Guerry")
+library("Guerry")
+d <- Guerry
+names(d)
+library(ggplot2)
+
+# représentation 1
+distProst <- ggplot(d) + geom_point(aes(x = Distance, y = Prostitutes), size = 3, colour = "red")
+distProst
+
+# représentation 2
+distProst2 <- ggplot(d) + geom_point(aes(x = Distance, y = Prostitutes, size = Prostitutes), colour = "red")
+distProst2
+
+# représentation 3
+distProst3 <- ggplot(d) + geom_point(aes(x = Distance, y = Prostitutes, size = Prostitutes, colour = Region))
+distProst3
+```
+
+Communes IGN 2015
+=================
+
+```{r}
+library(sp)
+library(spdep)
+library(maptools)
+library(RColorBrewer)
+library(classInt)
+
+file <- "~/Documents/Cartographie/Donnee_IGN/COMMUNE/COMMUNE.SHP"
+com<-readShapeSpatial(file)
+
+# CRS Lambert93: http://spatialreference.org/ref/epsg/rgf93-lambert-93/proj4js/
+com@proj4string <- CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+
+# traitement des caractères anormaux
+com@data$STATUT <- as.character(com@data$STATUT)
+Encoding(com@data$STATUT) <- "latin1"
+```
+
+Découpage de la France entière en différentes régions. Chaque région est formée de l'ensemble des limites des communes. Le découpage conserve les propriétés de chaque région notamment:
+
+- les data
+- la projection lambert 93
+
+```{r}
+par(mar = c(1,0,1,0)) # on fait de la place
+
+# Alsace
+alsace <- com[com$NOM_REG == "ALSACE",]
+alsace@proj4string
+plot(alsace)
+
+# Lorraine
+lorraine <- com[com$NOM_REG == "LORRAINE",]
+plot(lorraine)
+
+# champagne ardennes
+ca <- com[com$NOM_REG == "CHAMPAGNE-ARDENNE",]
+plot(ca)
+
+# Région Grand Est
+RGE <- com[com$NOM_REG %in% c("ALSACE","LORRAINE","CHAMPAGNE-ARDENNE"),]
+plot(RGE, main = "Région Grand Est")
+
+# on peut rajouter les dimensions avec l'argument axes
+par(mar = c(2,2,1,0)) # on fait de la place
+
+# border = couleur du trait
+# col = couleur du fond
+# axes = distance en mètre depuis l'origine
+plot(RGE, main = "Région Grand Est", sub = "RESURAL & IGN", border = "gray", axes = TRUE)
+```
+
+Fusion des polygones
+
+Les cartes sont constituées par un ensemble de polygones élémentaires représentant les communes. On peut fusionner ces polygones en utilisant les différents identifiants administratifs présents dans data:
+
+- "CODE_CANT"  
+- "CODE_ARR"  
+- "CODE_DEPT"  
+- "NOM_DEPT"   
+- "CODE_REG"   
+- "NOM_REG"
+
+```{r}
+# les régions
+alca.region <- unionSpatialPolygons(RGE, IDs = RGE@data$CODE_REG)
+plot(alca.region)
+
+# les départements
+alca.dpt <- unionSpatialPolygons(RGE, IDs = RGE@data$CODE_DEPT)
+plot(alca.dpt, border = "red")
+```
+
+On peut superposer deux plot avec add = TRUE. Attention à l'ordre des couches !
+```{r}
+plot(RGE, main = "Région Grand Est", sub = "RESURAL & IGN", border = "gray", axes = TRUE)
+plot(alca.dpt, border = "red", add = TRUE)
+plot(alca.region, add = TRUE)
+```
+
+Zoom
+
+Il est possible de zoomer sur une partie de la carte avec les instructions xlim et ylim:
+```{r}
+plot(RGE, main = "Région Grand Est", sub = "RESURAL & IGN", border = "gray", axes = TRUE, xlim = c(800000, 810000), ylim = c(6900000, 6900500))
+text(coordinates(RGE), labels = RGE$NOM_COM, cex = 1)
+
+
+```
+
+Coordinates
+
+Récupère les coordonnées des centroïdes
+
+```{r}
+a <- coordinates(alsace)
+head(a)
+plot(a, pch = ".")
+plot(alsace)
+points(coordinates(alsace), pch = 10, col = "lightgray", cex = 1)
+text(coordinates(alsace), labels = alsace$INSEE_COM, cex = 0.5)
+```
+
+Cartes choroplètes
+===================
+
+Variables quantitative: ex. STATUT
+----------------------------------
+On crée autant de couleurs que la var sTATUT a de niveaux
+```{r}
+mycol <- as.numeric(1:length(levels(RGE$STATUT)) * 2)
+plot(RGE, main = "Région Grand Est", sub = "RESURAL & IGN", border = "gray", axes = TRUE, col = mycol[RGE$STATUT])
+
+```
+
+Variable qualitative continue: ex: POPULATION
+
+Représentation en niveaux de gris. Astuce: on crée une colonne pop2 où on divise le nb d'habitants par le nombre max d'habitant pour avoir une échelle de 0 à 1:
+```{r}
+m <- max(RGE$POPULATION)
+RGE@data$pop2 <- RGE@data$POPULATION / m
+plot(RGE, col = gray(1 - RGE@data$pop2, alpha = 1), axes = TRUE)
+
+```
+PB: Strasbourg écrase toutes les autres aglomérations
+
+Cercles proportionnels:
+```{r}
+plot(alsace, col = "lightgreen")
+symbols(coordinates(alsace), circles = 10000*alsace@data$POPULATION/max(alsace@data$POPULATION), add = TRUE, inches = FALSE, bg = "red")
+
+```
+
+Solution 2:
+```{r}
+plot(alsace, col = "lightgreen")
+points(coordinates(alsace), cex = 10*alsace@data$POPULATION/max(alsace@data$POPULATION), col = "red", pch = 16)
+points(coordinates(alsace), cex = 10*alsace@data$POPULATION/max(alsace@data$POPULATION), col = "yellow", pch = 1)
+
+```
+
+Avec classint
+
+- nombre de classes: gén. 5; Formule de Surges: min(5, abs(1 + 3.22 * log(length(x) / log(2))))
+- création d'une palette avec brewer: brewer.pal(n=nb de couleurs, nom d'une palette)
+- 3 types de palettes:
+  - "qual" = gamme perroquet: variable quantitative nominale
+  - "seq": variable continue = dégradé: blues, BuOn, BuPu, GnBu... = camaieux
+  - "div": variable continue/discrete/qualit, ordinale => gradation
+
+```{r}
+display.brewer.all(type = "qual")
+display.brewer.all(type = "div")
+display.brewer.all(type = "seq")
+
+# choix de la palette
+nclr <- 5
+plotclr <- brewer.pal(n = nclr, name = "PuOr")
+plotclr
+
+# choix de la technique de discretisation:
+# ?classIntervals
+# chosen style: one of "fixed", "sd", "equal", "pretty", "quantile", "kmeans", "hclust", "bclust", "fisher", or "jenks"
+class <- classIntervals(varx=x, n=nclr, style = "equal")
+
+# création du graphique
+colcode <- findColours(class, plotclr)
+plot(alsace, col=colcode, axes = TRUE, main = "Les communes d'Alsace")
+
+```
+
+En pratique: population des communes d'Alsace
+```{r}
+par(mar = c(5,2,1,0)) # on fait de la place
+# nb de classes
+nclr <- 5
+# choix de la palette blues
+plotclr <- brewer.pal(n = nclr, name = "Blues") # pour inverser les couleurs n = nb_class:1
+# définition des classes
+class <- classIntervals(alsace$POPULATION, n=nclr, style = "equal")
+# attribution du code de couleur à chaque commune
+colcode <- findColours(class, plotclr)
+# graphique
+plot(alsace, col=colcode, axes = TRUE, main = "Population des communes d'Alsace", sub = "Auteur: JC Bartier, RESURAL \nSource IGN 2015", cex.sub = 0.8, cex.axis=0.6, cex.main = 0.9)
+
+# légende
+col.fill <- attr(colcode, "palette")
+tab.legend <- attr(colcode, "table")
+text.legend <- names(tab.legend)
+# reécriture de text.legend pour que tous les intervalles soient ouvert à droite
+text.legend <- gsub(pattern = ")", replacement = "[", text.legend)
+text.legend <- gsub("]","[", text.legend)
+
+legend("topleft", legend = text.legend, fill = col.fill, cex = 0.9, bty = "n", title = "Population")
+
+# Affichage du nord
+coor.N <- c(bbox(alsace[1,1]), bbox(alsace[2,2]))
+SpatialPolygonsRescale(layout.north.arrow(2), scale = 5000, plot.grid = FALSE, )
+```
+
+  
+
+
