@@ -32,6 +32,10 @@ distProst3
 Communes IGN 2015
 =================
 
+Ceci est la transcription partielle d'une demo youtube.
+
+Trouvé une très bonne référence en français: http://quanti.hypotheses.org/category/graphiques/
+
 ```{r}
 library(sp)
 library(spdep)
