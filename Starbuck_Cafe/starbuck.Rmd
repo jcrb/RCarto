@@ -1,0 +1,29 @@
+---
+title: "Starbuck"
+author: "jcb"
+date: "24 août 2016"
+output: html_document
+---
+
+Exemple de carte avec popup créé en moins de 5 lignes ! 
+
+source: http://www.computerworld.com/article/2893271/business-intelligence/5-data-visualizations-in-5-minutes-each-in-5-lines-or-less-of-r.html
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Map of Starbucks
+
+```{r}
+# récupère la liste des cafés starbuck aux USA
+download.file("https://opendata.socrata.com/api/views/ddym-zvjk/rows.csv?accessType=DOWNLOAD", "starbucks.csv", method = "curl")
+starbucks <- read.csv("starbucks.csv")
+
+library("leaflet")
+leaflet() %>% addTiles() %>% setView(-84.3847, 33.7613, zoom = 16) %>%
+addMarkers(data = starbucks, lat = ~ Latitude, lng = ~ Longitude, popup = starbucks$Name) 
+
+write.csv(starbucks, file = "starbucks.csv")
+```
+
