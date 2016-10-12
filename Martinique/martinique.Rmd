@@ -1,0 +1,560 @@
+---
+title: "Martinique"
+author: "jcb"
+date: "24 août 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Cartographier avec le logiciel R
+================================
+
+[Publié le 11 décembre 2012 par Laurent Beauguitte](http://quanti.hypotheses.org/195)	
+
+Par Laurent Beauguitte1 et Timothée Giraud2
+
+Ce n’est un secret pour personne, le logiciel R est devenu en quelques années l’un des logiciels de statistiques les plus performants qui soit3. Et les fonctions de cartographie de ce logiciel sont tout à fait capables de rivaliser avec les produits existant sur le marché, qu’ils soient gratuits mais non libres (Philcarto, disponible seulement sous environnement Windows) ou payants (Cartes & Données par exemple).
+
+Mais pourquoi utiliser R et s’embêter à taper du code alors qu’il est si facile, avec ces logiciels, de cliquer à droite, à gauche ? Tout d’abord pour gagner du temps (mais si, mais si). Une fois les fonctions de base maîtrisées, il suffit de préparer des modèles de scripts où seuls les noms des fichiers en entrée (et les titres des cartes) devront être modifiés. Autre argument : R est multiplateforme… Enfin et surtout, en intégrant les fonctions de représentation cartographique à la suite des fonctions de statistiques on limite au maximum les ruptures logicielles (du type, je mets en forme mes données avec un tableur X, je fais mes traitements statistiques avec un logiciel de statistique Y, je retourne dans un tableur pour créer un fichier à cartographier, je cartographie avec un logiciel dédié Z puis je mets en page avec un logiciel de traitement de textes XYZ…). Un court script permettra par exemple, une fois les données importées, de cartographier les résultats de toutes sortes de traitements statistiques, des plus simples aux plus compliqués. Cet avantage est énorme dans un processus d’exploration de données où la carte peut jouer un rôle important dans le processus classique d’allers et de retours entre les traitements, les analyses et les interprétations.
+
+Les modules de R (ou « packages » dans la terminologie du logiciel) permettant de créer des cartes sont nombreux (voir ci-dessous), et ce billet n’a pas la prétention de tous les présenter. Notre objectif est ici beaucoup plus modestement de présenter deux scripts, l’un permettant de créer une carte « choroplète »4, l’autre de créer une carte en « cercles proportionnels ». Nous avons essayé d’écrire des scripts qui soient simultanément concis et clairs. Mais ce ne sont bien entendu que des solutions possibles parmi d’autres.
+Les formats
+
+Le fond de carte que nous allons utiliser dans les deux cas est ce qu’on appelle un « shapefile ». Rappelons qu’un shapefile est formé de plusieurs fichiers différents portant tous le même nom. Un shapefile comprend au minimum trois fichiers :
+
+    un fichier à extension .shp stockant les géométries des entités ;
+    un fichier .bdf nommé  table attributaire ;
+    un fichier .shx stockant l’index de la géométrie des entités.
+
+Il est utile (et recommandé) d’avoir un fichier .prj (lisible avec un éditeur de texte) qui précise le système de projection utilisé.
+
+Si le format « shapefile » est propriétaire (ESRI), autrement dit il n’est pas libre, c’est toutefois le plus couramment utilisé, et tous les logiciels de SIG (système d’information géographique) open source savent le lire ; en outre, et les fonds de carte librement utilisables sont très nombreux en ligne (voir la rubrique ressources).
+
+Quant au format des données elles-mêmes, il importe peu, même s’il est recommandé avec R d’employer les formats .csv ou .txt. De manière générale tout dataframe (importé ou créé dans R) contenant des données numériques et des identifiants pourra être cartographié.
+
+Dans les deux exemples commentés ici, nous allons utiliser deux fichiers de départ :
+
+1. Un fond de carte de la Martinique provenant de l’IGN : [http://professionnels.ign.fr/geofla%20%20professionnels.ign.fr/sites/default/files/GEOFLA_1-1_SHP_UTM20W84_MQ-ED111.tar.gz](http://professionnels.ign.fr/geofla%20%20professionnels.ign.fr/sites/default/files/GEOFLA_1-1_SHP_UTM20W84_MQ-ED111.tar.gz)
+2. Un fichier de données démographiques issues du recensement de la population : [http://www.recensement.insee.fr/telechargement/bases-chiffres-cles/BTX_CC_POP_2009.zip](http://www.recensement.insee.fr/telechargement/bases-chiffres-cles/BTX_CC_POP_2009.zip)
+
+Par ailleurs, nous avons regroupé dans une archive au format .zip tous les fichiers utiles pour vous permettre d’abord de reproduire les cartes détaillées ci-dessous, puis ensuite de réaliser les vôtres en vous inspirant de ces premiers exemples simples. Cette archive est disponible en cliquant sur le lien ci-dessous :
+
+[cartographier_avec_R.zip](https://f.hypotheses.org/wp-content/blogs.dir/22/files/2012/12/cartographier_avec_R.zip)
+
+Elle contient : VOIR LE FICHIER DATA
+
+- le fond de carte IGN des communes de la Martinique ;
+- l’extrait du recensement de la population 2009 ;
+- le script intitulé carto_choro.R, détaillé ci-dessous, permettant de réaliser des cartes choroplètes ;
+- le script intitulé carto_prop.R, détaillé ci-dessous, permettant de réaliser des cartes en cercles proportionnels.
+
+Les packages utilisés
+
+Nous utilisons trois packages : maptools, classInt et RcolorBrewer. Le premier est l’un  des modules les plus utiles en cartographie, le second permet de discrétiser des séries quantitatives continues, enfin  le troisième, qui n’est d’ailleurs pas indispensable, permet  de choisir des gammes de couleur.
+Etapes, commandes et fonctions
+
+Créer une carte avec R suppose :
+
+    - d’importer les données (fond de carte – readShapeSpatial – et données – read.table) ;
+    - de joindre les deux fichiers (merge) grâce à un identifiant commun ;
+    - si besoin de discrétiser une variable (classIntervals) ;
+    - si besoin, de choisir une gamme de couleurs (brewer.pal) ;
+    - cartographier (plot) ;
+    - de créer la légende (legend) ;
+    - de mettre en page la carte (échelle – SpatialPolygonsRescale -, titre, auteur, source etc.).
+
+Import des données
+
+Le package maptools permet d’importer des objets spatiaux en fonction de leur type (polygone, ligne ou point) : readShapeSpatial, readLineSpatial et readPointSpatial. Même si le .shp comprend un fichier .prj (projection donc), il peut être nécessaire de préciser la projection utilisée – si on en a l’utilité, lors d’un changement de projection par exemple.
+
+Si les deux fichiers comportent chacun une colonne identique (ce qui est nécessaire…) nommée respectivement c1 et c2, la fonction merge(fond_de_carte, données, by.x= »c1″, by.y= »c2″, all.x=TRUE) permettra de joindre les fichiers. La précision all.x=TRUE permet de conserver l’ensemble des données cartographiques, que des données autres y soient associées ou non (données manquantes par exemple).
+
+Dans notre exemple, après avoir importé le jeu de données, nous créons une nouvelle variable représentant le taux d’accroissement de la population entre 1999 et 2009.
+
+Le début du script sera donc :
+
+    #chargement des packages nécessaires
+
+    library(RColorBrewer)
+
+    library(maptools)
+
+    library(classInt)
+
+    #nettoyage de l’espace de travail / attention, cette commande effacera tous les #objets R créés dans la session courante!
+
+    rm(list=ls())
+
+    #fermeture de fenêtres graphiques éventuellement ouvertes
+
+    dev.off()
+
+    #definition du dossier de travail ou se trouvent les données et le fond de carte
+
+    setwd("Le_chemin_de_mon_dossier_de_travail")
+
+    #import des données à cartographier
+
+    dt <- read.csv( "data.csv",header=TRUE,sep=";",dec=",",skip=1)
+
+    #création de la variable VAR_POP du taux d’accroissement de la population
+
+    dt$VAR_POP <- (dt$P09_POP-dt$P99_POP) / dt$P99_POP
+
+    #import du fond de carte
+
+    fdc <- readShapeSpatial("COMMUNE")
+
+    #Jointure entre le fond de carte et les données
+
+    fdc@data <- merge(fdc@data,dt, by.x="INSEE_COM",by.y="CODGEO", all.x=TRUE)
+
+Cartographie choroplète
+
+Un script minimal possible est le suivant :
+
+    #discrétisation en 4 classes (quantiles)
+
+    distr <- classIntervals(fdc$VAR_POP,4,style="quantile")$brks
+
+    #choix d’une gamme de couleurs
+
+    #pour voir les palettes disponibles : display.brewer.all()
+
+    colours <- brewer.pal(4,"PuOr")
+
+    #optionnel - codes des couleurs utilisées
+
+    colours
+
+    #attribution des couleurs aux régions
+
+    colMap <- colours[(findInterval(fdc$VAR_POP,distr,all.inside=TRUE))]
+
+    #Affichage de la carte
+
+    plot(fdc, col=colMap)
+
+    #affichage de la légende
+
+    legend("bottomleft", legend=leglabs(distr),
+
+    fill=colours, bty="n",
+
+    title="Taux d’accroissement\ndémographique de 1999 à 2009")
+
+    #l’introduction de la chaine de caractère « \n » entraine un saut de ligne dans #le texte à afficher
+
+    #titre et sous titres
+
+    title(main="Evolution de la population en Martinique",
+
+    sub="auteur: Timothée Giraud, UMS RIATE, 2012\nSource: IGN (fond de carte GEOFLA), INSEE (Recensement de la population)")
+
+Ce script donne le résultat suivant :
+
+ 
+
+Le résultat affiché dans la fenêtre graphique est exportable aux formats .emf, .eps, .pdf, .png, .bmp, .tiff, .jpg à l’aide de la fonction savePlot(nom_du_fichier, type= »format »).
+
+Avant d’enrichir ce script pour améliorer le résultat, un mot sur quelques fonctions utilisées ici… classIntervals permet de choisir la discrétisation de la variable cartographiée et plusieurs choix sont possibles, notamment fixed (bornes fixées par l’utilisateur), sd (moyenne et écart-type), equal (amplitude égale), quantile, kmeans, jenks et quelques autres encore. La fonction ne s’applique que sur des données de type numérique. La fonction legend comprend de très nombreux paramètres (position, cadre, couleur de fond, taille des caractères, titre etc.) et le plus simple est sans doute d’étudier les scripts d’exemples disponibles dans l’aide (taper ?legend dans la console).
+Propositions d’amélioration
+
+Trois défauts apparaissent en ce qui concerne la légende : trop de décimales, des termes en anglais et enfin, les bornes inférieures et supérieures sont inconnues. Plus de 0.11% certes mais quel est le maximum ?…
+
+Les deux premiers inconvénients sont facilement supprimés avec les modifications suivantes :
+
+    legend("bottomleft", legend=round(leglabs(distr), over="Plus de",  under="Moins de"), fill=colours, bty="n",title="Taux d’accroissement\ndémographique de 1999 à 2009")
+
+Obtenir l’affichage du minimum et du maximum est plus compliqué. Il serait bien sûr possible de récupérer les bornes (distr) puis de modifier la légende a posteriori… La solution proposée ici est la suivante : transformer la fonction existante leglabs pour modifier l’affichage des bornes et les arrondir. Traduire over et under devient alors superflu.
+
+Cette fonction est la suivante :
+
+    #fonction de calcul des bornes pour la légende
+
+    myLeg <- function (vec, arrond) {
+
+    x <- vec
+
+    lx <- length(x)
+
+    if (lx < 3)
+
+    stop("pas suffisamment de classes")
+
+    res <- character(lx - 1)
+
+    res
+
+    for (i in 1:(lx - 1))
+
+    {res[i] <- paste(round(x[i],arrond), round(x[i + 1],arrond),sep=" - ")
+
+    }
+
+    res
+
+    }
+
+Il suffira alors de remplacer dans l’instruction de création de légende legend=leglabs(distr) par legend=myLeg(distr,2) où distr est la variable ou sont stocker les bornes de la distribution et 2 le nombre de chiffres après la virgule désiré à l’affichage. On obtient alors le script et le résultat suivants :
+
+    legend("bottomleft", legend=myLeg(distr,2),fill=colours, bty="n", title="Taux d’accroissement\ndémographique de 1999 à 2009")
+
+Dernières étapes utiles : ajouter une échelle et une flèche nord. Dans les deux cas, le premier pas sera de choisir l’emplacement à l’aide de la fonction locator(n) où n est le nombre de points dont on souhaite obtenir les coordonées x,y.  Pour l’échelle, il faudra également indiquer la longueur désirée unités du fond de carte (mètres, kilomètres, degrés ?). Une solution possible est l’extrait de script suivant :
+
+    #affichage de l’échelle
+
+    l <- locator(n=1)   #cliquer dans la fenêtre graphique à l’endroit choisi
+
+    SpatialPolygonsRescale(layout.scale.bar(),offset=c(l$x,l$y),scale=5000,
+
+    fill=c("black"),plot.grid=F)
+
+    text(l$x+5000/2,l$y,paste("5 km","\n\n",sep=""))
+
+    #ajout d’une flèche nord
+
+    l <- locator(n=1)   #idem
+
+    SpatialPolygonsRescale(layout.north.arrow(2),offset=c(l$x,l$y),scale=5000,
+
+    plot.grid=F)
+
+Dans le script téléchargeable nous utilisons le script décrit précédemment en raffinant un peu les fonctions d’affichage (taille et espacement du texte etc.). Et le résultat obtenu est le suivant :
+
+Le script commenté intitulé carto_choro.R inclus dans le .zip téléchargeable  permet d’exécuter – et de personnaliser – chacune des étapes.
+
+Il est encore possible d’améliorer ce script, notamment pour gérer l’affichage des données manquantes ou permettre d’inverser l’ordre d’affichage de la gamme de couleur utilisée.
+Cartographie en cercles proportionnels
+
+Cartographier une variable quantitative de stock suppose l’utilisation de la variable taille. Quatre problèmes doivent être résolus pour une cartographie avec R :
+
+    créer des colonnes x,y correspondant aux coordonnées des centroïdes des polygones ;
+    déterminer la taille maximale des cercles ;
+    éviter les superpositions et, quand elles sont inévitables (ex. Population par communes en Ile de France), veuillez à placer les cercles les plus petits devant les plus gros ;
+    et enfin, construire la légende.
+
+Le problème de la discrétisation ne se pose plus (le package classInt est donc inutile ici), et les autres étapes du script (importation) sont à peu près identiques.
+
+Les coordonnées des centroïdes s’obtiennent avec la fonction coordinates(fond_de_carte) qu’il suffit ensuite de transformer en tableau de données (dataframe). Le début du script sera donc le suivant :
+
+    #chargement des packages nécessaires
+
+    library(RColorBrewer)
+
+    library(maptools)
+
+    #nettoyage de l’espace de travail / attention, cette commande est à utiliser
+
+    #avec précaution, elle effacera tous les objets R créés dans la session
+
+    #courante!
+
+    rm(list=ls())
+
+    #Fermeture de fenêtres graphiques éventuellement ouvertes
+
+    dev.off()
+
+    #definition du dossier de travail ou se trouvent les données et le fond de carte
+
+    setwd("Le_chemin_de_mon_dossier_de_travail ")
+
+    #import des données à cartographier
+
+    dt <- read.csv( "data.csv",header=TRUE,sep=";",dec=",",skip=1)
+
+    #import du fond de carte
+
+    fdc <- readShapeSpatial("COMMUNE")
+
+    #création d’un dataframe avec les coordonnées des centroides des communes
+
+    pt <- cbind(fdc@data[,"INSEE_COM"],as.data.frame(coordinates(fdc)))
+
+    #renommage des colonnes de ce dataframe
+
+    colnames(pt) <- c("Code","x","y")
+
+    #jointure entre le dataframe des coordonnées des centroides et les données à #cartographier
+
+    pt <- merge(pt,dt, by.x="Code",by.y="CODGEO", all.x=TRUE)
+
+Le dataframe pt contient maintenant les coordonnées des centroïdes des communes et les données associées. Les difficultés arrivent : nous voulons cartographier la population communale en 2009 en cercle proportionnels (variable P09_POP). La solution la plus fréquemment proposée est la suivante :
+
+    #Affichage de la carte
+
+    plot(fdc)
+
+    points(pt[,c("x","y")],cex=pt[,"P09_POP"]/5000,pch=21,bg="grey")
+
+L’utilisation de la fonction d’affichage points() pose problème car la déclaration des tailles des cercles (cex=) sera en points de police de caractère. Alors que la représentation en figurés proportionnels suppose une conservation des rapports entre les valeurs de la variable et les surfaces des figurés les représentant sur la carte. L’utilisation de la fonction points() ne garantit absolument pas la conservation de ce rapport.
+
+Par ailleurs, nous divisons les valeurs de la variable P09_POP par 5000 pour permettre l’affichage de cercles de taille raisonnable sur la carte. Mais représenter une autre variable quantitative de stock supposera un autre dénominateur qu’il n’est possible de trouver que par tatonnement.
+
+La solution que nous proposons permet de surmonter ces deux problèmes : d’abord en utilisant une fonction d’affichage de cercles assurant une réelle proportionnalité des figurés ; ensuite en calibrant la surface totale des cercles par la surface totale de la carte (la surface totale des cercles représentera x% de la surface totale de la carte.)5
+
+    #extension maximale du fond de carte
+
+    #la fonction bbox donne les coordonnées max et min du fond de carte
+
+    x1 <- bbox(fdc)[1]
+
+    y1 <- bbox(fdc)[2]
+
+    x2 <- bbox(fdc)[3]
+
+    y2 <- bbox(fdc)[4]
+
+    #surface maximale de la carte
+
+    sfdc <- (x2-x1)*(y2-y1)
+
+    #somme de la variable à cartographier
+
+    sc <- sum(pt$P09_POP,na.rm=TRUE)
+
+    #création d’une variable contenant les rayons des cercles à représenter
+
+    pt$var <- sqrt((pt$P09_POP*0.1*sfdc/sc)/pi) #la somme des surfaces des cercles #représentera ici 10% (0.1) de la surface de la carte
+
+    #tri du dataframe de manière à ce que les cercles soient dessiner du plus gros #au plus petit
+
+    pt <- pt[order(pt$var,decreasing=TRUE),]
+
+    #Affichage de la carte
+
+    plot(fdc, border="Grey", col="#FEE08B")
+
+    symbols(pt[,c("x","y")],circles=pt$var,add=TRUE,bg="#C7E9C0",inches=FALSE)
+
+    #la fonction symbols() dessine des cercles d’un diamètre donné
+
+Restera ensuite à dessiner une légende correspondant aux cercles dessinés :
+
+    #Affichage de la légende
+
+    rLeg <-  quantile(pt$var,c(1,0.9,0.25,0),type=1)
+
+    rVal <- quantile(pt$P09_POP,c(1,0.9,0.25,0),type=1)
+
+    l <- NULL
+
+    l$x <- x1
+
+    l$y <- y1
+
+    xinit <- l$x+rLeg[1]
+
+    ypos <- l$y+rLeg
+
+    symbols(x=rep(xinit,4),y=ypos,circles=rLeg,add=TRUE,bg="#C7E9C0",inches=FALSE)
+
+    text(x=rep(xinit,4)+rLeg[1]*1.2,y=(l$y+(2*rLeg)),rVal,cex=0.5,srt=0,adj=0)
+
+    for (i in 1:4){
+
+    segments (xinit,(l$y+(2*rLeg[i])),xinit+rLeg[1]*1.1,(l$y+(2*rLeg[i])))
+
+    }
+
+    text(x=xinit-rLeg[1],y=(l$y+(2*rLeg[1])),"Population communale
+
+    en 2009\n",adj=c(0,0),cex=0.6)
+
+Puis à ajouter titre, sous-titres, échelle et flèche nord comme dans l’exemple de la carte choroplète ;
+
+    #titre et sous titres
+
+    title(main="Répartition de la population en Martinique",
+
+    sub="Auteur: Timothée Giraud, UMS RIATE, 2012\nSource: IGN (fond de carte GEOFLA), INSEE (Recensement de la population)",
+
+    cex.sub=0.7)
+
+    #affichage de l’échelle
+
+    l <- locator(n=1)   #cliquer dans la fenêtre graphique à l’endroit choisi
+
+    SpatialPolygonsRescale(layout.scale.bar(),offset=c(l$x,l$y),scale=5000,
+
+    fill=c("black"),plot.grid=F)
+
+    text(l$x+5000/2,l$y,paste("5 km","\n\n",sep=""))
+
+    #ajout d’une flèche nord
+
+    l <- locator(n=1)   #idem
+
+    SpatialPolygonsRescale(layout.north.arrow(2),offset=c(l$x,l$y),scale=5000,
+
+    plot.grid=F)
+
+Il reste sans aucun doute du travail à faire en ce qui concerne la présentation de la légende et toutes les suggestions sont les bienvenues!
+Pour conclure (provisoirement)
+
+Nous ne prétendons évidemment pas que les solutions proposées ici sont les meilleures et les plus parcimonieuses qui soient. Notre objectif était autre : fournir clés en main deux exemples permettant d’apprivoiser la cartographie avec R.
+
+N’hésitez surtout pas à nous faire part de vos commentaires, suggestions, remarques et critiques. Nous adorons progresser en R!
+Autres packages utiles
+
+La liste ci-dessous ne prétend pas à l’exhaustivité. Les packages sont classés par ordre alphabétique.
+
+    animation : représentations (carto)graphiques animées.
+    mapproj : conversion de coordonnées géographiques en coordonnées projetées.
+    maps : dessin des cartes vectorielles.
+    raster : manipulation des fichiers raster.
+    rgdal : importation de nombreux formats de données spatiales, raster et vectorielles.
+    rgeos : manipulation de la géométrie des objets.
+    rgrs : cartographies choroplètes et en figurés proportionnels.
+    sp : la base de tous les autres packages spatiaux, dans lequel sont définis les classes d’objets spatiaux.
+    spdep : analyse spatiale
+
+Ressources en ligne
+
+Tous ces sites ont été visités en août 2012.
+
+    Parcourir les billet du site R-bloggers permet d’être au courant de l’actualité des packages R (http://www.r-bloggers.com/).
+    Le wiki  Global dataset montre de superbes réalisations cartographiques et fournit fonds de carte, données et scripts (http://spatial-analyst.net/wiki/index.php?title=Global_datasets).
+    Le site spatialanalysis fournit de nombreux scripts, jeux de données et liens (http://spatialanalysis.co.uk/r/).
+    Autre wiki intéressant : http://rwiki.sciviews.org/doku.php?id=tips:spatial-data&s=spatial.
+    Le site http://geodacenter.asu.edu/r-old mérite également le détour.
+
+Les ressources en français sont moins nombreuses mais signalons le blog FL\tauR comprenant plusieurs billets sur la cartographie (https://fltaur.wordpress.com/), le tutoriel de Julien Barnier (un chapitre sur la cartographie avec le package rgrs – http://alea.fr.eu.org/pages/intro-R), le blog de Baptiste Coulmont (http://coulmont.com/blog/).
+
+En ce qui concerne les fichiers .shp disponibles en ligne, signalons notamment :
+
+    communes et départements français (IGN) : http://professionnels.ign.fr/geofla
+    bibliothèque de liens MapCruzin : http://www.mapcruzin.com/
+    http://www.statsilk.com/maps/download-free-shapefile-maps
+    http://www.diva-gis.org/gData
+
+Lectures recommandées
+
+Pour aller (beaucoup) plus loin, l’ouvrage de Bivand et al. est une mine d’or. Oui, il est cher et commence à dater… mais on trouve tous les scripts commentés à l’adresse http://www.asdar-book.org/.
+
+Bivand, Roger S., Pebesma, Edzer J., Gómez-Rubio, Virgilio, 2008, Applied Spatial Data Analysis with R, Springer.
+
+Une autre manière de faire des cercles proportionnels intégrant une discussion sur la perception des symboles proportionnels :
+
+Tanimura, S., Kuroiwa, C., and Mizota, T. (2006) Proportional symbol mapping in R. Journal of Statistical Software 15(5). http://www.jstatsoft.org/v15/i05/paper
+
+ 
+
+    UMR IDEES [↩]
+    UMS RIATE [↩]
+    Muenchen Robert A., The Popularity of Data Analysis Software: http://r4stats.com/articles/popularity/. [↩]
+    Une carte choroplète est une carte thématique composée par la juxtaposition d’aplats de couleurs. [↩]
+    D’autre solutions sont possibles, voir notamment celle de Tanimura et al. (2006) utilisant d’autres packages. [↩]
+
+Laurent Beauguitte
+
+DISCUSSION:
+
+    Le 11 décembre 2012 à 19:23, Joël a dit :
+
+    L’utilisation de la fonction ‘merge’ pour fusionner le dataframe de l’objet spatial avec le dataframe contenant les données à cartographier (dans le cas de la carte choroplèthe) est susceptible de créer des erreurs, car cette fonction retourne un dataframe qui n’est pas nécessairement dans le même ordre que le dataframe de départ (par exemple lorsqu’il y a moins de lignes dans le dataframe avec les données à cartographier).
+    Pour un exemple de moyen de résoudre ce problème, voir par exemple le code source de la fonction ‘carte.prop’ du package ‘rgrs’ (disclaimer : j’ai contribué au code de cette fonction, initialement écrite par Julien Barnier).
+    Répondre ↓	
+        Le 12 décembre 2012 à 12:04, Timothée a dit :
+
+        Bonjour,
+        Il me semble que l’utilisation de l’argument ‘all.x=TRUE’ suffit à garantir le fait que les données soient correctement jointes au fond de carte.
+        En cas de différence entre les codes du fond de carte et ceux du dataframe des ‘NAs’ sont introduits ce qui ne gène pas l’exécution de la suite du script. Par ailleurs, l’ordre du spatialdataframe+dataframe n’est pas utilisé.
+        Cependant, si vous avez un exemple où la jointure ne fonctionne pas correctement je suis preneur.
+        Dans nos premiers tests nous utilisions des instructions sql (via le package ‘sqldf’) puis pour réduire le nombre de packages utilisés, nous sommes passés au ‘merge’.
+        Répondre ↓	
+    Le 12 décembre 2012 à 15:50, Joël a dit :
+
+    Bonjour,
+
+    hélas, non, je crois que les choses ne sont pas si simples. Le fait d’utiliser l’option « all.x » garantit d’avoir un data.frame avec autant de lignes que celui en entrée, mais pas nécessairement dans le même ordre. Selon la documentation, « The rows are by default lexicographically sorted on the common columns, but for sort = FALSE are in an unspecified order. ». Donc, cela marche parce que vous avez sort = TRUE et que le data.frame de départ est, selon toute probabilité, déjà trié selon le Code Insee.
+
+    De plus, l’ordre dans lequel sont triés le spatial data.frame et le data.frame peuvent importer car, en interne du spatial data.frame, les row.names du data.frame sont parfois (à défaut d’une colonne du data.Frame spécifiée explicitement) utilisés pour faire la jointure avec les polygones, identifiés par ces mêmes rownames. Et ils doivent être dans le même ordre…
+
+    (ces problèmes sont malheureusement mal documentés, il faut se plonger dans les abysses des listes de discussion… voir par exemple ce thread, où Roger Bivand, l’auteur de la classe ‘sp’, en explicite un certain nombre).
+
+    Je vous suggère donc d’essayer de trier autrement votre spatial data.frame préalablement à la jointure et de voir ce qui se passe. J’ai eu quelques désagréments dans le passé (souvent sans que R ne soulève d’erreur, d’ailleurs)…
+
+    Le passage par SQL est sans doute un peu lourd dans ce cas (au passage, connaissez-vous le package ‘data.table’ ? Il donne accès à beaucoup de propriétés désirables des tables SQL…). Il suffit d’être conscient du problème d’ordre et de le traiter.
+
+    En tout cas bravo pour votre post, R est en effet un excellent outil de cartographie et d’analyse spatiale ! (au passage, un peu d’autopromo : j’avais réalisé une très brève introduction à la cartographie avec R et rgrs qu’on peut trouver ici : http://fltaur.wordpress.com/2012/09/26/presentation-jeudi-11-octobre-cartographie-et-big-data-rhadoop/)?
+    Répondre ↓	
+        Le 13 décembre 2012 à 13:11, Julien Barnier a dit :
+
+        Une autre piste éventuellement pour les problèmes liés à l’emploi de merge pourrait être d’utiliser la fonction join de l’extension plyr. Celle-ci permet d’effectuer des jointures « à la mode SQL » tout en préservant l’ordre intitial des lignes, apparemment.
+        Répondre ↓	
+            Le 13 décembre 2012 à 13:14, Joël a dit :
+
+            Dans ce cas, autant utiliser le package data.table. Il fait des jointures à la SQL, mais surtout, il est infiniment plus rapide que plyr (et que toutes les opérations sur les dataframe en général, même lorsque le code est écrit en C/C++).
+            Répondre ↓	
+    Le 8 janvier 2013 à 18:34, Hadrien Commenges a dit :
+
+    Désolé, mais je me sens obligé de relancer le débat. Joël soulève trois problèmes, celui des valeurs manquantes, celui de la jointure qui peut se faire sur les rownames et celui de l’ordre des lignes.
+
+    A mon avis, le premier problème est réglé facilement par l’option all.x = TRUE et le deuxième problème est réglé en spécifiant les deux champs de la jointure by.x et by.y.
+
+    Reste le troisième, et ma question : si la jointure est correctement faite, sur des clefs clairement spécifiées et que l’on contrôle le problème des valeurs manquantes, en quoi l’ordre des lignes importe-t-il ?
+
+    J’ai fait quelques tests et je ne détecte pas d’erreur. Comme Thimothée, je suis preneur d’exemples dans lesquels ça ne marche pas.
+
+    Merci,
+    Répondre ↓	
+    Le 8 janvier 2013 à 19:15, Joël a dit :
+
+    Bonjour Hadrien,
+
+    Laurent, Thimothée et moi avions poursuivi l’échange en privé, mais tant mieux si ça intéresse d’autres personnes ;-)
+
+    Je n’ai pas d’exemple sous la main tout de suite (dommage, je suis encore tombé dessus il y a quelques jours), mais ce problème semble bien documenté, y compris par Roger Bivand (l’auteur du package sp) himself : voir https://stat.ethz.ch/pipermail/r-sig-geo/2008-January/003057.html
+
+    Dans beaucoup de situations, le bug ne se manifeste pas, mais le problème, c’est que quand il le fait, il ne prévient pas…
+
+    Sur le fond, cette histoire pose une question plus profonde : R est un langage qui a développé des aspects de programmation orientée object (OOP) – S3 et S4, et même R5 -, mais qui autorise quand même ses usagers à accéder aux attributs de ses objets sans passer par des getters et des setters spécialisés. Il faudrait, pour bien faire, écrire une méthode update() pour les SpatialPolygonsDataFrame…
+    Répondre ↓	
+    Le 9 janvier 2013 à 11:45, Timothée a dit :
+
+    Bonjour à tous,
+    Je poste ici deux bouts de code que je propose pour remplacer le merge, au cas où:
+
+    1. solution courte
+    fdc@data <- data.frame(fdc@data, dt[match(fdc@data[,"INSEE_COM"], dt[,"ID"]),])
+    En attaquant toujours directement la table attributaire du spatialdataframe et en contrôlant l'ordre des lignes par le match.
+
+    2. solution plus longue
+    # déclaration des row.names pendant l'import du spatialdataframe
+    fdc <- readShapeSpatial("shp/COMCOM",IDvar="INSEE_COM")
+    row.names(dt) <- as.character(dt$ID)
+    # tri du dataframe en fonction de l'ordre du spatialdataframe
+    dt <- dt[match(row.names(fdc), row.names(dt)),]
+    row.names(dt) <- fdc$INSEE_COM
+    # utilisation du cbind pour les objets spatiaux
+    fdc <- spCbind(fdc, dt).
+
+    Mais c'est vrai que je reste curieux de voir un cas ou le merge ne fonctionne pas quand on ne manipule pas du tout le spatialDataFrame (comme ici).
+
+    Après je suis d'accord avec Joël, il manque sûrement une fonction de jointure dédiée spécifiquement au spatialDataFrames.
+    Répondre ↓	
+    Le 9 janvier 2013 à 13:30, Hadrien Commenges a dit :
+
+    Si je comprends bien, le problème que décrit Joël (et le post qu’il signale) est que si la table attributaire du spatialdataframe bouge la correspondance avec les géométries n’est plus assurée. Il suffit donc de garantir que la table attributaire ne bouge pas quand on fait la jointure. Ne pas bouger ça veut dire que l’ordre des lignes reste inchangé et que le nombre de lignes reste inchangé.
+
+    Après plusieurs tests, voici ce que j’en conclus (dans tous les cas le 1r argument de merge sont les données attributaires et le second les données externes) :
+
+    Cas 1 : la correspondance entre les données attributaires (DA) et les données externes (DE) est de 1:1. Dans ce cas merge() fonctionne, même si l’ordre des lignes n’est pas le même entre DA et DE puisque l’ordre de la jointure est celui du premier argument de merge().
+
+    Cas 2 : il y a des valeurs manquantes dans DE (n:1), dans ce cas all.x garantit la conservation de toutes les lignes de DA ainsi que la conservation de leur ordre initial
+
+    Cas 3 : c’est là que le bât blesse, la jointure est de 1:n (DA:DE). Les lignes supplémentaires de DE sont alors ajoutées à la jointure ce qui modifie le nombre de lignes de DA. Dans ce cas, l’argument match() tel que présenté dans la première solution de Thimothée du post précédent garantit une jointure propre.
+
+    Tout ceci étant dit, le cas 3 se présente rarement, en tous cas il ne devrait jamais se présenter. Une jointure de ce type (DA:DE) doit être de n:1 ou de 1:1. Si elle est de 1:n il y a une erreur de conception qui est antérieure à l’essai de jointure: un seul champ d’un seul objet géométrique ne peut recevoir qu’une seule valeur.
+    Répondre ↓	
+    Le 10 juin 2013 à 16:28, Bramaud a dit :
+
+
+
+
