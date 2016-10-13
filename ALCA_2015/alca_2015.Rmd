@@ -85,5 +85,43 @@ alca3 <- unionSpatialPolygons(alca, IDs = alca@data$ANC_REG)
 plot(alca3)
 save(alca3, file = "alca3.Rda")
 ```
+projection des SU
+-----------------
+```{r}
+library(rgdal)
+library(sp)
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/ALCA_2015/su_alca.Rda") #d hoptaux ALCA
 
+spdfr <- d
+
+## transformation en SpatialPointDataFrame
+coordinates(spdfr) <- ~ Longitude + Latitude
+
+## on déclare le système de coordonnées de référence: dégrés décimaux WGS84
+proj4string(spdfr) <- CRS("+proj=longlat +ellps=WGS84")
+spdfr
+
+## conversion en Lambert étendu
+spdfrLambert <- spTransform(spdfr, CRS("+init=epsg:27572"))
+spdfrLambert
+
+# conversion en Lambert93 à partir du système de projection de __alca3__:
+spdfrLambert <- spTransform(spdfr, proj4string(alca3))
+
+# fond de carte + hôpitaux
+plot(alca3, axes = TRUE)
+plot(spdfrLambert, add = T, pch = 16, col = "red")
+
+# on peut récupérer les coordonnées de chaque point avec la fonction coordinates()
+head(coordinates(spdfrLambert))
+```
+   Longitude Latitude
+2  1050113.2  6841326
+3  1050879.3  6840027
+
+Ajouter Robert Pax:
+```
+text(coordinates(spdfrLambert[61,]), "Sarreguemines", col = "blue", cex = 0,6, pos = 4, offset = 0.2)
+
+```
 

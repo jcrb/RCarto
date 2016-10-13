@@ -157,7 +157,7 @@ Recherche du bon code,
 exemple pour les projections Lambert xx
 (EPSG_Lambert <- EPSG [grep("Lambert", EPSG$note), 1:2] )
 
-Trois codes incontournables
+__Trois codes incontournables__
 
 row  |  code EPSG  |  note  |  argument   
 -----|-------------|--------|----------   

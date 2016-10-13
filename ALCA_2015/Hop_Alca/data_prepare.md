@@ -202,6 +202,84 @@ La fonction _writeOGR_ plante si le fichier résultant existe déjà. Si on veut
 writeOGR(su_alca_L93, "../ShapeFile_SU_Alca_L93", "su_alca_L93", "ESRI Shapefile")
 ```
 
+Trouver le bon EPSG/CRS
+=======================
+Coordinate Reference System ou [CRS](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/OverviewCoordinateReferenceSystems.pdf) sont gérés en R par les packages _sp_ et _rgdal_. 
+
+En R, la notation utilisée pour décrire un CRS est _proj4string_ de la librairie __PROJ.4__. Cela ressemble à ça:
++init=epsg:4121 +proj = longlat +ellps=GRS80
+
+Un CRS particulier peut être référencé par son code EPSG  (i.e., epsg:4121). 
+
+En R, les details d'un EPSG code peut être récupéré:
+```
+CRS("+init=epsg:4326")
+```
+qui retourne:
+```
++init=epsg:4326 +proj=longlat+ellps=WGS84 +datum=WGS84 +no_defs+towgs84=0,0,0
+```
+On peut créer un data frame de tpous les CRSs:
+```{r}
+EPSG <-make_EPSG()
+head(EPSG)
+```
+qui retourne un data frame avec les columns:
+
+- code: EPSG code
+- note: notes as included in the file
+- prj4character: PROJ.4 attributes for the projection
+
+On peut chercher un code particulier dans le Data Frame avec la fonction __grep__:
+```
+EPSG[grep("4269", EPSG$code), ]
+```
+##EPSG codes for commonly used CRS
+
+### Latitude/Longitude: WGS84 (EPSG: 4326) 
+Très utilisé par les organisations fournissant des données GIS. CRS used by Google Earth
+
+### Mercator (EPSG: 3857)
+Tiles from Google Maps, Open Street Maps, Stamen Maps
+
+Manipulation des CRS dans R:
+---------------------------
+### Pour la classe _sp_:
+Certains fichiers de données sont fournis avec des indications de projection comme les shapefiles. Si on utilise __readOGR__ pour les importer, cette information est automatiquement transférée dans R.
+
+pour retruver le CRS d'un objet spatial:
+```proj4string(x)
+```
+
+Pour assigner un CRS à un objet spatial:
+```
+proj4string(x)  <-CRS("+init=epsg:28992")
+```
+ou avec les attributs de PROJ.4:
+```
+proj4string(x) <-CRS("+proj=utm+zone=10 +datum=WGS84")
+```
+
+Pour ransformer un CRS dans un autre:
+```
+newData <- spTransform(x, CRS("+init=epsg:4238"))
+```
+ou, reference the CRS d'un autre objet spatial:
+````
+newData <- spTransform(x, proj4string(OtherData))
+```
+
+
+```{r}
+EPSG <- make_EPSG()
+head(EPSG)
+EPSG_Lambert <- EPSG[grep("Lambert", EPSG$note), 1:2]
+```
+Pour Lambert93, le code est 5698
+```{r}
+proj4string(spdfr) <- CRS("+init=epsg:5698")
+```
+
 Compléments de graphisme cartographique
 =======================================
 
