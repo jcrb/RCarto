@@ -283,7 +283,7 @@ proj4string(spdfr) <- CRS("+init=epsg:5698")
 Compléments de graphisme cartographique
 =======================================
 
-Deux élémnts sont nécessaires pour compléter le graphisme:
+Deux éléments sont nécessaires pour compléter le graphisme:
 
 - une rose des vents
 - l'échelle de la carte

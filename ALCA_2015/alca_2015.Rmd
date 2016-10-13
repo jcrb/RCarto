@@ -121,7 +121,7 @@ head(coordinates(spdfrLambert))
 
 Ajouter Robert Pax:
 ```
-text(coordinates(spdfrLambert[61,]), "Sarreguemines", col = "blue", cex = 0,6, pos = 4, offset = 0.2)
+text(coordinates(spdfrLambert[61,]), "Sarreguemines", col = "blue", cex = 0.6, pos = 4, offset = 0.2)
 
 ```
 
