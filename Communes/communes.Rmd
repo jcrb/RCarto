@@ -1,0 +1,61 @@
+---
+title: "Analyse du fichier des communes de france"
+author: "jcb"
+date: "14 octobre 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Origine: fichier SHP sur le bureau
+```{r, message=FALSE}
+library(sp)
+library(rgdal)
+library(maptools)
+
+dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
+france <- readOGR(dsn = dsn, layer = "COMMUNE")
+france@proj4string
+```
+CRS arguments:
+ +proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80
++units=m +no_defs 
+
+Projection Lambert93 s'étend entre les latitudes 44 et 49. Le point central est situé à la latitude 46.5 et la longitude 3 (Greenwich). En coordonnées planes, l'IGN fixe à ce point central les coodonnées X = 700000 et Y = 6600000 mètres.
+
+```{r}
+names(france)
+unique(france@data$NOM_REG)
+
+```
+[1] "ID_GEOFLA"  "CODE_COM"   "INSEE_COM"  "NOM_COM"    "STATUT"     "X_CHF_LIEU" "Y_CHF_LIEU"
+ [8] "X_CENTROID" "Y_CENTROID" "Z_MOYEN"    "SUPERFICIE" "POPULATION" "CODE_CANT"  "CODE_ARR"  
+[15] "CODE_DEPT"  "NOM_DEPT"   "CODE_REG"   "NOM_REG" 
+
+Récupération des 3 régions
+```{r}
+alsace <- france[france@data$NOM_REG == "ALSACE",]
+lorraine <- france[france@data$NOM_REG == "LORRAINE",]
+champagne <- france[france@data$NOM_REG == "CHAMPAGNE-ARDENNE",]
+```
+Création des polygones
+```{r}
+alsace.union <- unionSpatialPolygons(alsace, alsace@data$NOM_REG == "ALSACE")
+lorraine.union <- unionSpatialPolygons(lorraine, lorraine@data$NOM_REG == "LORRAINE")
+champagne.union <- unionSpatialPolygons(champagne, champagne@data$NOM_REG == "CHAMPAGNE-ARDENNE")
+
+```
+
+Les polygones sont ils recouvrants ?
+```{r}
+a <- over(alsace.union, lorraine.union)
+a
+a <- over(alsace.union, champagne.union)
+a
+```
+Pour l'Alsace et la lorraine: oui. La fonction __over__ retourne TRUE.
+
+
+
