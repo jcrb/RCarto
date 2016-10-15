@@ -67,6 +67,11 @@ plot(dep)
 
 reg <- unionSpatialPolygons(france, IDs = france@data$NOM_REG)
 plot(reg)
+
+Les déprtements de France et la région grand est
+plot(dep)
+plot(rge.union, col = "red", add = TRUE)
+
 ```
 
 
