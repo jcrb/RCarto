@@ -15,8 +15,16 @@ library(sp)
 library(rgdal)
 library(maptools)
 
-dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
+# Mac book air
+#dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
+
+# IMac (fichiers 2015)
+dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2015/Fichier_SHP/COMMUNE"
+
+# carte de France
 france <- readOGR(dsn = dsn, layer = "COMMUNE")
+
+# readOGR récupère les infos de projection
 france@proj4string
 ```
 CRS arguments:
@@ -42,14 +50,30 @@ champagne <- france[france@data$NOM_REG == "CHAMPAGNE-ARDENNE",]
 ```
 Création des polygones
 ```{r}
-alsace.union <- unionSpatialPolygons(alsace, alsace@data$NOM_REG == "ALSACE")
-lorraine.union <- unionSpatialPolygons(lorraine, lorraine@data$NOM_REG == "LORRAINE")
-champagne.union <- unionSpatialPolygons(champagne, champagne@data$NOM_REG == "CHAMPAGNE-ARDENNE")
+# fonctionne uniquement avec le fichier 2014. En 2015 les 3 régions disparaissent...
+# alsace.union <- unionSpatialPolygons(alsace, alsace@data$NOM_REG == "ALSACE")
+# lorraine.union <- unionSpatialPolygons(lorraine, lorraine@data$NOM_REG == "LORRAINE")
+# champagne.union <- unionSpatialPolygons(champagne, champagne@data$NOM_REG == "CHAMPAGNE-ARDENNE")
 
+RGE <- france[france@data$NOM_REG == "ALSACE-CHAMPAGNE-ARDENNE-LORRAINE", ]
+rge.union <- unionSpatialPolygons(RGE, RGE@data$NOM_REG == "ALSACE-CHAMPAGNE-ARDENNE-LORRAINE")
 ```
 
-Les polygones sont ils recouvrants ?
+Autres découpages
+-----------------
 ```{r}
+dep <- unionSpatialPolygons(france, IDs = france@data$CODE_DEPT)
+plot(dep)
+
+reg <- unionSpatialPolygons(france, IDs = france@data$NOM_REG)
+plot(reg)
+```
+
+
+Les polygones sont ils recouvrants ?
+------------------------------------
+
+```{}
 a <- over(alsace.union, lorraine.union)
 a
 a <- over(alsace.union, champagne.union)
