@@ -1,0 +1,45 @@
+---
+title: "Livre de Bivand"
+author: "jcb"
+date: "16 octobre 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Chapitre 2
+==========
+
+La classse de base est __Spatial__ qui comporte 2 slots:
+
+- bounding box: matrice 2x2. La première ligne correspond aux limites _est_ (axe des X) et la seconde aux limites _nord_ (axe des Y).
+- un objet __CRS__ qui définit le système de coordonnées. Sa valeur par défaut est NA (Pas disponible).
+
+```{r}
+library(sp)
+file <- "/Users/jcb/Documents/Cartographie/Applied_Spatial_Data_Analysis/Data/CRAN051001a.txt"
+CRAN_df <- read.table(file, header = TRUE)
+CRAN_mat <- cbind(CRAN_df$long, CRAN_df$lat)
+row.names(CRAN_mat) <- 1:nrow(CRAN_mat)
+head(CRAN_df)
+str(CRAN_mat)
+
+
+# On ajoute un objet CRS
+llCRS <- CRS("+proj=longlat +ellps=WGS84")
+CRAN_sp <- SpatialPoints(CRAN_mat, proj4string = llCRS)
+summary(CRAN_sp)
+plot(CRAN_sp, axes = T, las = 2)
+
+```
+
+Chapitre 4 - Coordinates Reference System (CRS)
+=============================================
+
+CRS est le coeur des systèmes cartographiques. Il est toujours associé à une __ellipse__ représentant le patatoïde terrestre, un __méridien origine__ (Greenwich) et des __données__ (Datum). Les données sont arbitraires et accrochent le CRS à un point en 3 dimensions. Il existe plusieurs milliers de CRS.
+
+
+
+
