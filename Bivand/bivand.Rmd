@@ -38,7 +38,17 @@ plot(CRAN_sp, axes = T, las = 2)
 Chapitre 4 - Coordinates Reference System (CRS)
 =============================================
 
-CRS est le coeur des systèmes cartographiques. Il est toujours associé à une __ellipse__ représentant le patatoïde terrestre, un __méridien origine__ (Greenwich) et des __données__ (Datum). Les données sont arbitraires et accrochent le CRS à un point en 3 dimensions. Il existe plusieurs milliers de CRS.
+CRS est le coeur des systèmes cartographiques. Il est toujours associé à une __ellipse__ représentant le patatoïde terrestre, un __méridien origine__ (Greenwich) et des __données__ (Datum). Les données sont arbitraires et accrochent le CRS à un point en 3 dimensions. L'ellipsoÏde le plus utilisé est __WGS84__. Il existe plusieurs milliers de CRS. Ils sont rassemblés par l'EPSG qui les publie via la bibliothèque __PROJ.4__. Une copie est disponible par la librairie __rgdal__. rgdal permet de lire EPSG dans un dataframe et de faire des recherches va __grep__.
+
+```{r}
+library(rgdal)
+EPSG <- make_EPSG()
+head(EPSG)
+```
+On chercherche ED50
+```{r}
+EPSG[grep("^# ED50$", EPSG$note),]
+```
 
 
 
