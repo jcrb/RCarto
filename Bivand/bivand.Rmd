@@ -41,7 +41,7 @@ Chapitre 4 - Coordinates Reference System (CRS)
 CRS est le coeur des systèmes cartographiques. Il est toujours associé à une __ellipse__ représentant le patatoïde terrestre, un __méridien origine__ (Greenwich) et des __données__ (Datum). Les données sont arbitraires et accrochent le CRS à un point en 3 dimensions. L'ellipsoÏde le plus utilisé est __WGS84__. Il existe plusieurs milliers de CRS. Ils sont rassemblés par l'EPSG qui les publie via la bibliothèque __PROJ.4__. Une copie est disponible par la librairie __rgdal__. rgdal permet de lire EPSG dans un dataframe et de faire des recherches va __grep__.
 
 ```{r}
-library(rgdal)
+library(rgdal) 
 EPSG <- make_EPSG()
 head(EPSG)
 ```
@@ -50,6 +50,66 @@ On chercherche ED50
 EPSG[grep("^# ED50$", EPSG$note),]
 ```
 
+Structure d'un CRS
+------------------
 
+Le CRS traduit les spécifications de la  librairie PROJ.4 sous la forme d'un couple _tag=value_ entourés de _guillemets_. Attention, les espaces ont un sens => ne pas les utiliser. 
+Un tag commence toujours par le signe __+__, suivi du nom du tag, puis le signe __=__. Le symbole _espace_ sert à séparer plusieurs tags.
 
+````
++init=EPSG:4230
+```
+```{r}
+ED50 <- CRS("+init=EPSG:4230")
+ED50
+```
+CRS arguments:
+ +init=EPSG:4230 +proj=longlat +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +no_defs 
+
+Il y a 4 tags:
+
+- proj=longlat  => utilise des coordnnées géographiques
+- ellps = int1 correspoond à l'élipsoide de 1909 (Hayford)
+- towgs84=-87,-98,-121,0,0,0,0 vecteur de translation spatiale X,Y,Z
+- no_defs
+
+Application: on relève un point sur une carte coordonnées ED50 et on veut le même point en WSG84.
+```{r}
+east <- as(char2dms("4d31'00\"E"), "numeric")
+east
+nord <- as(char2dms("52d28'00\"N"), "numeric")
+nord
+IJ.ED50 <- SpatialPoints(cbind(x = east, y = nord ), proj4string = ED50)
+res <- spTransform(IJ.ED50, CRS("+proj=longlat +datum=WGS84"))
+res@coords
+x <- as(dd2dms(coordinates(res)[1]), "character")
+x
+y <- as(dd2dms(coordinates(res)[2]), "character")
+y
+cat(x,y)
+```
+ 
+List PROJ.4 tag information
+
+Description
+
+The projInfo function lists known values and descriptions for PROJ.4 tags for tag in c("proj", "ellps", "datum", "units"); getPROJ4VersionInfo returns the version of the underlying PROJ.4 release, getPROJ4libPath returns the value of the PROJ\_LIB environment variable, projNAD detects the presence of NAD datum conversion tables (looking for conus)
+
+Il y a 4 types: "proj", "ellps", "datum", "units")
+```{r}
+proj <- projInfo("proj")
+head(proj)
+
+#les USA ont choisit la projection _laea_
+proj[proj$name == "laea",]
+```
+ex. lonlat = ligne 57. La liste comporte 137 projections.
+
+ellps retourne une matrice de 43 lignes:
+```{r}
+proj <- projInfo("ellps")
+head(proj)
+
+proj[42,]
+```
 

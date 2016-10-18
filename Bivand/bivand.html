@@ -166,7 +166,7 @@ summary(CRAN_sp)</code></pre>
 <div id="chapitre-4---coordinates-reference-system-crs" class="section level1">
 <h1>Chapitre 4 - Coordinates Reference System (CRS)</h1>
 <p>CRS est le coeur des systèmes cartographiques. Il est toujours associé à une <strong>ellipse</strong> représentant le patatoïde terrestre, un <strong>méridien origine</strong> (Greenwich) et des <strong>données</strong> (Datum). Les données sont arbitraires et accrochent le CRS à un point en 3 dimensions. L’ellipsoÏde le plus utilisé est <strong>WGS84</strong>. Il existe plusieurs milliers de CRS. Ils sont rassemblés par l’EPSG qui les publie via la bibliothèque <strong>PROJ.4</strong>. Une copie est disponible par la librairie <strong>rgdal</strong>. rgdal permet de lire EPSG dans un dataframe et de faire des recherches va <strong>grep</strong>.</p>
-<pre class="r"><code>library(rgdal)</code></pre>
+<pre class="r"><code>library(rgdal) </code></pre>
 <pre><code>## rgdal: version: 1.1-10, (SVN revision 622)
 ##  Geospatial Data Abstraction Library extensions to R successfully loaded
 ##  Loaded GDAL runtime: GDAL 1.11.4, released 2016/01/25
@@ -196,6 +196,36 @@ head(EPSG)</code></pre>
 ## 159 4230 # ED50
 ##                                                                 prj4
 ## 159 +proj=longlat +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +no_defs</code></pre>
+<div id="structure-dun-crs" class="section level2">
+<h2>Structure d’un CRS</h2>
+<p>Le CRS traduit les spécifications de la librairie PROJ.4 sous la forme d’un couple <em>tag=value</em> entourés de <em>guillemets</em>. Attention, les espaces ont un sens =&gt; ne pas les utiliser. Un tag commence toujours par le signe <strong>+</strong>, suivi du nom du tag, puis le signe <strong>=</strong>. Le symbole <em>espace</em> sert à séparer plusieurs tags.</p>
+<p>`<code>+init=EPSG:4230</code></p>
+<pre class="r"><code>ED50 &lt;- CRS(&quot;+init=EPSG:4230&quot;)
+ED50</code></pre>
+<pre><code>## CRS arguments:
+##  +init=EPSG:4230 +proj=longlat +ellps=intl
+## +towgs84=-87,-98,-121,0,0,0,0 +no_defs</code></pre>
+<p>CRS arguments: +init=EPSG:4230 +proj=longlat +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +no_defs</p>
+<p>Il y a 4 tags:</p>
+<ul>
+<li>proj=longlat =&gt; utilise des coordnnées géographiques</li>
+<li>ellps = int1 correspoond à l’élipsoide de 1909 (Hayford)</li>
+<li>towgs84=-87,-98,-121,0,0,0,0 vecteur de translation spatiale X,Y,Z</li>
+<li>no_defs</li>
+</ul>
+<p>Application: on relève un point sur une carte coordonnées ED50 et on veut le même point en WSG84.</p>
+<pre class="r"><code>east &lt;- as(char2dms(&quot;4d31'00\&quot;E&quot;), &quot;numeric&quot;)
+east</code></pre>
+<pre><code>## [1] 4.516667</code></pre>
+<pre class="r"><code>nord &lt;- as(char2dms(&quot;52d28'00\&quot;N&quot;), &quot;numeric&quot;)
+nord</code></pre>
+<pre><code>## [1] 52.46667</code></pre>
+<pre class="r"><code>IJ.ED50 &lt;- SpatialPoints(cbind(x = east, y = nord ), proj4string = ED50)
+res &lt;- spTransform(IJ.ED50, CRS(&quot;+proj=longlat +datum=WGS84&quot;))
+res@coords</code></pre>
+<pre><code>##            x        y
+## [1,] 4.51533 52.46588</code></pre>
+</div>
 </div>
 
 
