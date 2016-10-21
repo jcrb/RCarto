@@ -57,6 +57,12 @@ Création des polygones
 
 RGE <- france[france@data$NOM_REG == "ALSACE-CHAMPAGNE-ARDENNE-LORRAINE", ]
 rge.union <- unionSpatialPolygons(RGE, RGE@data$NOM_REG == "ALSACE-CHAMPAGNE-ARDENNE-LORRAINE")
+# Sauvegarde en SHP: toutes les communes
+writeOGR(RGE, "Communes/RGE_Communes_L93_shp", "RGE", "ESRI Shapefile")
+
+# Départements
+dep <- unionSpatialPolygons(RGE, IDs = RGE@data$CODE_DEPT)
+writeOGR(dep, "Communes/RGE_Departements_L93_shp", "RGE_DEP", "ESRI Shapefile")
 ```
 
 Autres découpages
@@ -68,7 +74,7 @@ plot(dep)
 reg <- unionSpatialPolygons(france, IDs = france@data$NOM_REG)
 plot(reg)
 
-Les déprtements de France et la région grand est
+# Les départements de France et la région grand est
 plot(dep)
 plot(rge.union, col = "red", add = TRUE)
 
