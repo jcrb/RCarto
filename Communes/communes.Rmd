@@ -84,7 +84,13 @@ slotNames(dep)
 La fonction __unionSpatialPolygons__ ne conserve pas la partie _Data_ ce qui fait que _dep_ est un _SpatialPolygons_ et qu'on ne peut plus appliquer la fonction _writeOGR_ qui demande un _spatialPolygonsDataframe_ (et donc pas de version SHP). Solution possible: http://gis.stackexchange.com/questions/63577/joining-polygons-in-r
 Il faut donc créer un slot __Data__ compatible pour éviter le message "Error in SpatialPolygonsDataFrame() : row.names of data and Polygons IDs do not match".
 Le première étape est de récupérer le nombre de Polygons dans la nouvelle structure: dep résulte de la fusion des communes du grand est et on passe de plusieurs centaines de polygones à 10, correspondant aux 10 départements.a <- getSpPPolygonsIDSlots(dep)
+La fonction __getSpPPolygonsIDSlots__ retourne l'ID des polygone. On obtient la liste des départements dans l'ordre de stockage. Cette fonction est obsolète. Remplacée par les méthodes _over_.
 
+```{r}
+a <- getSpPPolygonsIDSlots(dep)
+a
+# [1] "08" "10" "51" "52" "54" "55" "57" "67" "68" "88"
+```
 
 Création du dataframe:
 ```{r}
@@ -101,15 +107,56 @@ dep2 <- SpatialPolygonsDataFrame(dep, data=df)
 writeOGR(dep2, "Communes/RGE_Departements_L93_shp", "RGE_DEP", "ESRI Shapefile")
 ```
 
+Dataframe amélioré avec les caractéristiques de la région. Ajout de la popolation,surface, densité. Il faut calculer les sommes par départements pour rester cohérent avec lenouveau schéma.
+On peut faire les calculs avec _tapply_ ou avec _aggreate_.
 
-1. sauvegarder les datas originaux
+### avec aggregate
 ```{r}
-# Convert SpatialPolygons to data frame
-rge.df <- as(RGE, "data.frame")
+rge.df.agg <- aggregate(RGE@data$POPULATION, list(RGE$CODE_DEPT), sum)
 
-# Aggregate and sum desired data attributes by ID list
-rge.df.agg <- aggregate(rge.df, list(RGE.id), sum)
-row.names(oregon.df.agg) <- as.character(oregon.df.agg$Group.1)
+```
+
+### avec tapply
+```{r}
+# nom des départements
+n <- unique(RGE@data[which(RGE$CODE_DEPT %in% a), c(15,16)])
+n$CODE_DEPT <- factor(n$CODE_DEPT)
+n$NOM_DEPT <- factor(n$NOM_DEPT)
+n$CODE_DEPT <- as.numeric(as.character(n$CODE_DEPT))
+n$NOM_DEPT <- as.character(n$NOM_DEPT)
+
+m <- data.frame(n)
+
+# Caractéristiques: population, superficie, densité
+pop.RGE <- unlist(tapply(RGE$POPULATION, factor(RGE$CODE_DEPT), sum, na.rm = TRUE))
+sup.RGE <- unlist(tapply(RGE$SUPERFICIE, factor(RGE$CODE_DEPT), sum, na.rm = TRUE))
+dens.RGE <- unlist(pop.RGE / sup.RGE)
+
+df$pop.RGE <- as.numeric(df$pop.RGE)
+df$sup.RGE <- as.numeric(df$sup.RGE)
+df$dens.RGE <- as.numeric(df$dens.RGE)
+
+
+# création du dataframe
+df <- data.frame(row.names = a, pop.RGE, sup.RGE, dens.RGE, code.dep = as.integer(a))
+
+# merging pour récupérer le nom des département
+df2 <- merge(df, m, by.x = "code.dep", by.y = "CODE_DEPT", all.x = TRUE)
+row.names(df2) <- a # indispesable pour faire un spatialpolygone
+
+# SpatialpolygonDatafrae et sauvegarde SHP
+dep3 <- SpatialPolygonsDataFrame(dep, data=df2)
+writeOGR(dep3, "Communes/RGE_Departements3_L93_shp", "RGE_DEP", "ESRI Shapefile")
+```
+
+Les centroïdes de chaque département sont calculés automatiqueent et récupérables via la fonction __coordinates__.
+```{r}
+plot(dep3, axes = TRUE)
+text(coordinates(dep3), dep3$NOM_DEPT, cex = 0.6)
+
+plot(dep3, axes = TRUE)
+text(coordinates(dep3), as.character(dep3$code.dep))
+
 ```
 
 Autres découpages
@@ -129,7 +176,7 @@ plot(rge.union, col = "red", add = TRUE)
 
 
 Les polygones sont ils recouvrants ?
-------------------------------------
+=====================================
 
 ```{}
 a <- over(alsace.union, lorraine.union)
@@ -164,12 +211,6 @@ SPDF <- SpatialPolygonsDataFrame(SPls, df)
 
 # the number of rows in data should equal the number of Polygons-class objects
 ```
-La fonction __getSpPPolygonsIDSlots__ retourne l'ID des polygone. On obtient la liste des départements dans l'ordre de stockage. Cette fonction est obsolète. Remplacée par les méthodes _over_.
 
-```{r}
-a <- getSpPPolygonsIDSlots(dep)
-a
-# [1] "08" "10" "51" "52" "54" "55" "57" "67" "68" "88"
-```
 
 
