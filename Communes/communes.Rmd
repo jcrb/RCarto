@@ -61,8 +61,55 @@ rge.union <- unionSpatialPolygons(RGE, RGE@data$NOM_REG == "ALSACE-CHAMPAGNE-ARD
 writeOGR(RGE, "Communes/RGE_Communes_L93_shp", "RGE", "ESRI Shapefile")
 
 # Départements
-dep <- unionSpatialPolygons(RGE, IDs = RGE@data$CODE_DEPT)
-writeOGR(dep, "Communes/RGE_Departements_L93_shp", "RGE_DEP", "ESRI Shapefile")
+dep <- unionSpatialPolygons(RGE, IDs = RGE@data$CODE_DEPT) 
+
+# centroïde de chaque département
+a <- coordinates(dep)
+plot(a)
+plot(dep, add = TRUE)
+
+# writeOGR(dep, "Communes/RGE_Departements_L93_shp", "RGE_DEP", "ESRI Shapefile")
+
+# dep est composé de slots
+slotNames(dep)
+# [1] "polygons"    "plotOrder"   "bbox"        "proj4string
+# équivalent à: sapply(slot(dep, "polygons"), function(x) slot(x, "ID"))
+# avec cette fonction on peut explorer les autres slots:
+# sapply(slot(dep, "polygons"), function(x) slot(x, "labpt"))
+# sapply(slot(dep, "polygons"), function(x) slot(x, "area"))
+
+```
+
+
+La fonction __unionSpatialPolygons__ ne conserve pas la partie _Data_ ce qui fait que _dep_ est un _SpatialPolygons_ et qu'on ne peut plus appliquer la fonction _writeOGR_ qui demande un _spatialPolygonsDataframe_ (et donc pas de version SHP). Solution possible: http://gis.stackexchange.com/questions/63577/joining-polygons-in-r
+Il faut donc créer un slot __Data__ compatible pour éviter le message "Error in SpatialPolygonsDataFrame() : row.names of data and Polygons IDs do not match".
+Le première étape est de récupérer le nombre de Polygons dans la nouvelle structure: dep résulte de la fusion des communes du grand est et on passe de plusieurs centaines de polygones à 10, correspondant aux 10 départements.a <- getSpPPolygonsIDSlots(dep)
+
+
+Création du dataframe:
+```{r}
+# nombre et nom des polygones de dep
+a <- getSpPPolygonsIDSlots(dep) # ou a <- sapply(slot(dep, "polygons"), function(x) slot(x, "ID"))
+
+# data.framedf <- data.frame(value=1:10, row.names=a)
+df <- data.frame(value=1:length(a), row.names=a)
+
+# spatialPolygonDatafame
+dep2 <- SpatialPolygonsDataFrame(dep, data=df)
+
+# sauvegarde SHP
+writeOGR(dep2, "Communes/RGE_Departements_L93_shp", "RGE_DEP", "ESRI Shapefile")
+```
+
+
+1. sauvegarder les datas originaux
+```{r}
+# Convert SpatialPolygons to data frame
+rge.df <- as(RGE, "data.frame")
+
+# Aggregate and sum desired data attributes by ID list
+rge.df.agg <- aggregate(rge.df, list(RGE.id), sum)
+row.names(oregon.df.agg) <- as.character(oregon.df.agg$Group.1)
 ```
 
 Autres découpages
@@ -92,5 +139,37 @@ a
 ```
 Pour l'Alsace et la lorraine: oui. La fonction __over__ retourne TRUE.
 
+Créer un spatialPolygonDataframe
+================================
+
+source Bivand: https://stat.ethz.ch/pipermail/r-sig-geo/2009-November/006844.html
+
+Création d'un polygone 400x 400
+```{r}
+library(sp)
+crds <- cbind(x=c(0, 0, 400, 400, 0), y=c(0, 400, 400, 0, 0))
+# str(crds)
+Pl <- Polygon(crds)
+# str(Pl)
+ID <- "400x400"
+Pls <- Polygons(list(Pl), ID=ID)
+
+# str(Pls)
+SPls <- SpatialPolygons(list(Pls))
+# str(SPls)
+df <- data.frame(value=1, row.names=ID)
+# str(df)
+SPDF <- SpatialPolygonsDataFrame(SPls, df)
+# str(SPDF)ss.
+
+# the number of rows in data should equal the number of Polygons-class objects
+```
+La fonction __getSpPPolygonsIDSlots__ retourne l'ID des polygone. On obtient la liste des départements dans l'ordre de stockage. Cette fonction est obsolète. Remplacée par les méthodes _over_.
+
+```{r}
+a <- getSpPPolygonsIDSlots(dep)
+a
+# [1] "08" "10" "51" "52" "54" "55" "57" "67" "68" "88"
+```
 
 
