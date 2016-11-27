@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+source: [http://www.bnosac.be/index.php/blog/61-belgiummaps-statbel-r-package-with-administrative-boundaries-of-belgium](http://www.bnosac.be/index.php/blog/61-belgiummaps-statbel-r-package-with-administrative-boundaries-of-belgium)
+
 ```{r}
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_AGGLOMERATIONS.RData")
 plot(BE_ADMIN_AGGLOMERATIONS)
