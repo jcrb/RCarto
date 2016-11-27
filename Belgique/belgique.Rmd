@@ -1,0 +1,42 @@
+---
+title: "Belgique"
+author: "jcb"
+date: "6 novembre 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_AGGLOMERATIONS.RData")
+plot(BE_ADMIN_AGGLOMERATIONS)
+head(BE_ADMIN_AGGLOMERATIONS@data)
+
+
+load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_REGION.RData")
+plot(BE_ADMIN_REGION)
+BE_ADMIN_REGION@data
+# Région de Bruxelles-capitale = RBC
+RBC <- BE_ADMIN_REGION[BE_ADMIN_REGION$TX_RGN_DESCR_FR == "Région de Bruxelles-Capitale",]
+
+load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_BELGIUM.RData")
+plot(BE_ADMIN_BELGIUM)
+
+# fichier de synthèse
+load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_HIERARCHY.RData")
+names(BE_ADMIN_HIERARCHY)
+head(BE_ADMIN_HIERARCHY)
+
+# Les communes de Belgique
+load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_MUNTY.RData")
+plot(BE_ADMIN_MUNTY)
+names(BE_ADMIN_MUNTY)
+
+# provnces de Belgique
+load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_PROVINCE.RData")
+plot(BE_ADMIN_PROVINCE)
+
+```
+
