@@ -38,5 +38,7 @@ names(BE_ADMIN_MUNTY)
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_PROVINCE.RData")
 plot(BE_ADMIN_PROVINCE)
 
+# remarquenà à supprimer
+
 ```
 
