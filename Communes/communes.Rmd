@@ -194,6 +194,7 @@ source Bivand: https://stat.ethz.ch/pipermail/r-sig-geo/2009-November/006844.htm
 Création d'un polygone 400x 400
 ```{r}
 library(sp)
+
 crds <- cbind(x=c(0, 0, 400, 400, 0), y=c(0, 400, 400, 0, 0))
 # str(crds)
 Pl <- Polygon(crds)
@@ -211,6 +212,5 @@ SPDF <- SpatialPolygonsDataFrame(SPls, df)
 
 # the number of rows in data should equal the number of Polygons-class objects
 ```
-
 
 

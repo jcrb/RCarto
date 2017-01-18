@@ -1,0 +1,167 @@
+---
+title: "Groupement hospitalier de territoire (GHT)"
+author: "JcB"
+date: "16/01/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Fichiers nécéssaires
+====================
+IGN_GEOFLA_2016/Fichier_SHP/COMMUNE
+"~/Downloads/Liste_GrandEst_COM_CodePMSI_GHT_27102016_VF.csv": liste  
+
+GHT
+===
+```{r}
+library(sp)
+library(rgdal)
+library(maptools)
+source("../Carto_utilitaires.R") # suprimer ../ si console
+
+# Mac book air
+#dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
+
+# IMac (fichiers 2015)
+# dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2015/Fichier_SHP/COMMUNE"
+
+# IMac - fichiers 2016
+dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
+
+# carte de France
+france <- readOGR(dsn = dsn, layer = "COMMUNE")
+```
+
+```{r}
+
+# départements faisant partie des GHT
+#  08 51 10 21 52 71 55 54 57 88 67 68
+# dep <- unique(ght$DEP)
+
+# la fonction add0 ajoute un zero denent un département dontle code est < 10
+# dep <- add0(dep)
+
+# ensemble des communes constituant les GHT de la RGE
+ght2 <- read.csv2("~/Downloads/Liste_GrandEst_COM_CodePMSI_GHT_27102016_VF.csv")
+a <- add0(ght2$code_com)
+ght2$code_com <- a
+
+ght  <- france[france@data$INSEE_COM %in% ght2$code_com,]
+plot(ght, axes = TRUE)
+ght@proj4string
+
+```
+
+```{r}
+#merging des fichiers
+##Jointure utiisant la méthode match qui ne modifi pas l'ordre des lignes
+a <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM")
+names(a)
+```
+
+NB: si PoPULATION n'est pas transformé en numérique, tappy génère une erreur. Voir: http://stackoverflow.com/questions/18045096/r-error-sum-not-meaningful-for-factors
+```{r}
+# Population par GHT
+tapply(as.numeric(a$POPULATION), a$GHT, sum)
+```
+
+```{r}
+
+# Population totale
+sum(tapply(as.numeric(a$POPULATION), a$GHT, sum))
+# en ¨%
+round(100 * tapply(as.numeric(a$POPULATION), a$GHT, sum) / sum(tapply(as.numeric(a$POPULATION), a$GHT, sum)), 2)
+# densité
+tapply(as.numeric(a$POPULATION), a$GHT, sum) / tapply(as.numeric(a$SUPERFICIE), a$GHT, sum)
+# densité au km2
+1000 * tapply(as.numeric(a$POPULATION), a$GHT, sum) / tapply(as.numeric(a$SUPERFICIE), a$GHT, sum)
+```
+
+```{r}
+# trace les limites des GHT
+ght <- unionSpatialPolygons(a, IDs = a@data$GHT)
+plot(ght)
+b <- coordinates(ght)
+text(b, names(ght))
+# Détails des slots
+c <- sapply(slot(ght, "polygons"), slot, "area")
+d <- sapply(slot(ght, "polygons"), slot, "ID")
+e <- sapply(slot(ght, "polygons"), slot, "labpt")
+ght_geo <- rbind(c,d,e)
+ght_geo <- t(ght_geo)
+colnames(ght_geo) <- c("surface", "ID", "centroid_X", "centroid_Y")
+# tri par n° ID
+ ght_geo[order(as.numeric(ght_geo[,2])),]
+#tri par surface
+ght_geo[order(as.numeric(ght_geo[,1])),]
+
+```
+
+# en couleur
+```{r}
+library(RColorBrewer)
+coul <- brewer.pal(n=12, name = "Set3")
+ght <- unionSpatialPolygons(a, IDs = a@data$GHT)
+plot(ght, col = coul, axes = TRUE)
+b <- coordinates(ght)
+text(b, names(ght))
+
+```
+
+Représentation par GHT
+======================
+Exemple GHT n°1
+---------------
+```{r}
+ght1 <- a[a@data$GHT == 1,]
+plot(ght1)
+ght01 <- unionSpatialPolygons(ght1, ght1@data$GHT == 1)
+plot(ght01)
+
+# préfecture
+ght1@data[which(ght1@data$STATUT == "Préfecture de département"),]
+x <- ght1@data[which(ght1@data$STATUT == "Préfecture de département"),]$X_CHF_LIEU
+y <- ght1@data[which(ght1@data$STATUT == "Préfecture de département"),]$Y_CHF_LIEU
+points(x,y, pch = 16, col = "red")
+text(x,y, ght1@data[which(ght1@data$STATUT == "Préfecture de département"),]$NOM_COM, pos = 1, cex = 0.8)
+
+```
+
+Hôpitaux-SU de la région grand est
+==================================
+
+On récupère les fichiers correspondants dans le dossier __/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/Structures_Urgence_FEDorU__. Il y a 3 fichiers au format csv correspondant aux anciennes régions.
+```{r}
+
+path = "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/Structures_Urgence_FEDorU/"
+a <- paste0(path, "Structures d'urgence_Als.csv")
+b <- paste0(path, "Structures d'urgence_Lor.csv")
+c <- paste0(path, "Structures d'urgence_CA.csv")
+
+a2<-read.csv(a, skip = 1)
+b2<-read.csv(b, skip = 1)
+c2<-read.csv(c, skip = 1)
+hopRge <- rbind(a2,b2,c2)
+# On ne cnserve que les colonnes ayant un intéret. Les col. 12 et 13 contiennent latitude et longitude en WS84.
+hopRge <- hopRge[, c(2,3,7,8,9,10,12,13)]
+
+d2 <- hopRge
+# on transforme mes virgules en points puis en numéric
+d2$Longitude <- as.numeric(gsub(",",".", d2$Longitude))
+d2$Latitude <- as.numeric(gsub(",",".", d2$Latitude))
+
+coordinates(d2) = ~ Longitude + Latitude
+proj4string(d2) = CRS("+proj=longlat +datum=WGS84")
+
+plot(d2, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SU Région Grand Est (WSG84)")
+
+# Reprojeter au format Lambert 93
+# EPSG:2154 Lambert 93
+newProj = CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+su_alca_L93 <- spTransform(d2, newProj)
+plot(su_alca_L93, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 1, main = "SU Région Grand Est (Lambert 93)")
+
+```
+
