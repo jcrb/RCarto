@@ -90,7 +90,7 @@ projection des SU
 ```{r}
 library(rgdal)
 library(sp)
-load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/ALCA_2015/su_alca.Rda") #d hoptaux ALCA
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/ALCA_2015/su_alca.Rda") #d hopitaux ALCA
 
 spdfr <- d
 

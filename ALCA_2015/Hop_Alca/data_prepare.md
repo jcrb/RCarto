@@ -120,7 +120,7 @@ Transformation en Spatial_Points
 
 Convertir le data.frame en SpatialPointsDataFrame
 -------------------------------------------------
-Cete étape et réalisée par la fonction __coordinates__ du package __sp__, en spécifiant les colonnes du data.frame qui contiennent les coordonnées géographiques sous forme d'un objet _formule_ ~x_coord+y_coord. 
+Cete étape est réalisée par la fonction __coordinates__ du package __sp__, en spécifiant les colonnes du data.frame qui contiennent les coordonnées géographiques sous forme d'un objet _formule_ ~x_coord+y_coord. 
 
 
 ```r

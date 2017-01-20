@@ -145,7 +145,7 @@ b2<-read.csv(b, skip = 1)
 c2<-read.csv(c, skip = 1)
 hopRge <- rbind(a2,b2,c2)
 # On ne cnserve que les colonnes ayant un intéret. Les col. 12 et 13 contiennent latitude et longitude en WS84.
-hopRge <- hopRge[, c(2,3,7,8,9,10,12,13)]
+hopRge <- hopRge[, c(2,3,7,8,9,10,15,16,20,21)]
 
 d2 <- hopRge
 # on transforme mes virgules en points puis en numéric
@@ -162,6 +162,12 @@ plot(d2, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SU
 newProj = CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
 su_alca_L93 <- spTransform(d2, newProj)
 plot(su_alca_L93, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 1, main = "SU Région Grand Est (Lambert 93)")
+
+plot(su_alca_L93[su_alca_L93$SMUR == "oui",], pch = 16, col = "red", xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SAMU Région Grand Est (Lambert93)")
+
+plot(su_alca_L93[su_alca_L93$SAMU == "oui",], pch = 15, col = "blue", xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SAMU Région Grand Est (Lambert93)", cex = 1.5, add = TRUE)
+
+
 
 ```
 
