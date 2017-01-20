@@ -1,1 +1,1 @@
-test
+grd <- as(grid, "BE_ADMN_HIEARCHY")

@@ -11,18 +11,26 @@ knitr::opts_chunk$set(echo = TRUE)
 
 source: [http://www.bnosac.be/index.php/blog/61-belgiummaps-statbel-r-package-with-administrative-boundaries-of-belgium](http://www.bnosac.be/index.php/blog/61-belgiummaps-statbel-r-package-with-administrative-boundaries-of-belgium)
 
+UN site github [https://github.com/bnosac/BelgiumMaps.StatBel](https://github.com/bnosac/BelgiumMaps.StatBel) sioke les données (voir DATA)
+
+Les données sont extraites à partir d'OSM et ne sont pas toujours complètes. 
+
 ```{r}
+# Communes de Belgique. Fichier le plus lent à s'afficher. La base de données contient 2 informations: l'identifiant de la commne et le nombbre d'habitants.
+
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_AGGLOMERATIONS.RData")
 plot(BE_ADMIN_AGGLOMERATIONS)
 head(BE_ADMIN_AGGLOMERATIONS@data)
 
-
+# affiche les 2 régions de Belgique et la région de Bruxeles. La base de donnée contient des informations géographiques et le nom des 3 régions:
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_REGION.RData")
 plot(BE_ADMIN_REGION)
 BE_ADMIN_REGION@data
 # Région de Bruxelles-capitale = RBC
 RBC <- BE_ADMIN_REGION[BE_ADMIN_REGION$TX_RGN_DESCR_FR == "Région de Bruxelles-Capitale",]
+plot(RBC)
 
+# limites géographiques de la Belgique. La bas de donnés ne cntient qu'une ligne.
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_BELGIUM.RData")
 plot(BE_ADMIN_BELGIUM)
 
@@ -30,17 +38,40 @@ plot(BE_ADMIN_BELGIUM)
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_HIERARCHY.RData")
 names(BE_ADMIN_HIERARCHY)
 head(BE_ADMIN_HIERARCHY)
+# CD_REFNIS_SECTOR code complet de la commune.
+# CD_SECTOR secteur/quartier de la commune
+# TX_SECTOR_DESCR_NL nom de la commune en flamand
+# TX_SECTOR_DESCR_FR nom de la commune en français
+# CD_MUNTY_REFNIS code le la commune
+# CD_RGN_REFNIS code de la région
 
 # Les communes de Belgique
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_MUNTY.RData")
 plot(BE_ADMIN_MUNTY)
 names(BE_ADMIN_MUNTY)
+# Chaque n°de ligne correspond à un code commune
+# CD_MUNTY_REFNIS code de la comune
+# TX_MUNTY_DESCR_NL nom de la commune en néerlandais
+# TX_MUNTY_DESCR_FR nom de la commune en français
+# CD_DSTR_REFNIS code de la région
+# TX_ADM_DSTR_DESCR_NL nom de l'arrondissement en néerlandais
+# TX_ADM_DSTR_DESCR_FR idem en français
+# CD_PROV_REFNIS code de la province
+# TX_PROV_DESCR_NL nom de la province en néerlandais
+# TX_PROV_DESCR_NL idem en français
+# CD_RGN_REFNIS code de la région
+# TX_RGN_DESCR_NL nom de la régio en néerlandais
+# TX_RGN_DESCR_FR idem en français
+# SURFACE.GIS.h
+# SURFACE.CAD.h
+# SURFACE.GIS.km2
+# SURFACE.CAD.km2
+
 
 # provnces de Belgique
 load("~/Documents/R/RCarto/Belgique/Data/BE_ADMIN_PROVINCE.RData")
 plot(BE_ADMIN_PROVINCE)
 
-# remarquenà à supprimer
 
 ```
 
