@@ -60,16 +60,124 @@ region <- c("08", "10","51","52","54","55","57","67","68","88")
 # ensemble des communes RGE
 com_rge <- d[substr(d$CODGEO, 1, 2) %in% region,]
 
+# La première colonne correspond au code INSEE de la commune
+# La seconde colne correspond au nom en clair de la commne
+# Les colonnes 3 à 103, correspondent aux hommes de 0 à 100 ans
+# Les colonnes de 104 à 204, correspondent aux femmes de 0 à 100 ans 
+
+# Création de 3 nouveles colonnes vides:
 com_rge$h <- NA
 com_rge$f <- NA
 com_rge$tot <- NA
 n <- nrow(com_rge)
 
+# total des hommes
 a <- apply(com_rge[,3:103], 1, sum)
+# total des femmes
 b <- apply(com_rge[,104:204], 1, sum)
 com_rge$h <- a
 com_rge$f <- b
+# total pour la commune
 com_rge$tot <- a + b
+```
+
+Age moyen et age médian par commune
+-----------------------------------
+Chaque case contient le nombre d'indvidus pour un age donné. Pour calculer un age moyen, il faut multiplier l'age par le nb d'individus
+
+### Age des hommes
+
+```{r}
+
+# age moyen hommes pour la commune 1
+a <- com_rge[1, 3:103] # nb d'hommes
+b <- a * 0:100 # fois age
+c <- sum(b) # somme des ages
+b
+# age moyen
+c/sum(com_rge[1, 3:103])
+
+n <- nrow(com_rge)
+
+for (i in 1:n) {
+      a <- com_rge[i, 3:103] # nb d'hommes  
+      b <- a * 0:100 # fois age
+      c <- sum(b) # somme des ages
+      # age moyen
+      com_rge[i, "hMean"] <- c/sum(a)
+}
+summary(com_rge$hMean)
+hist(com_rge$hMean, breaks = 20, main = "Hommes RGE - 2015", col = "cornflowerblue", border = "white", ylab = "Fréquence", xlab = "Age des hommes par commune")
 
 ```
+
+### Age des femmes
+
+```{r}
+for (i in 1:n) {
+      a <- com_rge[i, 104:204] # nb de femmes 
+      b <- a * 0:100 # fois age
+      c <- sum(b) # somme des ages
+      # age moyen
+      com_rge[i, "fMean"] <- c/sum(a) # age moyen des femmes dans cette commune
+}
+summary(com_rge$fMean)
+hist(com_rge$fMean, breaks = 20, main = "Femmes RGE - 2015", col = "pink", border = "white", ylab = "Fréquence", xlab = "Age des femmes par commune")
+abline(v = 42.42, lty = 3, col = "red")
+
+```
+
+Nombre de 75 ans et plus
+------------------------
+
+- hommes: 3 + 75 à 103 = 78 à 103 (vérification: which(colnames(com_rge) == "SEXE1_AGED100075") = 78
+)
+- femmes: 104 + 75 à 204 = 179 à 204 (vérif: which(colnames(com_rge) == "SEXE2_AGED100075") = 179
+)
+```{r}
+# total des hommes > ou = à 75 ans
+a <- apply(com_rge[,78:103], 1, sum)
+# total des femmes > ou = à 75 ans
+b <- apply(com_rge[,179:204], 1, sum)
+
+com_rge$hsupouegal75 <- a
+com_rge$fsupouegal75 <- b
+com_rge$totsupouegal75 <- a + b # total des 2 sexes
+com_rge$propsupouegal75 <- com_rge$totsupouegal75 / com_rge$tot # prop des 75 ans et plus
+head(com_rge$propsupouegal75)
+summary(com_rge$propsupouegal75)
+
+```
+
+Nombre de moins de 18 ans
+-------------------------
+```{r}
+# hommes mineurs
+a <- apply(com_rge[, 3:20], 1, sum)
+# femmes mineures
+b <- apply(com_rge[, 104:121], 1, sum) # which(colnames(com_rge) == "SEXE2_AGED100017") et which(colnames(com_rge) == "SEXE2_AGED100000")
+com_rge$hMineur <- a
+com_rge$fMineur <- b
+com_rge$totMineur <- a + b
+com_rge$propMineur <- com_rge$totMineur / com_rge$tot
+summary(com_rge$propMineur)
+```
+
+Nombre d'adultes (18 inclus à 74 inclus)
+-----------------------------------------
+```{r}
+# hommes adultes
+a <- apply(com_rge[, 21:77], 1, sum) # which(colnames(com_rge) == "SEXE1_AGED100018") et which(colnames(com_rge) == "SEXE1_AGED100074")
+
+
+# femmes mineures
+b <- apply(com_rge[, 122:178], 1, sum) # which(colnames(com_rge) == "SEXE2_AGED100018") et which(colnames(com_rge) == "SEXE2_AGED100074")
+
+com_rge$hAdulte <- a
+com_rge$fAdulte <- b
+com_rge$totAdulte <- a + b # totalité des adultes pour une commune
+com_rge$propAdulte <- com_rge$totAdulte / com_rge$tot
+summary(com_rge$propAdulte)
+```
+
 
