@@ -186,14 +186,22 @@ Nombre de moins de 18 ans
 -------------------------
 ```{r}
 # hommes mineurs
-a <- apply(com_rge[, 3:20], 1, sum)
+a <- apply(com_rge[, 3:20], 1, sum, na.rm = T)
 # femmes mineures
-b <- apply(com_rge[, 104:121], 1, sum) # which(colnames(com_rge) == "SEXE2_AGED100017") et which(colnames(com_rge) == "SEXE2_AGED100000")
+b <- apply(com_rge[, 104:121], 1, sum, na.rm = T) # which(colnames(com_rge) == "SEXE2_AGED100017") et which(colnames(com_rge) == "SEXE2_AGED100000")
+
 com_rge$hMineur <- a
 com_rge$fMineur <- b
 com_rge$totMineur <- a + b
 com_rge$propMineur <- com_rge$totMineur / com_rge$tot
 summary(com_rge$propMineur)
+# communes sans enfants
+x <- which(com_rge$totMineur == 0)
+x
+for(i in x){
+ com_rge$propAdulte[i] = 0.001
+}
+
 ```
 
 Nombre d'adultes (18 inclus à 74 inclus)
@@ -203,7 +211,7 @@ Nombre d'adultes (18 inclus à 74 inclus)
 a <- apply(com_rge[, 21:77], 1, sum) # which(colnames(com_rge) == "SEXE1_AGED100018") et which(colnames(com_rge) == "SEXE1_AGED100074")
 
 
-# femmes mineures
+# femmes adultes
 b <- apply(com_rge[, 122:178], 1, sum) # which(colnames(com_rge) == "SEXE2_AGED100018") et which(colnames(com_rge) == "SEXE2_AGED100074")
 
 com_rge$hAdulte <- a
@@ -211,6 +219,11 @@ com_rge$fAdulte <- b
 com_rge$totAdulte <- a + b # totalité des adultes pour une commune
 com_rge$propAdulte <- com_rge$totAdulte / com_rge$tot
 summary(com_rge$propAdulte)
+
+# communes sans adultes
+x <- which(com_rge$propAdulte == "NaN")
+x
+
 ```
 
 
@@ -228,5 +241,38 @@ round(x*100, 2)
 1     2     3     4     5     6     7     8     9    10    11    12 
 8.60  9.00  9.96 12.41 10.07  7.43  8.53  9.91  8.28  8.49  8.19  7.9
 
-cut(x*100,5)
+cut(x*100,5, labels = brewer.pal(n = 5, name = "Blues"))
+
+```{r}
+plot(ght5)
+text(coordinates(ght5), as.character(round(x*100, 2)))
+
+coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Blues"))
+plot(ght5, col = as.character(coul), main = "% de 75 ans et plus", axes = TRUE)
+text(coordinates(ght5), as.character(round(x*100, 2)))
+
+```
+
+Moins de 18 ans
+---------------
+```{r}
+x <- tapply(as.numeric(com_rge$propMineur), com_rge$GHT, mean)
+round(x*100, 2)
+
+coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Reds"))
+plot(ght5, col = as.character(coul), main = "% de 18 ans et moins", axes = TRUE)
+text(coordinates(ght5), as.character(round(x*100, 2)))
+```
+
+Adultes
+--------
+```{r}
+x <- tapply(as.numeric(com_rge$propAdulte), com_rge$GHT, mean)
+round(x*100, 2)
+
+coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Greens"))
+plot(ght5, col = as.character(coul), main = "% de 18 à 75 ans", axes = TRUE)
+text(coordinates(ght5), as.character(round(x*100, 2)))
+
+```
 
