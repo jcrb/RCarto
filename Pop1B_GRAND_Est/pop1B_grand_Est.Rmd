@@ -177,6 +177,12 @@ com_rge$hsupouegal75 <- a
 com_rge$fsupouegal75 <- b
 com_rge$totsupouegal75 <- a + b # total des 2 sexes
 com_rge$propsupouegal75 <- com_rge$totsupouegal75 / com_rge$tot # prop des 75 ans et plus
+# communes sans adultes
+x <- which(com_rge$propsupouegal75 == 0)
+x
+for(i in x){
+ com_rge$propsupouegal75[i] = 0.001
+}
 head(com_rge$propsupouegal75)
 summary(com_rge$propsupouegal75)
 
@@ -228,9 +234,20 @@ x
 
 
 
-cacul en fonction des GHT: 
-on e garde que les colonnes avec des résultats
+calcul en fonction des GHT: 
+---------------------------
+on ne garde que les colonnes avec des résultats.
 ```{r}
+plot(ght5)
+text(coordinates(ght5), names(ght5))
+
+```
+
+
+Le 75 ans et plus
+-----------------
+```{r}
+library(RColorBrewer)
 
 a <- com_rge[, 205:228]
 names(a)
@@ -245,11 +262,11 @@ cut(x*100,5, labels = brewer.pal(n = 5, name = "Blues"))
 
 ```{r}
 plot(ght5)
-text(coordinates(ght5), as.character(round(x*100, 2)))
+text(coordinates(ght5), as.character(round(x[names(ght5)] * 100, 2)))
 
 coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Blues"))
-plot(ght5, col = as.character(coul), main = "% de 75 ans et plus", axes = TRUE)
-text(coordinates(ght5), as.character(round(x*100, 2)))
+plot(ght5, col = as.character(coul[as.integer(names(ght5))]), main = "% de 75 ans et plus", axes = TRUE)
+text(coordinates(ght5), as.character(round(x[names(ght5)] * 100, 2)))
 
 ```
 
@@ -260,8 +277,8 @@ x <- tapply(as.numeric(com_rge$propMineur), com_rge$GHT, mean)
 round(x*100, 2)
 
 coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Reds"))
-plot(ght5, col = as.character(coul), main = "% de 18 ans et moins", axes = TRUE)
-text(coordinates(ght5), as.character(round(x*100, 2)))
+plot(ght5, col = as.character(coul[as.integer(names(ght5))]), main = "% de 18 ans et moins", axes = TRUE)
+text(coordinates(ght5), as.character(round(x[names(ght5)] * 100, 2)))
 ```
 
 Adultes
@@ -271,8 +288,21 @@ x <- tapply(as.numeric(com_rge$propAdulte), com_rge$GHT, mean)
 round(x*100, 2)
 
 coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Greens"))
-plot(ght5, col = as.character(coul), main = "% de 18 à 75 ans", axes = TRUE)
-text(coordinates(ght5), as.character(round(x*100, 2)))
+plot(ght5, col = as.character(coul[as.integer(names(ght5))]), main = "% de 18 à 75 ans", axes = TRUE)
+text(coordinates(ght5), as.character(round(x[names(ght5)] * 100, 2)))
 
 ```
 
+Totalité des habitants
+----------------------
+```{r}
+x <- tapply(as.numeric(com_rge$tot), com_rge$GHT, sum)
+x
+tot <- sum(x)
+prop <- round(x*100/tot, 2)
+
+coul = cut(prop, breaks = 5, labels = brewer.pal(n = 5, name = "Greens"))
+plot(ght5, col = as.character(coul[as.integer(names(ght5))]), main = "% de la population totale du grand est", axes = TRUE)
+text(coordinates(ght5), as.character(round(prop[names(ght5)], 2)))
+
+```

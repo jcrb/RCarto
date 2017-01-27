@@ -110,7 +110,7 @@ __ght__ est la carte des communes de la RGE.
 On fait une jointure avec le fichier des GHT
 ```{r}
 #merging des fichiers
-##Jointure utilisant la méthode match qui ne modifi pas l'ordre des lignes
+##Jointure utilisant la méthode match qui ne modifie pas l'ordre des lignes
 ght2$code_com <- add0(ght2$code_com)
 a <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM")
 names(a)
@@ -164,11 +164,6 @@ d <- sapply(slot(ght3, "polygons"), slot, "ID")
 ght_geo <- rbind(c,d)
 ght_geo <- t(ght_geo)
 colnames(ght_geo) <- c("surface", "ID")
-# tri par n° ID
- ght_geo[order(as.numeric(ght_geo[,2])),]
-#tri par surface
-ght_geo[order(as.numeric(ght_geo[,1])),]
-
 ```
 
 On peut en déduire le plus grand, le plus petit...
