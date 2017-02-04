@@ -1,0 +1,109 @@
+---
+title: "Région Grand Est"
+author: "JcB"
+date: "02/02/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Etude de la nouvelle Région Grand Est (RGE)
+===========================================
+
+Pour identifier les départements concernés, on part de la France défnie as l'INSEE:
+
+```{r intro, echo=FALSE, warning=FALSE, comment=""}
+# faire de la place
+# rm(list=ls(all=TRUE))
+library(sp)
+library(rgdal)
+library(maptools)
+source("../Carto_utilitaires.R")
+
+# # IMac - fichiers 2016
+# dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
+# # On commmence par charger la carte de France avec toutes les communes.
+# france <- readOGR(dsn = dsn, layer = "COMMUNE") # spatialPolygonsDataFrame
+#  
+# # départements de la RGE
+# dep.rge <-  c("08", "51", "10", "52", "55", "54", "57", "88", "67", "68")
+#  
+# # On ne conserve que la RGE
+# dep <- france[france$CODE_DEPT %in% dep.rge,] # départements RGE spatialPolygonsDataFrame
+#  
+# # transformation des factor POPULATION et SUPERFICIE en numeric
+# dep$POPULATION <- as.numeric(as.character(dep$POPULATION))
+# dep$SUPERFICIE <- as.numeric(as.character(dep$SUPERFICIE))
+# 
+# plot(dep, axes = T) # dessine la RGE avec toutes les communes
+#  
+# # merging avec le fichier de E.LAGILLE pour récupérer les GHT
+# # ensemble des communes constituant les GHT de la RGE. Liste transmise par E.Lagille
+# # Lecture du fichier
+# pathGht <- "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/ght_com.csv"
+# ght2 <- read.csv(pathGht) # 5928 observations of 7 variables
+# x <- add0(ght2$code_com) # ajoute un 0 devant un Finess trop court
+# ght2$code_com <- x
+# 
+# ght3 <- Attrib.Join(ght2, dep, "code_com", "INSEE_COM") # ght3 = INSEE + GHT
+# #save(ght3, file = "RGE-Description/ght3.Rdata") # en mode console
+# save(ght3, file = "ght3.Rdata") 
+```
+
+Exploitation
+=============
+Le fichier ght3 (spatialPolygonsDataFrame) permet de dessiner la RGE par commune, département ou GHT.
+```{r exploitation, echo=FALSE}
+# load("RGE-Description/ght3.Rdata")
+ load("ght3.Rdata")
+
+# Départements de la RGE
+rge.dep <- unionSpatialPolygons(ght3, IDs = ght3@data$CODE_DEPT)
+plot(rge.dep, axes = T, main = "Départements de la RGE")
+text(coordinates(rge.dep), names(rge.dep), col = "red")
+
+# GHT de la RGE
+rge.ght <- unionSpatialPolygons(ght3, IDs = ght3@data$GHT)
+plot(rge.ght, axes = T, main = "GHT de la RGE")
+text(coordinates(rge.ght), names(rge.ght), col = "red")
+
+# Communes de la RGE
+plot(ght3, axes = T, main = "Communes de la RGE")
+
+# carte en couleur
+library(RColorBrewer)
+coul <- brewer.pal(n=12, name = "Set3")
+plot(rge.ght, col = coul, axes = TRUE)
+b <- coordinates(rge.ght)
+text(b, names(rge.ght), col = "red")
+
+# nouvelle région
+rge.nouv.reg <- unionSpatialPolygons(ght3, IDs = ght3@data$CODE_REG)
+
+# anciennes régions
+ght3$ANC.REG <- NA
+ght3$ANC.REG[ght3$CODE_DEPT == 67 | ght3$CODE_DEPT == 68] <- "ALSACE"
+ght3$ANC.REG[ght3$CODE_DEPT == 54 | ght3$CODE_DEPT == 55 | ght3$CODE_DEPT == 57 | ght3$CODE_DEPT == 88] <- "LORRAINE"
+ght3$ANC.REG[ght3$CODE_DEPT == '08' | ght3$CODE_DEPT == 10 | ght3$CODE_DEPT == 51 | ght3$CODE_DEPT == 52] <- "CHAMPAGNE-ARDENNE"
+rge.anc.reg <- unionSpatialPolygons(ght3, IDs = ght3@data$ANC.REG)
+plot(rge.anc.reg, axes = T, main = "Anciennes régions RGE")
+
+```
+
+POPULATION
+==========
+
+```{r}
+# population par département
+pop.dep <- tapply(ght3$POPULATION, factor(ght3$CODE_DEPT), sum)
+pop.dep
+
+# population par ght
+pop.ght <- tapply(ght3$POPULATION, ght3$GHT, sum)
+pop.ght
+# population totale
+sum(pop.ght)
+
+```
+
