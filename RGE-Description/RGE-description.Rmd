@@ -19,7 +19,13 @@ Pour identifier les départements concernés, on part de la France défnie as l'
 library(sp)
 library(rgdal)
 library(maptools)
+library(knitr)
 source("../Carto_utilitaires.R")
+
+load("../GHT/RGE_contour_communes.Rda") # com
+load("../GHT/contour_departements.Rda") # dep2: ("../GHT/contour_departements.Rda") contour des départements
+load("../GHT/limites_des_ght.Rda") # ght3: contour des GHT
+load("../GHT/fichier_merge.Rda") # ghtx
 
 # # IMac - fichiers 2016
 # dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
@@ -53,48 +59,117 @@ source("../Carto_utilitaires.R")
 
 Exploitation
 =============
+
+La RGE compte 10 départements:
+
+- Ardennes           08
+- Aube               10
+- Marne              51
+- Haute Marne        52
+- Meurthe et Moselle 54
+- Meuse              55
+- Moselle            57
+- Bas-Rhin           67
+- HautRhin           68
+- Vosges             88
+
+Soit 5196 communes. Les coordonnées sont indiquées en Lambert93 (conformes au JO). Il existe près de 5000 projections cartographiques. Deux sont utilsées en France:
+
+- la projection conique conforme de Lambert ou Lambert93 qui est la seule légale en France et qui est utilisée par l'IGN et l'INSEE. Les distances sont indiquées en mètres.
+- la projection WSG84 utilisée par Googlemap et OpenStreetMap où les distances sont données en Longitude et latitude.
+
 Le fichier ght3 (spatialPolygonsDataFrame) permet de dessiner la RGE par commune, département ou GHT.
 ```{r exploitation, echo=FALSE}
 # load("RGE-Description/ght3.Rdata")
- load("ght3.Rdata")
+# load("ght3.Rdata")
 
 # Départements de la RGE
-rge.dep <- unionSpatialPolygons(ght3, IDs = ght3@data$CODE_DEPT)
-plot(rge.dep, axes = T, main = "Départements de la RGE")
-text(coordinates(rge.dep), names(rge.dep), col = "red")
+# rge.dep <- unionSpatialPolygons(ght3, IDs = ght3@data$CODE_DEPT)
+plot(dep2, axes = T, main = "Départements de la RGE")
+text(coordinates(dep2), names(dep2), col = "red")
 
 # GHT de la RGE
-rge.ght <- unionSpatialPolygons(ght3, IDs = ght3@data$GHT)
-plot(rge.ght, axes = T, main = "GHT de la RGE")
-text(coordinates(rge.ght), names(rge.ght), col = "red")
+#rge.ght <- unionSpatialPolygons(ght3, IDs = ght3@data$GHT)
+plot(ght3, axes = T, main = "GHT de la RGE")
+text(coordinates(ght3), names(ght3), col = "red")
 
 # Communes de la RGE
-plot(ght3, axes = T, main = "Communes de la RGE")
+#plot(ght3, axes = T, main = "Communes de la RGE")
+plot(com, axes = T, main = "Communes de la RGE")
 
 # carte en couleur
 library(RColorBrewer)
 coul <- brewer.pal(n=12, name = "Set3")
-plot(rge.ght, col = coul, axes = TRUE)
-b <- coordinates(rge.ght)
-text(b, names(rge.ght), col = "red")
+plot(ght3, col = coul, axes = TRUE)
+b <- coordinates(ght3)
+text(b, names(ght3), col = "red")
 
 # nouvelle région
-rge.nouv.reg <- unionSpatialPolygons(ght3, IDs = ght3@data$CODE_REG)
+# rge.nouv.reg <- unionSpatialPolygons(ght3, IDs = ght3@data$CODE_REG)
+```
 
+```{r ght_communes, echo=FALSE}
+# communes RGE et GHT
+load("../GHT/limites_des_ght.Rda") # ght3: contour des GHT
+plot(com, border = "gray80", axes = TRUE)
+plot(ght3, border = "red", lwd = 3, add = TRUE)
+# # centroïdes des 12 GHT
+ b <- coordinates(ght3)
+ text(b, names(ght3))
+```
+
+```{r}
+# superposition des GHT et départements
+coul <- brewer.pal(n=12, name = "Set3")
+plot(ght3, col = coul, axes = TRUE, main = "Superposition des GHT et départements")
+b <- coordinates(ght3)
+text(b, names(ght3), col = "red")
+plot(dep2, border = "blue", add = TRUE)
+```
+
+```{r old_region}
 # anciennes régions
+# load("RGE-Description/ght3.Rdata")
+ load("ght3.Rdata")
 ght3$ANC.REG <- NA
 ght3$ANC.REG[ght3$CODE_DEPT == 67 | ght3$CODE_DEPT == 68] <- "ALSACE"
 ght3$ANC.REG[ght3$CODE_DEPT == 54 | ght3$CODE_DEPT == 55 | ght3$CODE_DEPT == 57 | ght3$CODE_DEPT == 88] <- "LORRAINE"
 ght3$ANC.REG[ght3$CODE_DEPT == '08' | ght3$CODE_DEPT == 10 | ght3$CODE_DEPT == 51 | ght3$CODE_DEPT == 52] <- "CHAMPAGNE-ARDENNE"
 rge.anc.reg <- unionSpatialPolygons(ght3, IDs = ght3@data$ANC.REG)
 plot(rge.anc.reg, axes = T, main = "Anciennes régions RGE")
+```
+
+Villes principales
+====================
+
+```{r}
+load("../GHT/contour_departements.Rda") # dep2
+load("../GHT/ght.Rda") # ght
+
+x <- coordinates(ght[ght$STATUT == "Préfecture de département" | ght$STATUT == "Préfecture de région",])
+y <- ght[ght$STATUT == "Préfecture de département" | ght$STATUT == "Préfecture de région", "NOM_COM"]
+plot(dep2, axes = TRUE, main = "RGE - Préfectures")
+points(x, col = "red", pch = 16)
+text(x, as.character(y$NOM_COM), cex = 0.5, pos = 3)
+
+# sous-préfecture
+x <- coordinates(ght[ght$STATUT == "Sous-préfecture",])
+y <- ght[ght$STATUT == "Sous-préfecture", "NOM_COM"]
+plot(dep2, axes = TRUE, main = "RGE - Sous-Préfectures")
+points(x, col = "blue", pch = 16)
+text(x, as.character(y$NOM_COM), cex = 0.5, pos = 3)
 
 ```
+
 
 POPULATION
 ==========
 
-```{r}
+```{r pop, comment=""}
+
+# load("RGE-Description/ght3.Rdata")
+ load("ght3.Rdata")
+
 # population par département
 pop.dep <- tapply(ght3$POPULATION, factor(ght3$CODE_DEPT), sum)
 pop.dep
@@ -102,8 +177,45 @@ pop.dep
 # population par ght
 pop.ght <- tapply(ght3$POPULATION, ght3$GHT, sum)
 pop.ght
+
 # population totale
 sum(pop.ght)
 
 ```
+
+Hôpitaux-SU de la région grand est
+==================================
+
+On récupère les fichiers correspondants dans le dossier __/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/Structures_Urgence_FEDorU__. Il y a 3 fichiers au format csv correspondant aux anciennes régions.
+```{r}
+
+path = "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/Structures_Urgence_FEDorU/"
+a <- paste0(path, "Structures d'urgence_Als.csv")
+b <- paste0(path, "Structures d'urgence_Lor.csv")
+c <- paste0(path, "Structures d'urgence_CA.csv")
+
+a2<-read.csv(a, skip = 1)
+b2<-read.csv(b, skip = 1)
+c2<-read.csv(c, skip = 1)
+hopRge <- rbind(a2,b2,c2)
+# On ne cnserve que les colonnes ayant un intéret. Les col. 12 et 13 contiennent latitude et longitude en WS84.
+hopRge <- hopRge[, c(2,3,7,8,9,10,15,16,20,21)]
+
+d2 <- hopRge
+# on transforme mes virgules en points puis en numéric
+d2$Longitude <- as.numeric(gsub(",",".", d2$Longitude))
+d2$Latitude <- as.numeric(gsub(",",".", d2$Latitude))
+coordinates(d2) = ~ Longitude + Latitude
+proj4string(d2) = CRS("+proj=longlat +datum=WGS84")
+# Reprojeter au format Lambert 93
+# -------------------------------
+# EPSG:2154 Lambert 93
+newProj = CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+su_alca_L93 <- spTransform(d2, newProj)
+
+plot(su_alca_L93, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 1, main = "SU Région Grand Est (Lambert 93)" , pch = 16, col= "blue")
+plot(dep2, add = TRUE)
+x <- coordinates(su_alca_L93[su_alca_L93$Nom.établissement,])
+y <- su_alca_L93[su_alca_L93$Nom.établissement,"Nom.établissement"]
+text(x, as.character(y$Nom.établissement), cex = 0.5, pos = 3)
 
