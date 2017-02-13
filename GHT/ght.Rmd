@@ -7,7 +7,13 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# faire de la place
+# rm(list=ls(all=TRUE))
 ```
+Comment extaire les GHT de la Région Grand Est (RGE) ?
+On part des communes de la France Entière. Puis on extrait les communes de la RGE. Ensuite on merge ce fichier avec celui des GHT.
+On obtient un spatialPolygonDataFrame contenant le contour des communes (polygons) et le GHT d'appartenance.
+
 Fichiers nécéssaires
 ====================
 IGN_GEOFLA_2016/Fichier_SHP/COMMUNE
@@ -21,15 +27,25 @@ Fichiers créés
 
 - ght.Rda: GHT de la région gand est avec les communes
 - save(ght3, file = "GHT/limites_des_ght.Rda")
+- france:  toutes les comunes de France
+- com: ("../GHT/RGE_contour_communes.Rda") toutes les communes de la RGE. Limites communales en N&B. Utilisable en fond de carte avec border = "gray"
+- dep: ("../GHT/contour_departements.Rda") contour des départements
+- ght3 ("../GHT/limites_des_ght.Rda") contour des GHT
+- ght: fichier mergé
 
-GHT
-===
-```{r}
+Bibliothèques nécessaires
+=========================
+```{r biblio}
 library(sp)
 library(rgdal)
 library(maptools)
 source("../Carto_utilitaires.R") # suprimer ../ si console
+```
 
+
+GHT
+===
+```{r ght}
 # Mac book air
 #dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
 
@@ -38,80 +54,114 @@ source("../Carto_utilitaires.R") # suprimer ../ si console
 
 # IMac - fichiers 2016
 dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
+```
 
+On commmence par charger la carte de France avec toutes les communes.
+```{r france}
 # carte de France avec toutes les communes
 france <- readOGR(dsn = dsn, layer = "COMMUNE")
 ```
 
-```{r}
+On ne conserve que la RGE
+```{r RGE}
 
-# départements faisant partie des GHT
-#  08 51 10 21 52 71 55 54 57 88 67 68
-# dep <- unique(ght$DEP)
+# départements de la RGE # Dep
+dep.rge <-  c("08", "51", "10", "52", "55", "54", "57", "88", "67", "68")
 
 # la fonction add0 ajoute un zero denent un département dontle code est < 10
-# dep <- add0(dep)
 
-# ensemble des communes constituant les GHT de la RGE. Lise transmise par E.Lagille
-ght2 <- read.csv2("~/Downloads/Liste_GrandEst_COM_CodePMSI_GHT_27102016_VF.csv")
-a <- add0(ght2$code_com) # ajoute un 0 devant un Finess trop court
-ght2$code_com <- a
+# Contour des départements RGE
+com <- france[france$CODE_DEPT %in% dep.rge,]
+save(com, file = "../GHT/RGE_contour_communes.Rda") # toutes les comunes RGE
 
-# carte des GHT (limites avec les comunes)
-ght  <- france[france@data$INSEE_COM %in% ght2$code_com,]
-plot(ght, axes = TRUE)
-ght@proj4string
-save(ght, file = "GHT/ghtRGE_avecCommunes.Rda")
+dep <- unionSpatialPolygons(com, IDs = dep@data$CODE_DEPT)
+plot(dep, axes = TRUE, main = "Départements du Grand Est")
+save(dep, file = "../GHT/contour_departements.Rda")
+# dep est un spatalPolygonf => pas de data
+
+# load(../GHT/contour_departements.Rda")
+# le contour des départements n'est pas suerposable  celui des GHT.
+# essayer:
+# --------
+# plot(ght5) # carte des GHT
+# plot(dep, border = "red", lty = 3, add = T) # carte des departements en pointillé rouge
+# b <- coordinates(dep) # n° des départements
+# text(b, names(dep), col = "red") # affiche le n° du dep.
 ```
 
+```{r}
+# merging avec le fichier de Lagille
+# ensemble des communes constituant les GHT de la RGE. Liste transmise par E.Lagille
+# Lecture du fichier
+pathGht <- "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/ght_com.csv"
+ght2 <- read.csv(pathGht) # 5928 observations of 7 variables
+x <- add0(ght2$code_com) # ajoute un 0 devant un Finess trop court
+ght2$code_com <- x
+
+# La carte fournie par l'ARS est fausse car le GHT2 englobe les communes des départements 21 et 71 qui ne font pas partie de la région grand est. Il faut donc les éliminer:
+ght2 <-ght2[ght2$DEP != 21 & ght2$DEP != 71 ,] # 5197 observations of 7 variables
+
+# ght  <- france[france@data$INSEE_COM %in% ght2$code_com,] # ght est un spatialPolygonsDataFrame
+# 
+# plot(ght, axes = TRUE, main = "GHT - Communes de la RGE")
+# 
+# names(ght)
+
+# on ajoute la limite des départements
+# plot(dep, border = "red", lty = 3, lwd = 3, add = T) # carte des departements en pointillé rouge
+
+# __ght__ est la carte des communes de la RGE.
+# carte des GHT (limites avec les comunes)
+# ght  <- france[france@data$INSEE_COM %in% ght2$code_com,]
+# plot(ght, axes = TRUE)
+
+# on vérfie que la projection est renseignée:
+# ght@proj4string
+
+# save(ght, file = "../GHT/ghtRGE_avecCommunes.Rda")
+```
+
+On fait une jointure avec le fichier des GHT
 ```{r}
 #merging des fichiers
-##Jointure utiisant la méthode match qui ne modifi pas l'ordre des lignes
-a <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM")
-names(a)
+##Jointure utilisant la méthode match qui ne modifie pas l'ordre des lignes
+ght2$code_com <- add0(ght2$code_com)
+ght <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM") # spatialPolygonsDataFame
+names(ght)
 ```
-__a__ est un spatialPolygonDataFrame => possède un dataFrame et plot(a) dessine les GHT fe l'est avec les communes.
+
+__ght__ est un spatialPolygonDataFrame => possède un dataFrame et plot(ght) dessine les GHT de l'est avec les communes.
 
 NB: si le champ PoPULATION n'est pas transformé en numérique, tapply génère une erreur. Voir: http://stackoverflow.com/questions/18045096/r-error-sum-not-meaningful-for-factors
-```{r}
-# Population par GHT
-tapply(as.numeric(a$POPULATION), a$GHT, sum)
-```
 
-```{r}
-
-# Population totale
-sum(tapply(as.numeric(a$POPULATION), a$GHT, sum))
-# en ¨%
-round(100 * tapply(as.numeric(a$POPULATION), a$GHT, sum) / sum(tapply(as.numeric(a$POPULATION), a$GHT, sum)), 2)
-# densité
-tapply(as.numeric(a$POPULATION), a$GHT, sum) / tapply(as.numeric(a$SUPERFICIE), a$GHT, sum)
-# densité au km2
-1000 * tapply(as.numeric(a$POPULATION), a$GHT, sum) / tapply(as.numeric(a$SUPERFICIE), a$GHT, sum)
-```
 
 ```{r}
 # trace les limites des GHT
-ght3 <- unionSpatialPolygons(a, IDs = a@data$GHT)
-plot(ght3)
-save(ght3, file = "GHT/limites_des_ght.Rda")
+ght3 <- unionSpatialPolygons(ght, IDs = ght@data$GHT)
+plot(ght3,axes = TRUE)
+save(ght3, file = "../GHT/limites_des_ght.Rda")
+```
+
+```{r}
+
+# exemple: dessine les communes et en surimpression les limites des GHT. 
+plot(com, border = "gray", axes = TRUE)
+plot(ght3, border = "red", lwd = 3, add = TRUE)
 
 # centroïdes des 12 GHT
 b <- coordinates(ght3)
 text(b, names(ght3))
+```
 
+```{r}
 # Détails des slots
 c <- sapply(slot(ght3, "polygons"), slot, "area")
 d <- sapply(slot(ght3, "polygons"), slot, "ID")
-e <- sapply(slot(GHT3, "polygons"), slot, "labpt")
-ght_geo <- rbind(c,d,e)
-ght_geo <- t(ght_geo)
-colnames(ght_geo) <- c("surface", "ID", "centroid_X", "centroid_Y")
-# tri par n° ID
- ght_geo[order(as.numeric(ght_geo[,2])),]
-#tri par surface
-ght_geo[order(as.numeric(ght_geo[,1])),]
+# e <- sapply(slot(GHT3, "polygons"), slot, "labpt")
 
+ght_geo <- rbind(c,d)
+ght_geo <- t(ght_geo)
+colnames(ght_geo) <- c("surface", "ID")
 ```
 
 On peut en déduire le plus grand, le plus petit...
@@ -135,7 +185,7 @@ Exemple GHT n°1
 ght1 <- a[a@data$GHT == 1,]
 plot(ght1)
 ght01 <- unionSpatialPolygons(ght1, ght1@data$GHT == 1)
-plot(ght01)
+plot(ght01, main = "GHT n°1", axes = T)
 
 # préfecture
 ght1@data[which(ght1@data$STATUT == "Préfecture de département"),]
@@ -175,6 +225,7 @@ proj4string(d2) = CRS("+proj=longlat +datum=WGS84")
 plot(d2, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SU Région Grand Est (WSG84)")
 
 # Reprojeter au format Lambert 93
+# -------------------------------
 # EPSG:2154 Lambert 93
 newProj = CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
 su_alca_L93 <- spTransform(d2, newProj)
@@ -186,32 +237,73 @@ plot(su_alca_L93[su_alca_L93$SAMU == "oui",], pch = 15, col = "blue", xlab = "Lo
 
 ```
 
-Corrections
-===========
+Population
+==========
+La colonne POPULATION est présetée sous forme de facteur. C'est vrai pour __ght__  et __a__.
+Pour les transformer en nombre, il faut  d'abord les transforme en _character_ puis en _integer_, sion les résultats sont faux!
 
-La carte fournie par l'ARS est fausse car le GHT4 englobe les communes des départements 21 et 71 qui ne font pas partie de larégion grand est. Il faut donc les éliminer:
 ```{r}
-ght4 <-ght2[ght2$DEP != 21 & ght2$DEP != 71 ,]
-a <- add0(ght4$code_com)
-ght4$code_com <- a
-ght  <- france[france@data$INSEE_COM %in% ght4$code_com,]
-plot(ght, axes = TRUE)
+str(ght@data)
+```
+On voit que POPULATION est un factor!
 
-a <- Attrib.Join(ght4, ght, "code_com", "INSEE_COM")
-ght3 <- unionSpatialPolygons(a, IDs = a@data$GHT)
-plot(ght3)
-
-
-b <- coordinates(ght3)
-text(b, names(ght3))
-
-# en couleur
-library(RColorBrewer)
-coul <- brewer.pal(n=12, name = "Set3")
-ght5 <- unionSpatialPolygons(a, IDs = a@data$GHT)
-plot(ght5, col = coul, axes = TRUE)
-b <- coordinates(ght5)
-text(b, names(ght5))
+Transformation: Population par département
+```{r}
+ght$POPULATION <- as.integer(as.character(ght$POPULATION))
+t <- tapply(as.numeric(ght$POPULATION), factor(ght$CODE_DEPT), sum)
+t
+sum(t)
 
 ```
-On a une carte qui correspond au grand est.
+
+et population par GHT
+```{r}
+t <- tapply(ght$POPULATION, factor(ght$GHT), sum)
+t
+sum(t)
+barplot(sort(t), main = "Peuplement des GHT (2014)")
+abline(h = mean(t), col = "red")
+
+```
+Le GHT le moins peuplé est le 4, le plus peuplé est le 10.
+
+Pareil pour les surfaces et les densités
+-----------------------------------------
+```{r}
+ght$SUPERFICIE <- as.numeric(as.character(ght$SUPERFICIE))
+s <- tapply(ght$SUPERFICIE, factor(ght$GHT), sum)
+s
+round(t * 100 /s, 2)
+sort(round(t * 100 /s, 2))
+```
+en nb d'habitants au km2
+
+Par département
+```{r}
+t <- tapply(a$POPULATION, factor(a$DEP), sum)
+s <- tapply(a$SUPERFICIE, factor(a$DEP), sum)
+sort(round(t * 100 /s, 2))
+```
+
+Villes principales
+====================
+
+```{r}
+load("../GHT/contour_departements.Rda") # dep2
+load("../GHT/ght.Rda") # ght
+
+x <- coordinates(ght[ght$STATUT == "Préfecture de département" | ght$STATUT == "Préfecture de région",])
+y <- ght[ght$STATUT == "Préfecture de département" | ght$STATUT == "Préfecture de région", "NOM_COM"]
+plot(dep2, axes = TRUE, main = "RGE - Préfectures")
+points(x, col = "red", pch = 16)
+text(x, as.character(y$NOM_COM), cex = 0.5, pos = 3)
+
+# sous-préfecture
+x <- coordinates(ght[ght$STATUT == "Sous-préfecture",])
+y <- ght[ght$STATUT == "Sous-préfecture", "NOM_COM"]
+plot(dep2, axes = TRUE, main = "RGE - Sous-Préfectures")
+points(x, col = "blue", pch = 16)
+text(x, as.character(y$NOM_COM), cex = 0.5, pos = 3)
+
+```
+

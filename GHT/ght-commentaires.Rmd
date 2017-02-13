@@ -1,0 +1,170 @@
+---
+title: "GHT- commentaires"
+author: "JcB"
+date: "27/01/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+# faire de la place
+# rm(list=ls(all=TRUE))
+```
+
+La Région grand Est (RGE) est composée de 10 départements
+```{r, echo=FALSE, warning=FALSE, comment=""}
+library(sp)
+library(rgdal)
+library(maptools)
+source("../Carto_utilitaires.R")
+
+# Dessine le contour des départements formant ma RGE
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/contour_departements.Rda") # dep
+```
+
+```{r}
+
+plot(dep, axes = T, main = "Départements de la RGE")
+b <- coordinates(dep) # n° des départements
+text(b, names(dep), col = "red") # affiche le n° du dep.
+```
+
+La région RGE comporte environ 5200 communes:
+```{r}
+# communes et limites départementales
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/ght.Rda") # ght spatialPolygonsDataFrame
+# on suprime les départements 21 et 71
+ght <- ght[ght$CODE_DEPT != 21 & ght$CODE_DEPT != 71 ,]
+plot(ght, axes = TRUE, main = "Communes de la Région Grand Est")
+plot(dep, border = "red", lty = 1, lwd = 2, add = T)
+
+# ensemble des communes constituant les GHT de la RGE. Liste transmise par E.Lagille
+# Lecture du fichier
+pathGht <- "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/ght_com.csv"
+ght2 <- read.csv(pathGht) # 5928 observations of 7 variables
+x <- add0(ght2$code_com) # ajoute un 0 devant un Finess trop court
+ght2$code_com <- x
+
+# On fait une jointure avec le fichier des GHT
+# merging des fichiers
+# Jointure utilisant la méthode match qui ne modifie pas l'ordre des lignes
+ght3 <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM") # spatialPolygonsDataFame. GHT passe de 17 à 24 colonnes. Le nb de lignes ne change pas. Les GHT sot intégrés. ght reste un spatialPolygonsDataFrame.
+names(ght3)
+plot(ght3)
+
+# limites des ght
+ght4 <- unionSpatialPolygons(ght3, IDs = ght3@data$GHT)
+plot(ght4, axes = T, main = "GHT de la RGE")
+text(coordinates(ght4), names(ght4), col = "red")
+```
+
+Les coordonnées sont indiquées en Lambert93 (conformes au JO)
+
+
+La Région grand Est (RGE) est divisée en 12 groupements Hospitalier de territoire (GHT):
+
+01 - GHT Nord Ardennes  02 - GHT Marne Sud Ardennes 03 - GHT de l'Aube et du Sézannais
+
+04 - GHT 04  05 - GHT Marne Haute-Marne Meuse 06 - GHT Lorraine Nord 
+
+07 - GHT Sud Lorraine 08 - GHT Vosges  09 - GHT Moselle Est
+
+10 - GHT 10  11 - GHT Centre Alsace  12 - GHT Haute Alsace
+
+L'étude démographique utilise le fichier POP1B de l'INSEE qui donne par commune le nombre d'hommes et de femmes par trance de 1 an, de 0 à 100 ans et plus. Le fichier initial a été créé en 2013 puis mis à jour régulièrement. La dernière version date de juillet 2015.
+
+```{r}
+# carte en couleur des GHT
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/carte_ght_couleur.Rda") # ght5 spatialPolygons
+library(RColorBrewer)
+coul <- brewer.pal(n=12, name = "Set3")
+plot(ght5, col = coul, axes = TRUE, main = "GHT de la RGE")
+b <- coordinates(ght5)
+text(b, names(ght5))
+
+# transformation des factor POPULATION et SUPERFICIE en numeric
+ght$POPULATION <- as.numeric(as.character(ght$POPULATION))
+ght$SUPERFICIE <- as.numeric(as.character(ght$SUPERFICIE))
+
+# vérification:
+# str(ght)
+```
+
+Plusieurs communes ont 0 habitant depuis la première Guerre mondiale.
+
+```{r}
+# départements de la RGE
+dep.rge <-  c("08", "51", "10", "52", "55", "54", "57", "88", "67", "68")
+
+# # IMac - fichiers 2016
+# dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
+# # On commmence par charger la carte de France avec toutes les communes.
+ france <- readOGR(dsn = dsn, layer = "COMMUNE") # spatialPolygonsDataFrame
+# 
+# On ne conserve que la RGE
+ dep <- france[france$CODE_DEPT %in% dep.rge,] # départements RGE spatialPolygonsDataFrame
+ plot(dep, axes = T) # dessine la RGE avec toutes les communes
+# 
+ dep2 <- unionSpatialPolygons(dep, IDs = dep@data$CODE_DEPT)
+ plot(dep2, axes = TRUE, main = "Départements du Grand Est") # dessine le contour des départementds RGE
+ text(coordinates(dep2), names(dep2), col = "red")
+ save(dep2, file = "../GHT/contour_departements.Rda")
+# dep2 est un spatalPolygonf => pas de data
+ 
+# ensemble des communes constituant les GHT de la RGE. Liste transmise par E.Lagille
+# Lecture du fichier
+ pathGht <- "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/ght_com.csv"
+ ght2 <- read.csv(pathGht) # 5928 observations of 7 variables
+# x <- add0(ght2$code_com) # ajoute un 0 devant un Finess trop court
+# ght2$code_com <- x
+# 
+# # La carte fournie par l'ARS est fausse car le GHT2 englobe les communes des départements 21 et 71 qui ne font pas partie de la région grand est. Il faut donc les éliminer:
+# ght2 <-ght2[ght2$DEP != 21 & ght2$DEP != 71 ,] # 5197 observations of 7 variables
+# 
+# # On fait une jointure avec le fichier des GHT
+# #merging des fichiers
+# ##Jointure utilisant la méthode match qui ne modifie pas l'ordre des lignes
+ ght3 <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM") # spatialPolygonsDataFame. GHT passe de 17 à 24 colonnes. Le nb de lignes ne change pas. Les GHT sot intégrés. ght reste un spatialPolygonsDataFrame.
+# names(ght)
+# plot(ght)
+```
+
+
+Etendue des GHT
+================
+```{r}
+c <- sapply(slot(ght3, "polygons"), slot, "area")
+d <- sapply(slot(ght3, "polygons"), slot, "ID")
+ght_geo <- rbind(c,d)
+ght_geo <- t(ght_geo)
+# renommer
+colnames(ght_geo) <- c("surface (m2)", "GHT")
+# tri par n° ID
+ ght_geo[order(as.numeric(ght_geo[,2])),]
+#tri par surface
+ght_geo[order(as.numeric(ght_geo[,1])),]
+```
+Le GHT e plus petit est le n°12 (région de Mulhouse)
+
+Le GHT le plus grand est le n°5
+
+Population
+==========
+```{r pop.totale}
+# t <- tapply(as.numeric(a$POPULATION), factor(a$CODE_DEPT), sum)
+# t
+# sum(t)
+# barplot(sort(t), main = "Peuplement par département")
+# abline(h = mean(t), col = "red")
+# ```
+# 
+# La population totale est de 5 552 388 habitants
+# 
+# ```{r}
+# t <- tapply(as.numeric(a$POPULATION), factor(a$GHT), sum)
+# t
+# sum(t)
+# barplot(sort(t), main = "Peuplement par GHT")
+# abline(h = mean(t), col = "red")
+```
+
