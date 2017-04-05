@@ -142,22 +142,22 @@ plot(rge.anc.reg, axes = T, main = "Anciennes régions RGE")
 Villes principales
 ====================
 
-```{r}
+```{r, fig.width=18, fig.height=18}
 load("../GHT/contour_departements.Rda") # dep2
-load("../GHT/ght.Rda") # ght
+load("../GHT/ght.Rda") # ght = large SpatialPolygonsDataFrame
 
-x <- coordinates(ght[ght$STATUT == "Préfecture de département" | ght$STATUT == "Préfecture de région",])
+x <- coordinates(ght[ght$STATUT == "Préfecture de département" | ght$STATUT == "Préfecture de région", "NOM_COM"])
 y <- ght[ght$STATUT == "Préfecture de département" | ght$STATUT == "Préfecture de région", "NOM_COM"]
 plot(dep2, axes = TRUE, main = "RGE - Préfectures")
 points(x, col = "red", pch = 16)
-text(x, as.character(y$NOM_COM), cex = 0.5, pos = 3)
+text(x, as.character(y$NOM_COM), cex = 0.8, pos = 3)
 
 # sous-préfecture
 x <- coordinates(ght[ght$STATUT == "Sous-préfecture",])
 y <- ght[ght$STATUT == "Sous-préfecture", "NOM_COM"]
 plot(dep2, axes = TRUE, main = "RGE - Sous-Préfectures")
 points(x, col = "blue", pch = 16)
-text(x, as.character(y$NOM_COM), cex = 0.5, pos = 3)
+text(x, as.character(y$NOM_COM), cex = 0.8, pos = 3)
 
 ```
 
