@@ -338,7 +338,6 @@ text(coordinates(ght3), as.character(round(x[names(ght3)] * 100, 2)))
 Moins de 18 ans
 ---------------
 ```{r mineurs}
-x <- tapply(as.numeric(com_rge$propMineur), com_rge$GHT, mean, na.rm=T)
 round(x*100, 2)
 
 coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Reds"))

@@ -75,8 +75,9 @@ La RGE compte 10 départements:
 
 Soit 5196 communes. Les coordonnées sont indiquées en Lambert93 (conformes au JO). Il existe près de 5000 projections cartographiques. Deux sont utilsées en France:
 
-- la projection conique conforme de Lambert ou Lambert93 qui est la seule légale en France et qui est utilisée par l'IGN et l'INSEE. Les distances sont indiquées en mètres.
+- la projection conique conforme de Lambert ou Lambert93 qui est la seule légale en France et qui est utilisée par l'IGN et l'INSEE. Les distances sont indiquées en mètres à partir d'un point imaginaire.
 - la projection WSG84 utilisée par Googlemap et OpenStreetMap où les distances sont données en Longitude et latitude.
+- la projection UTM est utilisée pour les territoires ultra marins.
 
 Le fichier ght3 (spatialPolygonsDataFrame) permet de dessiner la RGE par commune, département ou GHT.
 ```{r exploitation, echo=FALSE}

@@ -54,7 +54,23 @@ cbind(adresse,loc)
 adresse <- c("Nouvel Hôpital Civil", "Hôpital de Hautepierre", "Centre hospitalier, Wissembourg", "Clinique sainte Anne, Strasbourg", "Clinique sainte Odile, Strasbourg", "Clinique Diaconat, Strasbourg")
 loc <- geocode(adresse)
 cbind(adresse,loc)
-
+'''                         adresse      lon      lat
+1              Nouvel Hôpital Civil 7.751022 48.57648
+2            Hôpital de Hautepierre 7.707201 48.59320
+3   Centre hospitalier, Wissembourg 7.932699 49.04049
+4  Clinique sainte Anne, Strasbourg 7.788180 48.61487
+5 Clinique sainte Odile, Strasbourg 7.758714 48.56544
+6     Clinique Diaconat, Strasbourg 7.742930 48.57675
+```
+adresse2 <- c("diaconat, mulhouse", "clinique des trois frontières, ", "hôpital emile muller, mulhouse", "hôpital du hasenrain, mulhouse","CH tahn, than")
+geocode(adresse2)
+```
+        lon      lat
+1  7.330786 47.74913
+2  7.551489 47.58255
+3  7.343588 47.72476
+4  7.331585 47.73347
+5 69.367869 23.45525
 ```
 
 ```{}
