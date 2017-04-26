@@ -47,13 +47,13 @@ GHT
 ===
 ```{r ght}
 # Mac book air
-#dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
+dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
 
 # IMac (fichiers 2015)
 # dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2015/Fichier_SHP/COMMUNE"
 
 # IMac - fichiers 2016
-dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
+# dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
 ```
 
 On commmence par charger la carte de France avec toutes les communes.
@@ -87,6 +87,10 @@ save(dep, file = "../GHT/contour_departements.Rda")
 # plot(dep, border = "red", lty = 3, add = T) # carte des departements en pointillé rouge
 # b <- coordinates(dep) # n° des départements
 # text(b, names(dep), col = "red") # affiche le n° du dep.
+```
+
+```{r}
+
 ```
 
 ```{r}
