@@ -134,6 +134,16 @@ $(document).ready(function () {
 # rm(list=ls(all=TRUE))
 
 # La commande fread est incroyablement plus rapide que read.csv
+<<<<<<< HEAD
+#install.packages(&quot;OpenMPController&quot;)
+library(&quot;OpenMPController&quot;)
+library(data.table)
+
+pathMcBookAir &lt;- &quot;/Users/jcb/Documents/Demographie/INSEE_2013/BTX_TD_POP1B_2013.csv&quot;
+pathIMac &lt;- &quot;/Users/jean-claudebartier/Documents/Demographie/INSEE_2013/BTX_TD_POP1B_2013.csv&quot;
+
+d &lt;- fread(pathMcBookAir, skip = 10)</code></pre>
+=======
 # install.packages(&quot;OpenMPController&quot;)
 library(&quot;OpenMPController&quot;)
 library(data.table)</code></pre>
@@ -142,6 +152,7 @@ library(data.table)</code></pre>
 
 path &lt;- &quot;/Users/jean-claudebartier/Documents/Demographie/INSEE_2013/BTX_TD_POP1B_2013.csv&quot;
 d &lt;- fread(path, skip = 10)</code></pre>
+>>>>>>> 6276cd754f4f979423f59ef0bd0a6d0728b5cbec
 <div id="donnees-ge" class="section level2">
 <h2>Données GE</h2>
 <p>Le GE comporte 10 départements:</p>
@@ -162,7 +173,11 @@ d &lt;- fread(path, skip = 10)</code></pre>
 com_rge &lt;- d[substr(d$CODGEO, 1, 2) %in% region,]
 
 # La première colonne correspond au code INSEE de la commune
+<<<<<<< HEAD
+# La seconde colonne correspond au nom en clair de la commne
+=======
 # La seconde colne correspond au nom en clair de la commne
+>>>>>>> 6276cd754f4f979423f59ef0bd0a6d0728b5cbec
 # Les colonnes 3 à 103, correspondent aux hommes de 0 à 100 ans
 # Les colonnes de 104 à 204, correspondent aux femmes de 0 à 100 ans 
 
@@ -179,6 +194,10 @@ b &lt;- apply(com_rge[,104:204], 1, sum)
 com_rge$h &lt;- a
 com_rge$f &lt;- b
 # total pour la commune
+<<<<<<< HEAD
+com_rge$tot &lt;- a + b</code></pre>
+</div>
+=======
 a</code></pre>
 <pre><code>##    [1]    242    793    108     75    135     41    343     94     58
 ##   [10]    118    194     74     53     95     64     32     28     38
@@ -1370,6 +1389,7 @@ head(ght4)</code></pre>
 ## 6 02 - GHT Marne Sud Ardennes   8</code></pre>
 <pre class="r"><code># merging
 com_rge &lt;- merge(com_rge, ght4, by.x = &quot;CODGEO&quot;, by.y = &quot;code_com&quot;, all.x = T)</code></pre>
+>>>>>>> 6276cd754f4f979423f59ef0bd0a6d0728b5cbec
 <div id="age-moyen-et-age-median-par-commune" class="section level2">
 <h2>Age moyen et age médian par commune</h2>
 <p>Chaque case contient le nombre d’indvidus pour un age donné. Pour calculer un age moyen, il faut multiplier l’age par le nb d’individus</p>
@@ -1379,8 +1399,65 @@ com_rge &lt;- merge(com_rge, ght4, by.x = &quot;CODGEO&quot;, by.y = &quot;code_
 a &lt;- com_rge[1, 3:103] # nb d'hommes
 b &lt;- a * 0:100 # fois age
 c &lt;- sum(b) # somme des ages
+<<<<<<< HEAD
+b</code></pre>
+<pre><code>##    SEXE1_AGED100000 SEXE1_AGED100001 SEXE1_AGED100002 SEXE1_AGED100003
+## 1:                0                1                4                3
+##    SEXE1_AGED100004 SEXE1_AGED100005 SEXE1_AGED100006 SEXE1_AGED100007
+## 1:                4               15               18                0
+##    SEXE1_AGED100008 SEXE1_AGED100009 SEXE1_AGED100010 SEXE1_AGED100011
+## 1:                0                0               30               22
+##    SEXE1_AGED100012 SEXE1_AGED100013 SEXE1_AGED100014 SEXE1_AGED100015
+## 1:               12               52               14               45
+##    SEXE1_AGED100016 SEXE1_AGED100017 SEXE1_AGED100018 SEXE1_AGED100019
+## 1:               48              102               36               38
+##    SEXE1_AGED100020 SEXE1_AGED100021 SEXE1_AGED100022 SEXE1_AGED100023
+## 1:               40               21               66              184
+##    SEXE1_AGED100024 SEXE1_AGED100025 SEXE1_AGED100026 SEXE1_AGED100027
+## 1:               96               25                0               54
+##    SEXE1_AGED100028 SEXE1_AGED100029 SEXE1_AGED100030 SEXE1_AGED100031
+## 1:               56                0                0              124
+##    SEXE1_AGED100032 SEXE1_AGED100033 SEXE1_AGED100034 SEXE1_AGED100035
+## 1:               96               99                0              140
+##    SEXE1_AGED100036 SEXE1_AGED100037 SEXE1_AGED100038 SEXE1_AGED100039
+## 1:                0               74              114               39
+##    SEXE1_AGED100040 SEXE1_AGED100041 SEXE1_AGED100042 SEXE1_AGED100043
+## 1:              200              164              168               86
+##    SEXE1_AGED100044 SEXE1_AGED100045 SEXE1_AGED100046 SEXE1_AGED100047
+## 1:                0               90              138              235
+##    SEXE1_AGED100048 SEXE1_AGED100049 SEXE1_AGED100050 SEXE1_AGED100051
+## 1:              384              294              250              357
+##    SEXE1_AGED100052 SEXE1_AGED100053 SEXE1_AGED100054 SEXE1_AGED100055
+## 1:              364              212              378              220
+##    SEXE1_AGED100056 SEXE1_AGED100057 SEXE1_AGED100058 SEXE1_AGED100059
+## 1:              224              171              290              236
+##    SEXE1_AGED100060 SEXE1_AGED100061 SEXE1_AGED100062 SEXE1_AGED100063
+## 1:              300              427              372              252
+##    SEXE1_AGED100064 SEXE1_AGED100065 SEXE1_AGED100066 SEXE1_AGED100067
+## 1:              384              390              264              335
+##    SEXE1_AGED100068 SEXE1_AGED100069 SEXE1_AGED100070 SEXE1_AGED100071
+## 1:              204                0                0               71
+##    SEXE1_AGED100072 SEXE1_AGED100073 SEXE1_AGED100074 SEXE1_AGED100075
+## 1:               72              219              148              150
+##    SEXE1_AGED100076 SEXE1_AGED100077 SEXE1_AGED100078 SEXE1_AGED100079
+## 1:               76              231               78                0
+##    SEXE1_AGED100080 SEXE1_AGED100081 SEXE1_AGED100082 SEXE1_AGED100083
+## 1:               80              162                0                0
+##    SEXE1_AGED100084 SEXE1_AGED100085 SEXE1_AGED100086 SEXE1_AGED100087
+## 1:                0               85               86                0
+##    SEXE1_AGED100088 SEXE1_AGED100089 SEXE1_AGED100090 SEXE1_AGED100091
+## 1:              176                0               90                0
+##    SEXE1_AGED100092 SEXE1_AGED100093 SEXE1_AGED100094 SEXE1_AGED100095
+## 1:                0                0                0                0
+##    SEXE1_AGED100096 SEXE1_AGED100097 SEXE1_AGED100098 SEXE1_AGED100099
+## 1:                0                0                0                0
+##    SEXE1_AGED100100
+## 1:                0</code></pre>
+<pre class="r"><code># age moyen
+=======
 # b
 # age moyen
+>>>>>>> 6276cd754f4f979423f59ef0bd0a6d0728b5cbec
 c/sum(com_rge[1, 3:103])</code></pre>
 <pre><code>## [1] 44.56612</code></pre>
 <pre class="r"><code>n &lt;- nrow(com_rge)
@@ -1466,6 +1543,8 @@ com_rge$propAdulte &lt;- com_rge$totAdulte / com_rge$tot
 summary(com_rge$propAdulte)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 ##  0.4015  0.6614  0.6889  0.6860  0.7122  1.0000       6</code></pre>
+<<<<<<< HEAD
+=======
 <p>cacul en fonction des GHT: on e garde que les colonnes avec des résultats</p>
 <pre class="r"><code>a &lt;- com_rge[, 205:214]
 names(a)</code></pre>
@@ -1475,6 +1554,7 @@ names(a)</code></pre>
 round(x*100, 2)</code></pre>
 <pre><code>## numeric(0)</code></pre>
 <p>1 2 3 4 5 6 7 8 9 10 11 12 8.60 9.00 9.96 12.41 10.07 7.43 8.53 9.91 8.28 8.49 8.19 7.9</p>
+>>>>>>> 6276cd754f4f979423f59ef0bd0a6d0728b5cbec
 </div>
 </div>
 

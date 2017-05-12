@@ -56,11 +56,21 @@ Récupération des données
 # rm(list=ls(all=TRUE))
 
 # La commande fread est incroyablement plus rapide que read.csv
+<<<<<<< HEAD
+#install.packages("OpenMPController")
+=======
 # install.packages("OpenMPController")
+>>>>>>> 6276cd754f4f979423f59ef0bd0a6d0728b5cbec
 library("OpenMPController")
 library(data.table)
 library(RColorBrewer)
 
+<<<<<<< HEAD
+pathMcBookAir <- "/Users/jcb/Documents/Demographie/INSEE_2013/BTX_TD_POP1B_2013.csv"
+pathIMac <- "/Users/jean-claudebartier/Documents/Demographie/INSEE_2013/BTX_TD_POP1B_2013.csv"
+
+d <- fread(pathMcBookAir, skip = 10)
+=======
 source("../Carto_utilitaires.R")
 load("../GHT/limites_des_ght.Rda") # ght3 = spatialPolygons
 
@@ -68,6 +78,7 @@ load("../GHT/limites_des_ght.Rda") # ght3 = spatialPolygons
 # les 10 remières lignes ne servent pas:
 path <- "/Users/jean-claudebartier/Documents/Demographie/INSEE_2013/BTX_TD_POP1B_2013.csv"
 d <- fread(path, skip = 10)
+>>>>>>> 6276cd754f4f979423f59ef0bd0a6d0728b5cbec
 ```
 
 Données GE
