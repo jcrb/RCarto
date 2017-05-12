@@ -17,10 +17,10 @@ On obtient un spatialPolygonDataFrame contenant le contour des communes (polygon
 Fichiers nécéssaires
 ====================
 IGN_GEOFLA_2016/Fichier_SHP/COMMUNE
-"~/Downloads/Liste_GrandEst_COM_CodePMSI_GHT_27102016_VF.csv": liste  
+"~/Downloads/CARTOGRAPHIE/Liste_GrandEst_COM_CodePMSI_GHT_27102016_VF.csv": liste  
 
 Fichier des communes faisant partie de GHT du grand est (transmis par Lagille)
-ght2 <- read.csv2("~/Downloads/Liste_GrandEst_COM_CodePMSI_GHT_27102016_VF.csv")
+ght2 <- read.csv("~/Documents/CARTOGRAPHIE/Liste_GrandEst_COM_CodePMSI_GHT_27102016_VF.csv")
 
 Fichiers créés
 ==============
@@ -68,13 +68,14 @@ On ne conserve que la RGE
 # départements de la RGE # Dep
 dep.rge <-  c("08", "51", "10", "52", "55", "54", "57", "88", "67", "68")
 
-# la fonction add0 ajoute un zero denent un département dontle code est < 10
-
 # Contour des départements RGE
 com <- france[france$CODE_DEPT %in% dep.rge,]
+# la fonction add0 ajoute un zero denent un département dontle code est < 10
+com$CODE_COM <- add0(com$CODE_COM)
+
 save(com, file = "../GHT/RGE_contour_communes.Rda") # toutes les comunes RGE
 
-dep <- unionSpatialPolygons(com, IDs = dep@data$CODE_DEPT)
+dep <- unionSpatialPolygons(com, IDs = com@data$CODE_DEPT)
 plot(dep, axes = TRUE, main = "Départements du Grand Est")
 save(dep, file = "../GHT/contour_departements.Rda")
 # dep est un spatalPolygonf => pas de data
@@ -126,14 +127,21 @@ On fait une jointure avec le fichier des GHT
 #merging des fichiers
 ##Jointure utilisant la méthode match qui ne modifie pas l'ordre des lignes
 ght2$code_com <- add0(ght2$code_com)
-ght <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM") # spatialPolygonsDataFame
+ght <- Attrib.Join(ght2, com, "code_com", "INSEE_COM") # spatialPolygonsDataFame
 names(ght)
+unique(ght$DEP)
+unique(ght$GHT)
+
 ```
 
 __ght__ est un spatialPolygonDataFrame => possède un dataFrame et plot(ght) dessine les GHT de l'est avec les communes.
 
 NB: si le champ PoPULATION n'est pas transformé en numérique, tapply génère une erreur. Voir: http://stackoverflow.com/questions/18045096/r-error-sum-not-meaningful-for-factors
-
+ght$POPULATION <- as.character(ght$POPULATION)
+ght$POPULATION <- as.numeric(ght$POPULATION)
+tapply(ght$POPULATION, ght$GHT, sum)
+       1        2        3        4        5        6        7        8        9        10       11       12 
+ 224 185  551 539  332 951  114 153  284 520  801 873  612 150  375 226  322 407 1 041 847  408 501  483 036 
 
 ```{r}
 # trace les limites des GHT
@@ -150,13 +158,15 @@ plot(ght3, border = "red", lwd = 3, add = TRUE)
 
 # centroïdes des 12 GHT
 b <- coordinates(ght3)
-text(b, names(ght3))
 ```
 
 ```{r}
 # Détails des slots
 c <- sapply(slot(ght3, "polygons"), slot, "area")
 d <- sapply(slot(ght3, "polygons"), slot, "ID")
+"1"  "10" "11" "12" "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9" # ordre des polygones
+text(coordinates(ght3), as.character(d))
+
 # e <- sapply(slot(GHT3, "polygons"), slot, "labpt")
 
 ght_geo <- rbind(c,d)
@@ -170,10 +180,10 @@ On peut en déduire le plus grand, le plus petit...
 ```{r}
 library(RColorBrewer)
 coul <- brewer.pal(n=12, name = "Set3")
-ght <- unionSpatialPolygons(a, IDs = a@data$GHT)
-plot(ght, col = coul, axes = TRUE)
-b <- coordinates(ght)
-text(b, names(ght))
+# ght <- unionSpatialPolygons(a, IDs = a@data$GHT)
+plot(ght3, col = coul, axes = TRUE)
+b <- coordinates(ght3)
+text(b, names(ght3))
 
 ```
 

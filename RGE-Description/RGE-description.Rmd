@@ -220,3 +220,30 @@ x <- coordinates(su_alca_L93[su_alca_L93$Nom.établissement,])
 y <- su_alca_L93[su_alca_L93$Nom.établissement,"Nom.établissement"]
 text(x, as.character(y$Nom.établissement), cex = 0.5, pos = 3)
 
+Créer un SpatialPolygonsDataFrame à partir d'un spatialPolygons
+===============================================================
+
+Par exemplre on choisit les déprtements de la RGE:
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/contour_departements.Rda")
+plot(dep2, axes = T, main = "Départements de la RGE")
+b <- coordinates(dep2) # n° des départements
+text(b, names(dep2), col = "red")
+
+Dans un premier temps il faut connaitre l'ordre des polygones de l'objet SpatialPolygons:
+a <- getSpPPolygonsIDSlots(dep2)
+a<- data.frame(a)
+
+Puis on met l'ordre des lignes du dataFrame dans l'ordre de dessin pes polygones:
+row.names(a) <- a$a
+
+A prtir de là, on peut combiner les polygones et le DF:
+SPDF <- SpatialPolygonsDataFrame(dep2, a)
+
+SPDF est un SpatialPolygonsDataFrame et on peut enrichire la partie data (a) evec d'autres éléments:
+a$pop.tot <- t
+
+ou colorier les départements en fonction de leur population:
+coul <- cut(t, breaks = 5, labels = brewer.pal(n = 5, name = "Blues"))
+plot(SPDF, axes = TRUE, col = as.character(coul))
+text(coordinates(SPDF), as.character(a$a))
+legend("bottomleft", legend = round(a$pop.tot), bty = "n", fill = as.character(levels(coul), title = "pop.tot.")

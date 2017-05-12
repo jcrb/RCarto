@@ -98,7 +98,7 @@ Création du dataframe:
 a <- getSpPPolygonsIDSlots(dep) # ou a <- sapply(slot(dep, "polygons"), function(x) slot(x, "ID"))
 
 # data.framedf <- data.frame(value=1:10, row.names=a)
-df <- data.frame(value=1:length(a), row.names=a)
+df <- data.frame(value = 1:length(a), row.names=a)
 
 # spatialPolygonDatafame
 dep2 <- SpatialPolygonsDataFrame(dep, data=df)
