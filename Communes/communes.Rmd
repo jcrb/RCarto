@@ -114,7 +114,7 @@ Création du dataframe:
 a <- getSpPPolygonsIDSlots(dep) # ou a <- sapply(slot(dep, "polygons"), function(x) slot(x, "ID"))
 
 # data.framedf <- data.frame(value=1:10, row.names=a)
-df <- data.frame(value=1:length(a), row.names=a)
+df <- data.frame(value = 1:length(a), row.names=a)
 
 # spatialPolygonDatafame
 dep2 <- SpatialPolygonsDataFrame(dep, data=df)
@@ -158,7 +158,7 @@ df <- data.frame(row.names = a, pop.RGE, sup.RGE, dens.RGE, code.dep = as.intege
 
 # merging pour récupérer le nom des département
 df2 <- merge(df, m, by.x = "code.dep", by.y = "CODE_DEPT", all.x = TRUE)
-row.names(df2) <- a # indispesable pour faire un spatialpolygone
+row.names(df2) <- a # indispensable pour faire un spatialpolygone
 
 # SpatialpolygonDatafrae et sauvegarde SHP
 dep3 <- SpatialPolygonsDataFrame(dep, data=df2)

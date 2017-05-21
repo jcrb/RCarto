@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 La Région grand Est (RGE) est composée de 10 départements
+
 ```{r, echo=FALSE, warning=FALSE, comment=""}
 library(sp)
 library(rgdal)
@@ -19,14 +20,14 @@ library(maptools)
 source("../Carto_utilitaires.R")
 
 # Dessine le contour des départements formant ma RGE
-load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/contour_departements.Rda") # dep
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/contour_departements.Rda") # dep2
 ```
 
 ```{r}
 
-plot(dep, axes = T, main = "Départements de la RGE")
-b <- coordinates(dep) # n° des départements
-text(b, names(dep), col = "red") # affiche le n° du dep.
+plot(dep2, axes = T, main = "Départements de la RGE")
+b <- coordinates(dep2) # n° des départements
+text(b, names(dep2), col = "red") # affiche le n° du dep.
 ```
 
 La région RGE comporte environ 5200 communes:
@@ -97,7 +98,7 @@ Plusieurs communes ont 0 habitant depuis la première Guerre mondiale.
 dep.rge <-  c("08", "51", "10", "52", "55", "54", "57", "88", "67", "68")
 
 # # IMac - fichiers 2016
-# dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
+dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2016/COMMUNE"
 # # On commmence par charger la carte de France avec toutes les communes.
  france <- readOGR(dsn = dsn, layer = "COMMUNE") # spatialPolygonsDataFrame
 # 

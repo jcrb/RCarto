@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# rm(list=ls(all=TRUE))
 
 CE  papier étudie la population du grand est. Source des donées: INSEE
 /Users/jean-claudebartier/Documents/Demographie/INSEE_2013/BTX_TD_POP1B_2013.xls
@@ -19,7 +20,7 @@ thèmes : Démographie > Évolution et structure de la population
 Niveau géographique : Toutes les communes
 catégories : Données > Bases de données
 
-Vous pouvez aussi accéder directement [à cette sélection](https://www.insee.fr/fr/statistiques?debut=0&idprec=2521169&theme=1&categorie=3&geo=TOUTES_COMMUNE-1). VOIR: Population et lieu de résidence antérieure en 2013 Recensement de la population - Base tableaux détaillés
+Vous pouvez aussi accéder directement [à cette sélection] (https://www.insee.fr/fr/statistiques?debut=0&idprec=2521169&theme=1&categorie=3&geo=TOUTES_COMMUNE-1). VOIR: Population et lieu de résidence antérieure en 2013 Recensement de la population - Base tableaux détaillés
 Le fichier POP1B- Population par sexe et âge est disponible dans la base "Population est résidence antérieure". 
 
 Variables:
@@ -71,7 +72,7 @@ pathIMac <- "/Users/jean-claudebartier/Documents/Demographie/INSEE_2013/BTX_TD_P
 d <- fread(pathMcBookAir, skip = 10)
 =======
 source("../Carto_utilitaires.R")
-load("../GHT/limites_des_ght.Rda") # ght3
+load("../GHT/limites_des_ght.Rda") # ght3 = spatialPolygons
 
 #d = données pour toutes les communes de france
 # les 10 remières lignes ne servent pas:
@@ -134,7 +135,10 @@ ght4$code_com <- x
 head(ght4)
 
 # merging
+dim(com_rge)
 com_rge <- merge(com_rge, ght4, by.x = "CODGEO", by.y = "code_com", all.x = T)
+dim(com_rge) # com_rge compte 210 colones
+
 ```
 
 # Création de 3 nouvelles colonnes vides:
@@ -143,7 +147,10 @@ com_rge$f <- NA # nb de femmes
 com_rge$tot <- NA # total
 n <- nrow(com_rge)
 
-# total des hommes
+dim(com_rge)
+# 213 colones
+
+# total des hommes par commne
 a <- apply(com_rge[,3:103], 1, sum)
 # total des femmes
 b <- apply(com_rge[,104:204], 1, sum)
@@ -162,7 +169,7 @@ sum(com_rge$tot)
 # communes "mortes pour la France"
 com_rge[which(com_rge$tot == 0), c(1:2,213)]
 
-# communes avec moisns de 50 habitants
+# communes avec moins de 50 habitants
 com_rge[which(com_rge$tot < 50), c(1:2,213)]
 
 ```
@@ -186,17 +193,17 @@ Chaque case contient le nombre d'indvidus pour un age donné. Pour calculer un a
 
 n <- nrow(com_rge)
 
-for (i in 1:n) {
-      a <- com_rge[i, 3:103] # nb d'hommes  
-      b <- a * 0:100 # fois age
-      c <- sum(b) # somme des ages
+# for (i in 1:n) {
+     # a <- com_rge[i, 3:103] # nb d'hommes  
+     # b <- a * 0:100 # fois age
+     # c <- sum(b) # somme des ages
       # age moyen
-      com_rge[i, "hMean"] <- c/sum(a)
+     # com_rge[i, "hMean"] <- c/sum(a)
       # mean(b, na.rm = TRUE)
       # median(b, na.rm = TRUE)
-}
-summary(com_rge$hMean)
-hist(com_rge$hMean, breaks = 20, main = "Hommes RGE - 2015", col = "cornflowerblue", border = "white", ylab = "Fréquence", xlab = "Age des hommes par commune")
+# }
+# summary(com_rge$hMean)
+# hist(com_rge$hMean, breaks = 20, main = "Hommes RGE - 2015", col = "cornflowerblue", border = "white", ylab = "Fréquence", xlab = "Age des hommes par commune")
 
 ```
 
@@ -204,17 +211,17 @@ hist(com_rge$hMean, breaks = 20, main = "Hommes RGE - 2015", col = "cornflowerbl
 
 ```{r age_moyen_femmes}
 
-for (i in 1:n) {
-      a <- com_rge[i, 104:204] # nb de femmes 
-      b <- a * 0:100 # fois age
-      c <- sum(b) # somme des ages
+# for (i in 1:n) {
+     # a <- com_rge[i, 104:204] # nb de femmes 
+     # b <- a * 0:100 # fois age
+     # c <- sum(b) # somme des ages
       # age moyen
-      com_rge[i, "fMean"] <- c/sum(a) # age moyen des femmes dans cette commune
+     # com_rge[i, "fMean"] <- c/sum(a) # age moyen des femmes dans cette commune
       # com_rge[i, "fMean2"] <- mean(c, na.rm = T)
-}
-summary(com_rge$fMean)
-hist(com_rge$fMean, breaks = 20, main = "Femmes RGE - 2015", col = "pink", border = "white", ylab = "Fréquence", xlab = "Age des femmes par commune")
-abline(v = 42.42, lty = 3, col = "red")
+# }
+# summary(com_rge$fMean)
+# hist(com_rge$fMean, breaks = 20, main = "Femmes RGE - 2015", col = "pink", border = "white", ylab = "Fréquence", xlab = "Age des femmes par commune")
+# abline(v = 42.42, lty = 3, col = "red")
 
 ```
 
@@ -252,7 +259,8 @@ Nombre de moins de 18 ans
 # hommes mineurs
 a <- apply(com_rge[, 3:20], 1, sum, na.rm = T)
 # femmes mineures
-b <- apply(com_rge[, 104:121], 1, sum, na.rm = T) # which(colnames(com_rge) == "SEXE2_AGED100017") et which(colnames(com_rge) == "SEXE2_AGED100000")
+b <- apply(com_rge[, 104:121], 1, sum, na.rm = T) 
+# which(colnames(com_rge) == "SEXE2_AGED100017") et which(colnames(com_rge) == "SEXE2_AGED100000")
 
 com_rge$hMineur <- a
 com_rge$fMineur <- b
@@ -285,13 +293,19 @@ com_rge$fAdulte <- b
 # Totalité des adultes pour une commune
 com_rge$totAdulte <- a + b 
 
-com_rge$propAdulte <- com_rge$totAdulte / com_rge$tot
+# communes sans adultes
+x <- which(com_rge$totAdulte == 0)
+x
+for(i in x){
+ com_rge$propAdulte[i] = 0.001
+}
+
 #summary(com_rge$propAdulte)
 
 # communes sans adultes
-x <- which(com_rge$propAdulte == "NaN")
-x
-
+# x <- which(com_rge$propAdulte == "NaN")
+# x
+com_rge$propadulte = round(com_rge$totAdulte/com_rge$tot, 2)
 ```
 
 calcul en fonction des GHT: 
@@ -304,13 +318,17 @@ on ne garde que les colonnes avec des résultats.
 ```
 
 
-Le 75 ans et plus
+Les 75 ans et plus
 -----------------
 ```{r}
+# library(arulesViz)
+load("../GHT/limites_des_ght.Rda") # ght3: contour des GHT)
 
+plot(ght3)
 a <- com_rge[, 205:ncol(com_rge)]
 names(a)
 
+# Tapply par GHT, moyenne
 x <- tapply(as.numeric(a$propsupouegal75), a$GHT, mean, na.rm=T)
 round(x*100, 2)
 ```
@@ -320,10 +338,9 @@ round(x*100, 2)
 cut(x*100,5, labels = brewer.pal(n = 5, name = "Blues"))
 
 ```{r}
-plot(ght3)
 text(coordinates(ght3), as.character(round(x[names(ght3)] * 100, 2)))
-
 coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Blues"))
+
 plot(ght3, col = as.character(coul[as.integer(names(ght3))]), main = "% de 75 ans et plus", axes = TRUE)
 text(coordinates(ght3), as.character(round(x[names(ght3)] * 100, 2)))
 
@@ -332,7 +349,6 @@ text(coordinates(ght3), as.character(round(x[names(ght3)] * 100, 2)))
 Moins de 18 ans
 ---------------
 ```{r mineurs}
-x <- tapply(as.numeric(com_rge$propMineur), com_rge$GHT, mean, na.rm=T)
 round(x*100, 2)
 
 coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Reds"))
@@ -345,6 +361,7 @@ Adultes
 ```{r}
 x <- tapply(as.numeric(com_rge$propAdulte), com_rge$GHT, mean, na.rm=T)
 round(x*100, 2)
+x
 
 coul = cut(x, breaks = 5, labels = brewer.pal(n = 5, name = "Greens"))
 plot(ght3, col = as.character(coul[as.integer(names(ght3))]), main = "% de 18 à 75 ans", axes = TRUE)
