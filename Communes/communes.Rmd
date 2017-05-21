@@ -14,9 +14,25 @@ Origine: fichier SHP sur le bureau
 library(sp)
 library(rgdal)
 library(maptools)
+library(gpclib)
+
+# Région grand est
+rge <- c("08", "10", "51", "52", "54", "55", "57", "67", "68", "88")
+
+# cus <- c("Eckwersheim", "Vendenheim", "Lampertheim", "Mundolsheim", "Souffelweyersheim", "Bischheim", "Schiltigheim", "Strasbourg", "La Wantzenau", "Illkirch-Grafenstaden", "Plobsheim", "Achenheim", "Eckbolsheim", "Lingolsheim", "Ostwald", "Wolfisheim", "Oberhausbergen", "Mittelhausbergen")
+# manque des communes dans la Cus
 
 # Mac book air
-#dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
+# dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE"
+
+# Mac book air données 2016
+# dsn <- "/Users/jcb/Documents/Cartographie/Donnee_IGN/COMMUNE_2016"
+# france <- readOGR(dsn = dsn, layer = "COMMUNE")
+# summary(france@data$NOM_REG)
+# rge.com <- france[france$CODE_DEPT %in% rge,]
+
+# dim(rge.com)
+#  5152   17
 
 # IMac (fichiers 2015)
 dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFLA_2015/Fichier_SHP/COMMUNE"
