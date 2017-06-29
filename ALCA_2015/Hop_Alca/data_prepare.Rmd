@@ -11,6 +11,8 @@ output:
     toc: yes
 ---
 
+# rm(list=ls(all=TRUE))
+
 __Source: MacBook::Documents/R/Rcarto/Alca2015/Hop_Alca/data_prepare.Rmd__
 
 L'objectif est de rassembler et de préparer les données nécessaires pour dessiner une carte de la région Grand Est (RGE) avec:
@@ -21,6 +23,8 @@ L'objectif est de rassembler et de préparer les données nécessaires pour dess
 Le fond de carte est fourni par les données open data de l'IGN. Les fichiers sont au format _shapefile_. Les coordonnées des points sont en _Lambert93_.
 
 Les coordonnées des ES sont fournies par un fichier Excel récupéré auprès de la FEDORU. Il s'agit de coordonnées approximatives correspondant à l'adresse postale de l'établissement. _R_ permet de récupérer ce type d'information à partir de Googlemap. Les coordonnées des ES sont au format WSG84. Il faut les convertir en Lambert93.
+
+Pour le géocodage voir ggmap.rmd
 
 Préparation des donnnées
 ========================================================

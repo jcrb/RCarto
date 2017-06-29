@@ -33,30 +33,53 @@ text(b, names(dep2), col = "red") # affiche le n° du dep.
 La région RGE comporte environ 5200 communes:
 ```{r}
 # communes et limites départementales
-load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/ght.Rda") # ght spatialPolygonsDataFrame
+load("~/Documents/CARTOGRAPHIE/CartographieR/RCarto/GHT/ght.Rda") # ght spatialPolygonsDataFrame 
+plot(ght) # ensemble des communes dela RGE mais comporte les départements 21 et 71 => pas bon !
+
 # on suprime les départements 21 et 71
 ght <- ght[ght$CODE_DEPT != 21 & ght$CODE_DEPT != 71 ,]
-plot(ght, axes = TRUE, main = "Communes de la Région Grand Est")
+
+plot(ght, axes = TRUE, main = "Communes de la Région Grand Est")  # ensemble des communes dela RGE ==> bon. La prtie @data comporte les données de l'InSEE:
+names(ght)
+```
+[1] "ID_GEOFLA"  "CODE_COM"   "INSEE_COM"  "NOM_COM"    "STATUT"     "X_CHF_LIEU" "Y_CHF_LIEU" "X_CENTROID" "Y_CENTROID" "Z_MOYEN"    "SUPERFICIE" "POPULATION" "CODE_ARR"   "CODE_DEPT" 
+[15] "NOM_DEPT"   "CODE_REG"   "NOM_REG"  
+
+```{r}
+dep <- unionSpatialPolygons(ght, IDs = ght@data$CODE_DEPT) # on ajoute les départements. DEP est un "SpatialPolygons"
 plot(dep, border = "red", lty = 1, lwd = 2, add = T)
+text(coordinates(dep), as.character(names(dep)), col = "red") 
+
+```
+
+
 
 # ensemble des communes constituant les GHT de la RGE. Liste transmise par E.Lagille
 # Lecture du fichier
 pathGht <- "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/ght_com.csv"
 ght2 <- read.csv(pathGht) # 5928 observations of 7 variables
 x <- add0(ght2$code_com) # ajoute un 0 devant un Finess trop court
-ght2$code_com <- x
+ght2$code_com <- x # ght2 est un dataframe
 
 # On fait une jointure avec le fichier des GHT
 # merging des fichiers
 # Jointure utilisant la méthode match qui ne modifie pas l'ordre des lignes
-ght3 <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM") # spatialPolygonsDataFame. GHT passe de 17 à 24 colonnes. Le nb de lignes ne change pas. Les GHT sot intégrés. ght reste un spatialPolygonsDataFrame.
+ght3 <- Attrib.Join(ght2, ght, "code_com", "INSEE_COM") # spatialPolygonsDataFame. GHT passe de 17 à 24 colonnes. Le nb de lignes ne change pas. Les GHT sot intégrés. ght reste un 
+spatialPolygonsDataFrame.
+
 names(ght3)
-plot(ght3)
+[1] "ID_GEOFLA"  "CODE_COM"   "INSEE_COM"  "NOM_COM"    "STATUT"     "X_CHF_LIEU" "Y_CHF_LIEU" "X_CENTROID" "Y_CENTROID" "Z_MOYEN"    "SUPERFICIE" "POPULATION" "CODE_ARR"   "CODE_DEPT" 
+[15] "NOM_DEPT"   "CODE_REG"   "NOM_REG"    "code_com"   "code_geo"   "annee"      "lib_com"    "GHT"        "LIB_GHT"    "DEP"  
+
+plot(ght3) # dessine toutes les communes de la RGE
 
 # limites des ght
-ght4 <- unionSpatialPolygons(ght3, IDs = ght3@data$GHT)
+ght4 <- unionSpatialPolygons(ght3, IDs = ght3@data$GHT) # ght4 est un "SpatialPolygons"
 plot(ght4, axes = T, main = "GHT de la RGE")
+
 text(coordinates(ght4), names(ght4), col = "red")
+# plot(dep, add = TRUE, border = "blue") # ajout des limites des départements
+
 ```
 
 Les coordonnées sont indiquées en Lambert93 (conformes au JO)
@@ -88,7 +111,7 @@ ght$POPULATION <- as.numeric(as.character(ght$POPULATION))
 ght$SUPERFICIE <- as.numeric(as.character(ght$SUPERFICIE))
 
 # vérification:
-# str(ght)
+# str(ght@data)
 ```
 
 Plusieurs communes ont 0 habitant depuis la première Guerre mondiale.
@@ -110,7 +133,7 @@ dsn <- "/Users/jean-claudebartier/Documents/CARTOGRAPHIE/CartographieR/IGN_GEOFL
  plot(dep2, axes = TRUE, main = "Départements du Grand Est") # dessine le contour des départementds RGE
  text(coordinates(dep2), names(dep2), col = "red")
  save(dep2, file = "../GHT/contour_departements.Rda")
-# dep2 est un spatalPolygonf => pas de data
+# dep2 est un spatalPolygon => pas de data
  
 # ensemble des communes constituant les GHT de la RGE. Liste transmise par E.Lagille
 # Lecture du fichier

@@ -214,6 +214,9 @@ Hôpitaux-SU de la région grand est
 ==================================
 
 On récupère les fichiers correspondants dans le dossier __/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/Structures_Urgence_FEDorU__. Il y a 3 fichiers au format csv correspondant aux anciennes régions.
+
+Pour le géocodage voir ggmap.rmd
+
 ```{r}
 
 path = "/Users/jean-claudebartier/Documents/Resural/Stat Resural/RPU_Doc/RPU_Carto-Pop-Alsace/Cartographie/Structures_Urgence_FEDorU/"
@@ -226,15 +229,19 @@ b2<-read.csv(b, skip = 1)
 c2<-read.csv(c, skip = 1)
 hopRge <- rbind(a2,b2,c2)
 # On ne cnserve que les colonnes ayant un intéret. Les col. 12 et 13 contiennent latitude et longitude en WS84.
-hopRge <- hopRge[, c(2,3,7,8,9,10,15,16,20,21)]
+hopRge2 <- hopRge[, c(2,3,7,8,9,10,11,15,16,17,21,22)]
 
-d2 <- hopRge
+d2 <- hopRge2
 # on transforme mes virgules en points puis en numéric
 d2$Longitude <- as.numeric(gsub(",",".", d2$Longitude))
 d2$Latitude <- as.numeric(gsub(",",".", d2$Latitude))
 
 coordinates(d2) = ~ Longitude + Latitude
 proj4string(d2) = CRS("+proj=longlat +datum=WGS84")
+class(d2)
+# [1] "SpatialPointsDataFrame"
+#  attr(,"package")
+# [1] "sp"
 
 plot(d2, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SU Région Grand Est (WSG84)")
 
@@ -243,11 +250,20 @@ plot(d2, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SU
 # EPSG:2154 Lambert 93
 newProj = CRS("+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
 su_alca_L93 <- spTransform(d2, newProj)
-plot(su_alca_L93, xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 1, main = "SU Région Grand Est (Lambert 93)")
 
-plot(su_alca_L93[su_alca_L93$SMUR == "oui",], pch = 16, col = "red", xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SAMU Région Grand Est (Lambert93)")
+plot(su_alca_L93, xlab = "Longitude", ylab = "Latitude", las = 1, main = "SU Région Grand Est (Lambert 93)", pch = 16, col = "red", axes = TRUE)
+
+plot(su_alca_L93[su_alca_L93$SMUR == "oui",], pch = 16, col = "red", xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SMUR Région Grand Est (Lambert93)")
 
 plot(su_alca_L93[su_alca_L93$SAMU == "oui",], pch = 15, col = "blue", xlab = "Longitude", ylab = "Latitude", axes = TRUE, las = 2, main = "SAMU Région Grand Est (Lambert93)", cex = 1.5, add = TRUE)
+
+# liste des SAMU
+su_alca_L93@data[su_alca_L93@data$SAMU == "oui",]
+
+# Strasbourg
+str <- su_alca_L93[su_alca_L93$Adresse...ville %in% c("STRASBOURG CEDEX", "STRASBOURG", "STRASBOURG CEDEX 2"),]
+plot(str, axes = TRUE, pch = 16, col = "red")
+text(coordinates(str), as.character(str$Nom.établissement), cex = 0.7, pos = 1)
 
 ```
 
