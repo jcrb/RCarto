@@ -271,6 +271,14 @@ north.arrow(750000, y, 5000, "N")
 # Variante avec northarrow: dessine une rose des vents plus élaborée. Pour modifier la taille de la rose faire varier la valeur 2000
 northarrow(c(800000, y), 20000)
 ```
+Nouvelle façon:
+```{r}
+library(prettymapr)
+plot(ght9)
+# addscalebar() # SI ON ne précise pas la projection,  assuming Google Mercator (epsg 3857) addscalebar(plotepsg=3395) #specify plot is in mercator projection, addscalebar(plotepsg=26920) #specify plot is in UTM Zone 20N
+addscalebar(plotepsg=2154) # Lambert93 # EPSG:2154 Lambert 93
+addnortharrow()
+```
 
 ```
 [1] CHU DE STRASBOURG-NHC                              CLINIQUE SAINTE ODILE                             
